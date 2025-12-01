@@ -15,10 +15,10 @@
 	<!-- HikariCP Configuration (커넥션 풀) -->
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 		<!-- MySQL 8.0 설정 -->
-		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
-		<property name="jdbcUrl" value="jdbc:log4jdbc:mysql://localhost:3306/moneysense"/>
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/moneysense"/>
 		<property name="username" value="root"/>
-		<property name="password" value="1234"/>  <!-- 본인 DB 비밀번호로 변경 -->
+		<property name="password" value="1234"/>
 		
 		<!-- HikariCP 성능 최적화 설정 -->
 		<property name="maximumPoolSize" value="10"/>
@@ -39,12 +39,14 @@
 		<!-- MyBatis 설정 파일 위치 -->
 		<property name="configLocation" value="classpath:/mybatis-config.xml"/>
 		<!-- Mapper XML 파일 위치 -->
-		<property name="mapperLocations" value="classpath:/mappers/**/*Mapper.xml"/>
+		<property name="mapperLocations" value="classpath:/mapper/**/*Mapper.xml"/>
 	</bean>
 	
+	<mybatis-spring:scan base-package="com.itwillbs.mapper"/>
 	<!-- Component 스캔 (Service, Repository 등) -->
-	<context:component-scan base-package="com.itwillbs.mapper"/>
 	<context:component-scan base-package="com.itwillbs.service"/>
 	<context:component-scan base-package="com.itwillbs.security"/>
+	
+	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 		
 </beans>
