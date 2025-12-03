@@ -17,11 +17,11 @@
 	<!-- (S) CSS -->
 	<link  rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/common.css">
 	<c:choose>
-	 <c:when test="${uri == '/'}">
+	 <c:when test="${uri == '/main'}">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css" />
 	 </c:when>
 	 <c:otherwise>
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/sub.css?ver=1.1" />
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/sub.css" />
 	 </c:otherwise>
 	</c:choose>
 	<!-- (E) CSS -->
@@ -34,7 +34,7 @@
 <header>
 <div class="header">
     <div class="header-content">
-        <div class="logo">MoneySense</div>
+        <div class="logo"><a href="/" title="홈으로 이동">MoneySense</a></div>
         <div class="user-info">
             <span>
                 <sec:authentication property="principal.member.name"/>님 환영합니다!
@@ -43,6 +43,7 @@
                 <sec:csrfInput/>
                 <button type="submit" class="btn-logout">로그아웃</button>
             </form>
+            <button class="btn-logout" onclick="location.href='/members/mypage'">마이페이지</button>
         </div>
     </div>
 </div>
