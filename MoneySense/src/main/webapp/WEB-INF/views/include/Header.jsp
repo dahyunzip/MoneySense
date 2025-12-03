@@ -5,9 +5,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>💰 MoneySense</title>
+<title>MoneySense</title>
 	<!-- favicon.svg -->
-	<link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath }/resources/images/favicon.svg" />
+	<link rel="shortcut icon" type="image/x-icon" href="https://notion-emojis.s3-us-west-2.amazonaws.com/prod/svg-twitter/1f4b5.svg" />
 	
 	<!-- Web Font -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,7 +34,7 @@
 <header>
 <div class="header">
     <div class="header-content">
-        <div class="logo">💰 MoneySense</div>
+        <div class="logo">MoneySense</div>
         <div class="user-info">
             <span>
                 <sec:authentication property="principal.member.name"/>님 환영합니다!
