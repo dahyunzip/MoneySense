@@ -34,7 +34,7 @@
 <header>
 <div class="header">
     <div class="header-content">
-        <div class="logo"><a href="/" title="홈으로 이동">MoneySense</a></div>
+        <div class="logo"><a href="/" title="홈으로 이동"><img src="${pageContext.request.contextPath}/resources/images/logo.svg"></a></div>
         <div class="user-info">
         	<!-- 로그인 상태일 때만 표시 -->
 	        <sec:authorize access="isAuthenticated()">

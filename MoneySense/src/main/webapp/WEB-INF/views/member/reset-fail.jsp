@@ -15,3 +15,4 @@
 	    </div>
 	</div>
 </div>
+<%@ include file="../include/Footer.jsp"%>
