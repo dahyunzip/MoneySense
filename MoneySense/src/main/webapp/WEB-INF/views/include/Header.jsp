@@ -27,7 +27,7 @@
 	<!-- (E) CSS -->
 	
 	<!-- (S) JS -->
-	<script src="${pageContext.request.contextPath }/resources/js/jquery-3.7.1.js" type="text/javascript"></script>
+	<script src="${pageContext.request.contextPath }/resources/js/jquery-3.7.1.min.js" type="text/javascript"></script>
 	<!-- (E) JS -->
 </head>
 <body>
@@ -36,14 +36,23 @@
     <div class="header-content">
         <div class="logo"><a href="/" title="홈으로 이동">MoneySense</a></div>
         <div class="user-info">
-            <span>
-                <sec:authentication property="principal.member.name"/>님 환영합니다!
-            </span>
-            <form action="${pageContext.request.contextPath}/members/logout" method="post" style="display: inline;">
-                <sec:csrfInput/>
-                <button type="submit" class="btn-logout">로그아웃</button>
-            </form>
-            <button class="btn-logout" onclick="location.href='/members/mypage'">마이페이지</button>
+        	<!-- 로그인 상태일 때만 표시 -->
+	        <sec:authorize access="isAuthenticated()">
+	            <span>
+	                <sec:authentication property="principal.member.name"/>님 환영합니다!
+	            </span>
+	            <form action="${pageContext.request.contextPath}/members/logout" method="post" style="display: inline;">
+	                <sec:csrfInput/>
+	                <button type="submit" class="btn-logout">로그아웃</button>
+	            </form>
+	            <button class="btn-logout" onclick="location.href='/members/mypage'">마이페이지</button>
+	        </sec:authorize>
+	        
+	        <!-- 비로그인 상태일 때만 표시 -->
+            <sec:authorize access="isAnonymous()">
+                <a href="${pageContext.request.contextPath}/members/login" class="btn-login">로그인</a>
+                <a href="${pageContext.request.contextPath}/members/signup" class="btn-signup">회원가입</a>
+            </sec:authorize>
         </div>
     </div>
 </div>
