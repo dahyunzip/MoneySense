@@ -29,7 +29,7 @@
 			authentication-failure-handler-ref="customLoginFailureHandler"/>
 		
 		<!-- 로그아웃 설정 -->
-		<security:logout logout-url="/logout" logout-success-url="/" invalidate-session="true" delete-cookies="JSESSIONID"/>
+		<security:logout logout-url="/members/logout" logout-success-url="/members/login?logout=true" invalidate-session="true" delete-cookies="JSESSIONID"/>
 			
 		<!-- CSRF 보호 활성화 -->
 		<security:csrf/>

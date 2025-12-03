@@ -71,4 +71,79 @@ public class MemberService {
 		 return count > 0; // 중복이면 true
 	 }
 	
+	 // ===== 마이페이지 관련 추가 메서드 =====
+	 /**
+	  * memberId로 회원 정보 조회
+	  * @param memberId
+	  * @return MemberVO
+	  * */
+	 public MemberVO getMemberById(int memberId) {
+		 logger.info("회원 정보 조회 : memberId : " + memberId);
+		 return memberMapper.selectMemberById(memberId);
+	 }
+	 
+	 /**
+	  * 회원 이름 수정
+	  * @param memberId
+	  * @param name
+	  * @return 성공 : true, 실패 : false
+	  */
+	 public boolean updateMemberName(int memberId, String name) {
+		 logger.info("회원 이름 수정 시작");
+		 logger.info(" memberId : " + memberId + ", 새 이름 : " +name);
+		 try {
+			 MemberVO member = new MemberVO();
+			 member.setMemberId(memberId);
+			 member.setName(name);
+			 
+			 int result = memberMapper.updateMemberName(member);
+			 
+			 if(result >0) {
+				 logger.info(" 회원 이름 수정 완료! ");
+				 return true;
+			 }
+			 
+		 }catch(Exception e) {
+			 logger.info("회원 이름 수정 실패 : " + e.getMessage());
+			 e.printStackTrace();
+		 }
+		 return false;
+	 }
+	 
+	 /**
+	  * 회원 탈퇴
+	  * @param memberId
+	  * @param password
+	  * @return 성공 : true, 실패 : false
+	  * */
+	 public boolean withdrawMember(int memberId, String password) {
+		 logger.info(" 회원 탈퇴 시작 - memberId : " + memberId);
+		 try {
+			 // 회원 정보 조회
+			 MemberVO member = memberMapper.selectMemberById(memberId);
+			 if(member == null) {
+				 logger.info(" 회원 정보 없음");
+				 return false;
+			 }
+			 
+			 // 비밀번호 확인
+			 if(!passwordEncoder.matches(password, member.getPassword())) {
+				 logger.info(" 비밀번호가 일치하지 않음");
+				 return false;
+			 }
+			 
+			 // 회원 탈퇴 처리
+			 int result = memberMapper.deleteMember(memberId);
+			 if(result > 0) {
+				 logger.info(" 회원 탈퇴 완료 !!! ");
+				 return true;
+			 }
+		 }catch(Exception e) {
+			 logger.info(" 회원 탈퇴 실패 : " +e.getMessage());
+			 e.printStackTrace();
+		 }
+		 return false;
+	 }
+	 
+	 
 }
