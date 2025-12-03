@@ -8,34 +8,38 @@
     </script>
 </c:if>
 <div id="subContents" class="mypage">
-<h1>마이페이지</h1>
-    <c:if test="${not empty msg}">
-        <div class="message">${msg}</div>
-    </c:if>
-    
-    <div class="info-section">
-        <h2>회원 정보</h2>
-        <div class="info-item">
-            <span class="info-label">이메일</span>
-            <span class="info-value">${member.email}</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">이름</span>
-            <span class="info-value">${member.name}</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">가입일</span>
-            <span class="info-value">
-                <fmt:formatDate value="${member.joinedAt}" pattern="yyyy-MM-dd HH:mm" />
-            </span>
-        </div>
-    </div>
-    
-    <div class="btn-group">
-        <a href="${pageContext.request.contextPath}/members/mypage/edit" class="btn btn-primary">정보 수정</a>
-        <%-- <a href="${pageContext.request.contextPath}/members/mypage/password" class="btn btn-warning">비밀번호 변경</a> --%>
-        <a href="${pageContext.request.contextPath}/members/mypage/withdraw" class="btn btn-danger">회원 탈퇴</a>
-        <a href="${pageContext.request.contextPath}/main" class="btn btn-secondary">홈으로</a>
+	<div class="fix-layout">
+		<div class="container">
+			<h1>마이페이지</h1>
+		    <c:if test="${not empty msg}">
+		        <div class="message">${msg}</div>
+		    </c:if>
+		    
+		    <div class="info-section">
+		        <h2>회원 정보</h2>
+		        <div class="info-item">
+		            <span class="info-label">이메일</span>
+		            <span class="info-value">${member.email}</span>
+		        </div>
+		        <div class="info-item">
+		            <span class="info-label">이름</span>
+		            <span class="info-value">${member.name}</span>
+		        </div>
+		        <div class="info-item">
+		            <span class="info-label">가입일</span>
+		            <span class="info-value">
+		                <fmt:formatDate value="${member.joinedAt}" pattern="yyyy-MM-dd HH:mm" />
+		            </span>
+		        </div>
+		    </div>
+		    
+		    <div class="btn-group">
+		        <a href="${pageContext.request.contextPath}/members/mypage/edit" class="btn btn-primary">정보 수정</a>
+		        <%-- <a href="${pageContext.request.contextPath}/members/mypage/password" class="btn btn-warning">비밀번호 변경</a> --%>
+		        <a href="${pageContext.request.contextPath}/members/mypage/withdraw" class="btn btn-danger">회원 탈퇴</a>
+		        <a href="${pageContext.request.contextPath}/main" class="btn btn-secondary">홈으로</a>
+		    </div>
+		    </div>
     </div>
 </div>
 <%@ include file="../include/Footer.jsp"%>

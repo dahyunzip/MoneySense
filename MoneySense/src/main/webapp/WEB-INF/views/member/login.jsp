@@ -36,6 +36,7 @@
         </div>
     </div>
 </div>
+<%@ include file="../include/Footer.jsp"%>
 <script>
     $(document).ready(function() {
         // 폼 제출 전 유효성 검사

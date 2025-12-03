@@ -33,6 +33,7 @@
         </form>
     </div>
 </div>
+<%@ include file="../include/Footer.jsp"%>
 <script>
     $(document).ready(function() {
         const $form = $('#resetForm');

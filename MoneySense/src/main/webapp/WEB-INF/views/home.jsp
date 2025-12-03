@@ -7,22 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoneySense - 스마트한 가계부 관리</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #fff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            color: white;
+            color: #222;
         }
         
         .hero {
@@ -62,8 +56,8 @@
         }
         
         .btn-primary {
-            background: white;
-            color: #667eea;
+            background: #667eea;
+            color: #fff;
         }
         
         .btn-primary:hover {
@@ -72,13 +66,13 @@
         }
         
         .btn-secondary {
-            background: rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.2);
             color: white;
             border: 2px solid white;
         }
         
         .btn-secondary:hover {
-            background: rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.3);
             transform: translateY(-3px);
         }
         
@@ -91,7 +85,7 @@
         }
         
         .feature {
-            background: rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.1);
             padding: 30px;
             border-radius: 15px;
             backdrop-filter: blur(10px);
