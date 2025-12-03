@@ -23,10 +23,10 @@ public interface MemberMapper {
 	// 회원 이름 수정
 	int updateMemberName(MemberVO member);
 	
-	// 회원 비밀번호 수정
-	int updateMemberPassword(MemberVO member);
-	
 	// 회원 탈퇴(soft delete)
 	int deleteMember(int memberId);
+	
+	// 비밀번호 재설정 관련 추가
+	int updatePasswordByEmail(MemberVO member);
 	
 }

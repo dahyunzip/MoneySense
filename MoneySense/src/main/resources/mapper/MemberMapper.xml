@@ -103,12 +103,12 @@
 		AND is_deleted = 0
 	</update>
 	
-	<!-- 회원 비밀번호 수정 -->
-	<update id="updateMemberPassword">
+	<!-- 이메일로 비밀번호 업데이트 -->
+	<update id="updatePasswordByEmail">
 		UPDATE member
 		SET password = #{password},
 			updated_at = CURRENT_TIMESTAMP
-		WHERE member_id = #{memberId}
+		WHERE email = #{email}
 		AND is_deleted = 0
 	</update>
 	

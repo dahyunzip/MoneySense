@@ -1,5 +1,7 @@
 package com.itwillbs.controller;
 
+import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -201,5 +203,90 @@ public class MemberController {
 			rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
 			return "redirect:/members/mypage/withdraw";
 		}
+	}
+	
+	//////////////////////////////////////////////////
+	// 비밀번호 재설정 관련 메서드
+	
+	// 비밀번호 찾기 - GET
+	@GetMapping("/find-password")
+	public String findPasswordPage() {
+		logger.info(" 비밀번호 찾기 페이지 ");
+		return "member/find-password";
+	}
+	
+	// 비밀번호 찾기 - POST
+	@PostMapping("/find-password")
+	public String findPassword(@RequestParam("email") String email,
+							HttpServletRequest request,	
+							Model model) {
+		logger.info("비밀번호 찾기 요청 - email : " + email);
+		
+		MemberVO member = mService.findMemberByEmail(email);
+		
+		if(member == null) {
+			model.addAttribute("msg", "등록된 이메일이 없습니다.");
+			return "member/find-password";
+		}
+		
+		String token = UUID.randomUUID().toString();
+		
+		// 현재 요청으로부터 baseUrl 생성
+		String baseUrl = getBaseUrl(request);
+		
+		mService.sendResetMail(email, token, baseUrl);
+		
+		model.addAttribute("msg", "비밀번호 재설정 메일이 발송되었습니다. 이메일을 확인해 주세요.");
+		return "member/find-password";
+	}
+	
+	// baseUrl 메서드
+	private String getBaseUrl(HttpServletRequest request) {
+		String scheme = request.getScheme();			// http 또는 https
+		String serverName = request.getServerName();	// localhost 또는 실제 도메인
+		int serverPort = request.getServerPort();		// 8088 Ehsms 80, 443
+		String contextPath = request.getContextPath();	// 프로젝트 Context path
+		
+		// 표준 포트 (80, 443)인 경우 포트 번호 생략
+		if((scheme.equals("http") && serverPort == 80) || (scheme.equals("https") && serverPort == 443)) {
+			return scheme + "://" + serverName + contextPath;
+		}else {
+			return scheme + "://" + serverName + ":" + serverPort + contextPath;
+		}
+	}
+	
+	// 비밀번호 재설정 - GET
+	@GetMapping("/reset-password")
+	public String resetPasswordPage(@RequestParam("token") String token,
+									Model model) {
+		logger.info(" 비밀번호 재설정 페이지 요청 - token : " + token);
+		
+		String email = mService.getEmailByToken(token);
+		
+		if(email == null) {
+			model.addAttribute("msg", "유효하지 않거나 만료된 링크입니다.");
+			return "member/reset-fail";
+		}
+		
+		model.addAttribute("email", email);
+		model.addAttribute("token", token);
+		return "member/reset-password";
+	}
+	
+	// 비밀번호 재설정 - POST
+	@PostMapping("/reset-password")
+	public String resetPassword(@RequestParam("email") String email,
+								@RequestParam("newPassword") String newPassword,
+								@RequestParam("token") String token,
+								RedirectAttributes rttr) {
+		logger.info(" 비밀번호 재설정 처리 - eamil : " + email);
+		
+		mService.updatePasswordByEmail(email, newPassword);
+		mService.invalidateToken(token);
+		
+		rttr.addFlashAttribute("msg", "비밀번호가 성공적으로 변경되었습니다. 새 비밀번호로 로그인해주세요.");
+		
+		logger.info(" 비밀번호 변경 완료! ");
+		return "redirect:/members/login";
 	}
 }

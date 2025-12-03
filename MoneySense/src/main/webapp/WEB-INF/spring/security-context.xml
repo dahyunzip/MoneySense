@@ -19,6 +19,10 @@
 		<security:intercept-url pattern="/members/login" access="permitAll"/>
 		<security:intercept-url pattern="/members/check-email" access="permitAll"/>
 		
+		<!-- 비밀번호 찾기/재설정 페이지 -->
+        <security:intercept-url pattern="/members/find-password" access="permitAll" />
+        <security:intercept-url pattern="/members/reset-password" access="permitAll" />
+		
 		<!-- 나머지 모든 요청은 인증 필요 -->
 		<security:intercept-url pattern="/**" access="hasRole('USER')"/>
 		
@@ -52,10 +56,8 @@
 
 	<!-- Custom UserDetailsService Bean 등록 -->
 	<bean id="customUserDetailsService" class="com.itwillbs.security.CustomUserDetailsService"/>
-	
 	<!-- 로그인 성공 핸들러 -->
 	<bean id="customLoginSuccessHandler" class="com.itwillbs.security.CustomLoginSuccessHandler"/>
-	
 	<!-- 로그인 실패 핸들러 -->
 	<bean id="customLoginFailureHandler" class="com.itwillbs.security.CustomLoginFailureHandler"/>
 
