@@ -18,6 +18,7 @@
 		<security:intercept-url pattern="/members/signup" access="permitAll"/>
 		<security:intercept-url pattern="/members/login" access="permitAll"/>
 		<security:intercept-url pattern="/members/check-email" access="permitAll"/>
+		<security:intercept-url pattern="/test/**" access="permitAll" />
 		
 		<!-- 비밀번호 찾기/재설정 페이지 -->
         <security:intercept-url pattern="/members/find-password" access="permitAll" />
