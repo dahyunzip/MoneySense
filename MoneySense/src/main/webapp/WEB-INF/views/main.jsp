@@ -9,8 +9,6 @@
 </c:if>
 <div id="mainContents">
     <div class="container">
-        <h1>🎉 로그인 성공!</h1>
-        <p>MoneySense에 오신 것을 환영합니다.</p>
         <p style="margin-top: 10px;">
             이메일: <strong><sec:authentication property="principal.username"/></strong>
         </p>

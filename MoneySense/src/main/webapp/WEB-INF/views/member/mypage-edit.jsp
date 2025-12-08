@@ -9,7 +9,7 @@
 </c:if>
 <div id="subContents" class="mypage">
     <div class="container">
-        <h1>회원정보 수정</h1>
+        <h1 class="page-title">회원정보 수정</h1>
         
         <form action="${pageContext.request.contextPath}/members/mypage/update-name" method="post">
         	<sec:csrfInput/>

@@ -1,5 +1,7 @@
 package com.itwillbs.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.itwillbs.domain.BankAccountVO;
 import com.itwillbs.domain.openbank.RequestTokenVO;
 import com.itwillbs.domain.openbank.ResponseTokenVO;
 import com.itwillbs.security.CustomUserDetails;
@@ -72,4 +75,56 @@ public class AccountController {
 		logger.info(" 계좌 연동 페이지 요청 ");
 		return "account/connect";
 	}
+	
+	/**
+	 *	 계좌 목록 페이지 
+	 */
+	@GetMapping("/list")
+	public String accountList(Model model, RedirectAttributes rttr) {
+		logger.info(" 계좌 목록 페이지 요청 ");
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+		int memberId = userDetails.getMember().getMemberId();
+		
+		try {
+			// DB에 저장된 계좌 목록 조회
+			List<BankAccountVO> accounts = openBankingService.getAccountsByMemberId(memberId);
+			model.addAttribute("accounts", accounts);
+			return "account/list";
+		}catch(Exception e) {
+			logger.info(" 계좌 목록 조회 실패 : {}", e.getMessage());
+			e.printStackTrace();
+
+			rttr.addFlashAttribute("msg", "계좌 목록 조회에 실패했습니다.");
+			return "redirect:/main";
+		}
+	}
+	
+	
+	/**
+	 *	계좌 동기화 (오픈뱅킹 API로 최신 정보 가져오기) 
+	 */
+	@GetMapping("/sync")
+	public String syncAccounts(RedirectAttributes rttr) {
+		logger.info(" 계좌 동기화 요청 ");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+		int memberId = userDetails.getMember().getMemberId();
+		
+		try {
+			List<BankAccountVO> accounts = openBankingService.getAndSaveAccounts(memberId);
+			
+			rttr.addFlashAttribute("msg", accounts.size() + "개의 계좌가 동기화 되었습니다.");
+			return "redirect:/accounts/list";
+		}catch(Exception e) {
+			logger.info(" 계좌 동기화 실패 : {}", e.getMessage());
+			e.printStackTrace();
+			rttr.addFlashAttribute("msg", "계좌 동기화에 실패했습니다.");
+			return "redirect:/accounts/list";
+			
+		}
+	}
+	
+	
 }

@@ -20,7 +20,7 @@
 </script>
 <div id="subContents" class="mypage">
 	<div class="container">
-        <h1>⚠️ 회원 탈퇴</h1>
+        <h1 class="page-title">⚠️ 회원 탈퇴</h1>
         
         <c:if test="${not empty msg}">
             <div class="message">${msg}</div>

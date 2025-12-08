@@ -2,16 +2,38 @@
 
 /* (S) COMMON */
 .fix-layout{width:100%; max-width:1500px; margin:0 auto; padding:0 5%;}
-.container { max-width: 1200px; margin: 40px auto;padding: 0 20px;}
 /* (E) COMMON */
 
+/* (S) FONTS */
+@font-face {font-family: 'Paperlogy';src: url('./fonts/Paperlogy-1Thin.ttf') format('truetype');font-weight: 100;font-style: normal;}
+@font-face {font-family: 'Paperlogy';src: url('./fonts/Paperlogy-2ExtraLight.ttf') format('truetype');font-weight: 200;font-style: normal;}
+@font-face {font-family: 'Paperlogy';src: url('./fonts/Paperlogy-3Light.ttf') format('truetype');font-weight: 300;font-style: normal;}
+@font-face {font-family: 'Paperlogy';src: url('./fonts/Paperlogy-4Regular.ttf') format('truetype');font-weight: 400;font-style: normal;}
+@font-face {font-family: 'Paperlogy';src: url('./fonts/Paperlogy-5Medium.ttf') format('truetype');font-weight: 500;font-style: normal;}
+@font-face {font-family: 'Paperlogy';src: url('./fonts/Paperlogy-6SemiBold.ttf') format('truetype');font-weight: 600;font-style: normal;}
+@font-face {font-family: 'Paperlogy';src: url('./fonts/Paperlogy-7Bold.ttf') format('truetype');font-weight: 700;font-style: normal;}
+@font-face {font-family: 'Paperlogy';src: url('./fonts/Paperlogy-8ExtraBold.ttf') format('truetype');font-weight: 800;font-style: normal;}
+@font-face {font-family: 'Paperlogy';src: url('./fonts/Paperlogy-9Black.ttf') format('truetype');font-weight: 900;font-style: normal;}
+@font-face {font-family: 'Pretendard';src: url('./fonts/Pretendard-Thin.woff2') format('woff2');font-weight: 100;font-style: normal;}
+@font-face {font-family: 'Pretendard';src: url('./fonts/Pretendard-ExtraLight.woff2') format('woff2');font-weight: 200;font-style: normal;}
+@font-face {font-family: 'Pretendard';src: url('./fonts/Pretendard-Light.woff2') format('woff2');font-weight: 300;font-style: normal;}
+@font-face {font-family: 'Pretendard';src: url('./fonts/Pretendard-Regular.woff2') format('woff2');font-weight: 400;font-style: normal;}
+@font-face {font-family: 'Pretendard';src: url('./fonts/Pretendard-Medium.woff2') format('woff2');font-weight: 500;font-style: normal;}
+@font-face {font-family: 'Pretendard';src: url('./fonts/Pretendard-SemiBold.woff2') format('woff2');font-weight: 600;font-style: normal;}
+@font-face {font-family: 'Pretendard';src: url('./fonts/Pretendard-Bold.woff2') format('woff2');font-weight: 700;font-style: normal;}
+@font-face {font-family: 'Pretendard';src: url('./fonts/Pretendard-ExtraBold.woff2') format('woff2');font-weight: 800;font-style: normal;}
+@font-face {font-family: 'Pretendard';src: url('./fonts/Pretendard-Black.woff2') format('woff2');font-weight: 900;font-style: normal;}
+body {font-family:'Pretendard', 'Paperlogy', sans-serif;}
+/* (E) FONTS */
+
+
 /* (S) Header */
-.header { background: #fff; color: white; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-.header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;}
+.header { background: #fff; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.header-content {display: flex; justify-content: space-between; align-items: center; height:100px;}
 .logo img{width:100px; height:auto;}
 .user-info { display: flex; align-items: center; gap: 20px;}
-.btn-logout { padding: 10px 20px; border: 1px solid #e5e5e5; color: #5a5a5a; border-radius: 5px; cursor: pointer;font-size: 14px;}
-.btn-logout:hover { background: rgba(255,255,255,0.3);}
+.btn-logout {color:#5a5a5a; font-size: 14px; border:none; background:none; cursor:pointer}
+.btn-logout:hover { text-decoration: underline;}
 /* (E) Header */
 
 
@@ -74,6 +96,6 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-a{color:inherit; text-decoration:none}
+a{color:#5a5a5a; text-decoration:none}
 /* (E) RESET */
 /******************************RESET.CSS **************************************/

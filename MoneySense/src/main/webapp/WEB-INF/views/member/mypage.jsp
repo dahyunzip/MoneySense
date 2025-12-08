@@ -10,7 +10,7 @@
 <div id="subContents" class="mypage">
 	<div class="fix-layout">
 		<div class="container">
-			<h1>마이페이지</h1>
+			<h1 class="page-title">마이페이지</h1>
 		    <c:if test="${not empty msg}">
 		        <div class="message">${msg}</div>
 		    </c:if>
@@ -35,11 +35,12 @@
 		    
 		    <div class="btn-group">
 		        <a href="${pageContext.request.contextPath}/members/mypage/edit" class="btn btn-primary">정보 수정</a>
+		        <a href="${pageContext.request.contextPath}/accounts/connect" class="btn btn-primary">계좌연동</a>
+		        <a href="${pageContext.request.contextPath}/accounts/sync" class="btn btn-danger">계좌 리스트</a>
 		        <%-- <a href="${pageContext.request.contextPath}/members/mypage/password" class="btn btn-warning">비밀번호 변경</a> --%>
 		        <a href="${pageContext.request.contextPath}/members/mypage/withdraw" class="btn btn-danger">회원 탈퇴</a>
-		        <a href="${pageContext.request.contextPath}/main" class="btn btn-secondary">홈으로</a>
 		    </div>
-		    </div>
+	    </div>
     </div>
 </div>
 <%@ include file="../include/Footer.jsp"%>
