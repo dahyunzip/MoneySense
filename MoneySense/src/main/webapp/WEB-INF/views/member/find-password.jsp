@@ -2,9 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/Header.jsp"%>
 <div id="subContents">
-    <div class="container">
-        <h3>비밀번호 찾기</h3>
-        
+    <div class="container" id="loginPage">
+        <h1 class="page-title">비밀번호 찾기</h1>
         <form action="${pageContext.request.contextPath}/members/find-password" method="post">
         	<sec:csrfInput/>
             <div class="form-group">
@@ -12,7 +11,9 @@
                 <input type="email" class="form-control" name="email" 
                        placeholder="example@moneysense.com" required />
             </div>
-            <button type="submit" class="btn">메일 전송</button>
+            <div class="btn-group">
+           		<button type="submit" class="btn btn-login mb20">메일 전송</button>
+            </div>
         </form>
         
         <c:if test="${not empty msg}">

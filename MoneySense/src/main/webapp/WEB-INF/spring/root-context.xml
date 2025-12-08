@@ -62,6 +62,7 @@
 		<property name="configLocation" value="classpath:/mybatis-config.xml"/>
 		<!-- Mapper XML 파일 위치 -->
 		<property name="mapperLocations" value="classpath:/mapper/**/*Mapper.xml"/>
+		
 	</bean>
 	
 	<mybatis-spring:scan base-package="com.itwillbs.mapper"/>

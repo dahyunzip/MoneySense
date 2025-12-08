@@ -4,9 +4,9 @@
 <div id="subContents">
 	<div class="fix-layout">    
 	    <div class="container">
-	        <div class="success-icon">✓</div>
+	        <div class="success-icon text-center">✓</div>
 	        <h1 class="page-title">계좌 연동 완료!</h1>
-	        <p>${msg}</p>
+	        <p class="message">${msg}</p>
 	        
 	        <div class="token-info">
 	            <h3>연동 정보</h3>

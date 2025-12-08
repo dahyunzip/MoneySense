@@ -57,7 +57,7 @@
 	                                <fmt:formatNumber value="${account.balance}" type="number" groupingUsed="true"/>원
 	                            </div>
 	                            
-	                            <div class="account-actions">
+	                            <div class="btn-group right">
 	                                <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}" 
 	                                   class="btn btn-info btn-sm">
 	                                    거래내역 보기
