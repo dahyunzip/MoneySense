@@ -1,0 +1,346 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ include file="../include/Header.jsp"%>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<div id="subContents">
+	<div class="fix-layout">
+	    <div class="container">
+	        <div class="account-header">
+	            <div class="account-info">
+	                <div class="account-details">
+	                    <div class="bank-name">${account.bankName}</div>
+	                    <div class="account-num">${account.accountName} · ${account.accountNum}</div>
+	                </div>
+	                <div class="balance">
+	                    <div class="balance-label">현재 잔액</div>
+	                    <div class="balance-amount">
+	                        <fmt:formatNumber value="${account.balance}" type="number" groupingUsed="true"/>원
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	        
+	        <c:if test="${not empty msg}">
+	            <div class="message">${msg}</div>
+	        </c:if>
+	        
+	        <div class="actions">
+	            <a href="${pageContext.request.contextPath}/accounts/list" class="btn btn-secondary">
+	                ← 계좌 목록
+	            </a>
+	            <c:if test="${empty transactions}">
+	                <a href="${pageContext.request.contextPath}/transactions/generate-mock?accountId=${account.accountId}" 
+	                   class="btn btn-success"
+	                   onclick="return confirm('테스트용 거래내역을 생성하시겠습니까?');">
+	                    📝 테스트 거래내역 생성
+	                </a>
+	            </c:if>
+	        </div>
+	        
+	        <!-- 날짜 필터 -->
+	        <c:if test="${totalCount > 0}">
+	            <div class="filter-section">
+	                <form method="get" action="${pageContext.request.contextPath}/transactions/list">
+	                    <input type="hidden" name="accountId" value="${account.accountId}">
+	                    <div class="filter-row">
+	                        <span class="filter-label">📅 기간 선택:</span>
+	                        <input type="text" 
+	                               id="startDate" 
+	                               name="startDate" 
+	                               class="date-input" 
+	                               placeholder="시작일"
+	                               value="${startDate}"
+	                               readonly>
+	                        <span>~</span>
+	                        <input type="text" 
+	                               id="endDate" 
+	                               name="endDate" 
+	                               class="date-input" 
+	                               placeholder="종료일"
+	                               value="${endDate}"
+	                               readonly>
+	                        <button type="submit" class="btn btn-primary">조회</button>
+	                        <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}" 
+	                           class="btn btn-secondary">전체</a>
+	                    </div>
+	                </form>
+	            </div>
+	        </c:if>
+	        
+	        <div class="transaction-list">
+	            <h2 style="margin-bottom: 20px;">거래내역</h2>
+	            
+	            <c:choose>
+	                <c:when test="${empty transactions}">
+	                    <div class="empty-message">
+	                        <h3>거래내역이 없습니다</h3>
+	                        <p>테스트용 거래내역을 생성하거나 실제 거래가 발생하면 여기에 표시됩니다.</p>
+	                    </div>
+	                </c:when>
+	                <c:otherwise>
+	                    <c:forEach var="tx" items="${transactions}">
+	                        <div class="transaction-item" id="tx-${tx.transactionId}">
+	                            <div class="transaction-main">
+	                                <div class="transaction-info">
+	                                    <div class="transaction-date">
+	                                        <fmt:formatDate value="${tx.transactedAt}" pattern="yyyy-MM-dd HH:mm"/>
+	                                    </div>
+	                                    <div class="transaction-desc">${tx.description}</div>
+	                                </div>
+	                                <div class="transaction-amount">
+	                                    <div class="amount-value ${tx.inoutType == 'I' ? 'amount-in' : 'amount-out'}">
+	                                        ${tx.inoutType == 'I' ? '+' : '-'}
+	                                        <fmt:formatNumber value="${tx.amount}" type="number" groupingUsed="true"/>원
+	                                    </div>
+	                                    <div class="balance-after">
+	                                        잔액 <fmt:formatNumber value="${tx.balanceAfter}" type="number" groupingUsed="true"/>원
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            
+	                            <!-- 메모 섹션 -->
+	                            <div class="memo-section">
+	                                <div id="memo-display-${tx.transactionId}" style="${empty tx.memo ? 'display:none;' : ''}">
+	                                    <div class="memo-display" id="memo-text-${tx.transactionId}">
+	                                        📝 ${tx.memo}
+	                                    </div>
+	                                    <div class="memo-actions">
+	                                        <button onclick="editMemo(${tx.transactionId})" class="btn btn-sm btn-primary">수정</button>
+	                                        <button onclick="deleteMemo(${tx.transactionId})" class="btn btn-sm btn-secondary">삭제</button>
+	                                    </div>
+	                                </div>
+	                                
+	                                <div id="memo-edit-${tx.transactionId}" style="${empty tx.memo ? '' : 'display:none;'}">
+	                                    <input type="text" 
+	                                           class="memo-input" 
+	                                           id="memo-input-${tx.transactionId}"
+	                                           placeholder="메모를 입력하세요"
+	                                           value="${tx.memo}">
+	                                    <div class="memo-actions">
+	                                        <button onclick="saveMemo(${tx.transactionId})" class="btn btn-sm btn-success">저장</button>
+	                                        <button onclick="cancelEdit(${tx.transactionId}, '${tx.memo}')" class="btn btn-sm btn-secondary">취소</button>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </c:forEach>
+	                </c:otherwise>
+	            </c:choose>
+	        </div>
+	        
+	        <!-- 페이징 -->
+	        <c:if test="${totalPages > 1}">
+	            <div class="pagination">
+	                <%-- 
+			            페이징 로직:
+			            - 현재 페이지 기준 앞뒤 2개씩 = 총 5개 페이지 표시
+			            - 예: 현재 3페이지면 → 1 2 [3] 4 5
+			        --%>
+			        <c:set var="startPage" value="${currentPage - 2}" />
+			        <c:set var="endPage" value="${currentPage + 2}" />
+			        
+			        <%-- 시작 페이지가 1보다 작으면 1로 --%>
+			        <c:if test="${startPage < 1}">
+			            <c:set var="startPage" value="1" />
+			            <c:set var="endPage" value="${startPage + 4}" />
+			        </c:if>
+			        
+			        <%-- 끝 페이지가 총 페이지보다 크면 조정 --%>
+			        <c:if test="${endPage > totalPages}">
+			            <c:set var="endPage" value="${totalPages}" />
+			            <c:set var="startPage" value="${endPage - 4}" />
+			            <c:if test="${startPage < 1}">
+			                <c:set var="startPage" value="1" />
+			            </c:if>
+			        </c:if>
+			        
+			        <!-- 맨 처음 -->
+			        <c:if test="${currentPage > 1}">
+			            <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=1<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+			               class="page-link">«</a>
+			        </c:if>
+			        
+			        <!-- 이전 페이지 -->
+			        <c:choose>
+			            <c:when test="${currentPage > 1}">
+			                <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${currentPage - 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+			                   class="page-link">‹</a>
+			            </c:when>
+			            <c:otherwise>
+			                <span class="page-link disabled">‹</span>
+			            </c:otherwise>
+			        </c:choose>
+			        
+			        <!-- 페이지 번호 (5개씩만) -->
+			        <c:forEach var="i" begin="${startPage}" end="${endPage}">
+			            <c:choose>
+			                <c:when test="${i == currentPage}">
+			                    <span class="page-link active">${i}</span>
+			                </c:when>
+			                <c:otherwise>
+			                    <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${i}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+			                       class="page-link">${i}</a>
+			                </c:otherwise>
+			            </c:choose>
+			        </c:forEach>
+			        
+			        <!-- 다음 페이지 -->
+			        <c:choose>
+			            <c:when test="${currentPage < totalPages}">
+			                <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${currentPage + 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+			                   class="page-link">›</a>
+			            </c:when>
+			            <c:otherwise>
+			                <span class="page-link disabled">›</span>
+			            </c:otherwise>
+			        </c:choose>
+			        
+			        <!-- 맨 끝 -->
+			        <c:if test="${currentPage < totalPages}">
+			            <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${totalPages}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+			               class="page-link">»</a>
+			        </c:if>
+	            </div>
+	        </c:if>
+	    </div>
+    </div>
+</div>
+   
+    <script>
+	 // Datepicker 초기화
+	    $(function() {
+	    	// 한글 설정 먼저
+	        $.datepicker.setDefaults({
+	            dateFormat: 'yy-mm-dd',
+	            prevText: '이전 달',
+	            nextText: '다음 달',
+	            monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+	            monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+	            dayNames: ['일','월','화','수','목','금','토'],
+	            dayNamesShort: ['일','월','화','수','목','금','토'],
+	            dayNamesMin: ['일','월','화','수','목','금','토'],
+	            showMonthAfterYear: true,
+	            yearSuffix: '년',
+	            changeMonth: true,
+	            changeYear: true,
+	            showButtonPanel: true
+	        });
+	        
+	        // 시작일 Datepicker
+	        $("#startDate").datepicker({
+	            maxDate: new Date(),
+	            onSelect: function(selectedDate) {
+	                // 시작일 선택하면 종료일의 최소 날짜를 시작일로 설정
+	                $("#endDate").datepicker("option", "minDate", selectedDate);
+	            }
+	        });
+	        
+	        // 종료일 Datepicker
+	        $("#endDate").datepicker({
+	            maxDate: new Date(),
+	            onSelect: function(selectedDate) {
+	                // 종료일 선택하면 시작일의 최대 날짜를 종료일로 설정
+	                $("#startDate").datepicker("option", "maxDate", selectedDate);
+	            }
+	        });
+	        
+	        // 이미 선택된 날짜가 있으면 제약조건 적용
+	        <c:if test="${not empty startDate}">
+	            $("#endDate").datepicker("option", "minDate", "${startDate}");
+	        </c:if>
+	        <c:if test="${not empty endDate}">
+	            $("#startDate").datepicker("option", "maxDate", "${endDate}");
+	        </c:if>
+	    });
+	    
+	    // CSRF 토큰
+	    const csrfToken = '${_csrf.token}';
+	    const csrfHeader = '${_csrf.headerName}';
+	    
+	    // 메모 편집 모드로 전환
+	    function editMemo(txId) {
+	        document.getElementById('memo-display-' + txId).style.display = 'none';
+	        document.getElementById('memo-edit-' + txId).style.display = 'block';
+	        document.getElementById('memo-input-' + txId).focus();
+	    }
+	    
+	    // 메모 편집 취소
+	    function cancelEdit(txId, originalMemo) {
+	        if(originalMemo && originalMemo !== 'null' && originalMemo.trim() !== '') {
+	            document.getElementById('memo-display-' + txId).style.display = 'block';
+	            document.getElementById('memo-edit-' + txId).style.display = 'none';
+	            document.getElementById('memo-input-' + txId).value = originalMemo;
+	        } else {
+	            document.getElementById('memo-edit-' + txId).style.display = 'none';
+	        }
+	    }
+	    
+	    // 메모 저장
+	    function saveMemo(txId) {
+	        const memo = document.getElementById('memo-input-' + txId).value.trim();
+	        
+	        if(!memo) {
+	            alert('메모를 입력해주세요.');
+	            return;
+	        }
+	        
+	        fetch('${pageContext.request.contextPath}/transactions/save-memo', {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/x-www-form-urlencoded',
+	                [csrfHeader]: csrfToken
+	            },
+	            body: 'transactionId=' + txId + '&memo=' + encodeURIComponent(memo)
+	        })
+	        .then(response => response.json())
+	        .then(data => {
+	            if(data.success) {
+	                document.getElementById('memo-text-' + txId).textContent = '📝 ' + memo;
+	                document.getElementById('memo-display-' + txId).style.display = 'block';
+	                document.getElementById('memo-edit-' + txId).style.display = 'none';
+	                alert(data.message);
+	            } else {
+	                alert(data.message);
+	            }
+	        })
+	        .catch(error => {
+	            console.error('Error:', error);
+	            alert('메모 저장 중 오류가 발생했습니다.');
+	        });
+	    }
+	    
+	    // 메모 삭제
+	    function deleteMemo(txId) {
+	        if(!confirm('메모를 삭제하시겠습니까?')) {
+	            return;
+	        }
+	        
+	        fetch('${pageContext.request.contextPath}/transactions/delete-memo', {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/x-www-form-urlencoded',
+	                [csrfHeader]: csrfToken
+	            },
+	            body: 'transactionId=' + txId
+	        })
+	        .then(response => response.json())
+	        .then(data => {
+	            if(data.success) {
+	                document.getElementById('memo-display-' + txId).style.display = 'none';
+	                document.getElementById('memo-edit-' + txId).style.display = 'block';
+	                document.getElementById('memo-input-' + txId).value = '';
+	                alert(data.message);
+	            } else {
+	                alert(data.message);
+	            }
+	        })
+	        .catch(error => {
+	            console.error('Error:', error);
+	            alert('메모 삭제 중 오류가 발생했습니다.');
+	        });
+	    }
+	</script>
+<%@ include file="../include/Footer.jsp"%>

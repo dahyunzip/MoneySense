@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwillbs.mapper.BankAccountMapper">
+	<!-- resultMap 정의 -->
+	<resultMap id="accountMap" type="com.itwillbs.domain.BankAccountVO">
+		<id property="accountId" column="account_id"/>
+		<result property="memberId" column="member_id"/>
+		<result property="bankCode" column="bank_code"/>
+		<result property="bankName" column="bank_name"/>
+		<result property="accountNum" column="account_num"/>
+		<result property="accountName" column="account_name"/>
+		<result property="balance" column="balance"/>
+		<result property="createdAt" column="created_at"/>
+		<result property="fintechUseNum" column="fintech_use_num"/>
+	</resultMap>
+	
+	<!-- 계좌 저장 -->
+	<insert id="insertAccount" useGeneratedKeys="true" keyProperty="accountId">
+		INSERT INTO bank_account(
+			member_id,
+			bank_code,
+			bank_name,
+			account_num,
+			account_name,
+			balance,
+			fintech_use_num
+		) VALUES(
+			#{memberId},
+			#{bankCode},
+			#{bankName},
+			#{accountNum},
+			#{accountName},
+			#{balance},
+			#{fintechUseNum}
+		)
+	</insert>
+	
+	<!-- 회원의 모든 계좌 조회 -->
+	<select id="selectAccountsByMemberId" resultMap="accountMap">
+		SELECT
+			account_id,
+			member_id,
+			bank_code,
+			bank_name,
+			account_num,
+			account_name,
+			balance,
+			created_at,
+			fintech_use_num
+		FROM bank_account
+		WHERE member_id = #{memberId}
+		ORDER BY created_at DESC
+	</select>
+	
+	<!-- 특정 계좌 조회 -->
+	<select id="selectAccountById" resultMap="accountMap">
+		SELECT
+			account_id,
+			member_id,
+			bank_code,
+			bank_name,
+			account_num,
+			account_name,
+			balance,
+			created_at,
+			fintech_use_num
+		FROM bank_account
+		WHERE account_id = #{accountId}
+	</select>
+	
+	<!-- 계좌번호로 조회 -->
+	<select id="selectAccountByAccountNum" resultMap="accountMap">
+		SELECT
+			account_id,
+			member_id,
+			bank_code,
+			bank_name,
+			account_num,
+			account_name,
+			balance,
+			created_at,
+			fintech_use_num
+		FROM bank_account
+		WHERE account_num = #{accountNum}
+	</select>
+	
+	<!-- 계좌 잔액 업데이트 -->
+	<update id="updateAccountBalance">
+		UPDATE bank_account
+		SET balance = #{balance}
+		WHERE account_id = #{accountId}
+	</update>
+	
+	<!-- 계좌 삭제 -->
+	<delete id="deleteAccount">
+		DELETE FROM back_account
+		WHERE account_id = #{accountId}
+	</delete>
+</mapper>
