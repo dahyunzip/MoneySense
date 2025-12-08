@@ -44,6 +44,9 @@ public class OpenBankingService {
 		
 		OpenbankTokenVO tokenVO = new OpenbankTokenVO();
 		tokenVO.setMemberId(memberId);
+		
+		logger.info("setMemberId 직후 - tokenVO.getMemberId(): {}", tokenVO.getMemberId());
+		
 		tokenVO.setAccessToken(responseToken.getAccess_token());
 		tokenVO.setRefreshToken(responseToken.getRefresh_token());
 		tokenVO.setUserSeqNo(responseToken.getUser_seq_no());
@@ -51,16 +54,21 @@ public class OpenBankingService {
 		long expiresInMillis = System.currentTimeMillis() + (responseToken.getExpires_in() * 1000L);
 		tokenVO.setExpiresAt(new Timestamp(expiresInMillis));
 		
+		logger.info("최종 tokenVO: {}", tokenVO);
+	    logger.info("tokenVO.toString(): {}", tokenVO.toString());
+		
 		OpenbankTokenVO existingToken = openbankTokenMapper.selectTokenByMemberId(memberId);
 		
 		if(existingToken != null) {
 			openbankTokenMapper.updateToken(tokenVO);
 			logger.info(" 기존 토큰 업데이트 완료");
 		}else {
-			openbankTokenMapper.insertToken(existingToken);
-			logger.info(" 새 토큰 저장 완료 ");
+			logger.info(" 새 토큰 저장 ");
+			logger.info("INSERT 직전 tokenVO.getMemberId(): {}", tokenVO.getMemberId());
+			openbankTokenMapper.insertToken(tokenVO);
 		}
 		
+		logger.info(" 토큰 저장 완료! ");
 		logger.info(" =============================================== ");
 		return responseToken;
 		

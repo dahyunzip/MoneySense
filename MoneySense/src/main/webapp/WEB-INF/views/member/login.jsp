@@ -3,9 +3,9 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ include file="../include/Header.jsp"%>
 <div id="subContents">
-    <div class="container">
-        <h2>💰 MoneySense</h2>
-        
+    <div id="loginPage" class="container">
+        <h1 class="page-title">Login</h1>
+        <p class="page-sub-title">로그인 후 머니센스를 이용해주세요!</p>
         <c:if test="${not empty msg}">
             <div class="alert ${msg.contains('완료') || msg.contains('성공') ? 'alert-success' : 'alert-danger'}">
                 ${msg}
@@ -28,8 +28,8 @@
             
             <button type="submit" class="btn-login">로그인</button>
         </form>
-        <div class="text-center">
-		    <a href="${pageContext.request.contextPath}/members/find-password">비밀번호를 잊으셨나요?</a>
+        <div class="text-right">
+		    <a href="${pageContext.request.contextPath}/members/find-password">비밀번호 찾기</a>
 		</div>
         <div class="signup-link">
             계정이 없으신가요? <a href="${pageContext.request.contextPath}/members/signup">회원가입</a>

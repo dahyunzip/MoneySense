@@ -38,8 +38,8 @@
 	        <div class="user-info">
 	        	<!-- 로그인 상태일 때만 표시 -->
 		        <sec:authorize access="isAuthenticated()">
-		            <span>
-		                <sec:authentication property="principal.member.name"/>님 환영합니다!
+		            <span class="name">
+		                <sec:authentication property="principal.member.name"/>님
 		            </span>
 		            <form action="${pageContext.request.contextPath}/members/logout" method="post" style="display: inline;">
 		                <sec:csrfInput/>
@@ -50,8 +50,8 @@
 		        
 		        <!-- 비로그인 상태일 때만 표시 -->
 	            <sec:authorize access="isAnonymous()">
-	                <button onclick="location.href='${pageContext.request.contextPath}/members/login'" class="btn-login">로그인</button>
 	                <button onclick="location.href='${pageContext.request.contextPath}/members/signup'" class="btn-logout">회원가입</button>
+	                <button onclick="location.href='${pageContext.request.contextPath}/members/login'" class="btn-login">로그인</button>
 	            </sec:authorize>
 	        </div>
 	    </div>
