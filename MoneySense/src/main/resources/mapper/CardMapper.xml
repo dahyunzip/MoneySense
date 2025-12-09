@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itwillbs.mapper.CardMapper">
+	<!-- resultMap 정의 -->
+	<resultMap id="cardMap" type="com.itwillbs.domain.CardVO">
+		<id property="cardId" column="card_id"/>
+		<result property="memberId" column="member_id"/>
+		<result property="cardCompany" column="card_company"/>
+		<result property="cardName" column="card_name"/>
+		<result property="cardNumber" column="card_number"/>
+		<result property="cardType" column="card_type"/>
+		<result property="createdAt" column="created_at"/>
+	</resultMap>
+	
+	<!-- 카드 저장 -->
+	<insert id="insertCard" useGeneratedKeys="true" keyProperty="cardId">
+		INSERT INTO card(
+			member_id,
+			card_company,
+			card_name,
+			card_number,
+			card_type
+		) VALUES (
+			#{memberId},
+			#{cardCompany},
+			#{cardName},
+			#{cardNumber},
+			#{cardType}
+		)
+	</insert>
+	
+	<!-- 회원의 모든 카드 조회 -->
+	<select id="selectCardsByMemberId" resultMap="cardMap">
+		SELECT
+			card_id,
+			member_id,
+			card_company,
+			card_name,
+			card_number,
+			card_type,
+			created_at
+		FROM card
+		WHERE member_id = #{memberId}
+		ORDER BY created_at DESC
+	</select>
+	
+	<!-- 특정 카드 조회 -->
+	<select id="selectCardById" resultMap="cardMap">
+		SELECT
+			card_id,
+			member_id,
+			card_company,
+			card_name,
+			card_number,
+			card_type,
+			created_at
+		FROM card
+		WHERE card_id = #{cardId}
+	</select>
+	
+	<!-- 카드 수정 -->
+	<update id="updateCard">
+		UPDATE card
+		SET card_company = #{cardCompany},
+			card_name = #{cardName},
+			card_number = #{cardNumber},
+			card_type = #{cardType}
+		WHERE card_id = #{cardId}
+	</update>
+	
+	<!-- 카드 삭제 -->
+	<delete id="deleteCard">
+		DELETE FROM card
+		WHERE card_id = #{cardId}
+	</delete>
+	
+	<!-- 카드 개수 조회 -->
+	<select id="countCardsByMemberId" resultType="int">
+		SELECT count(*)
+		FROM card
+		WHERE member_id = #{memberId}
+	</select>
+	
+</mapper>

@@ -30,8 +30,9 @@
 	        	<a href="/accounts/connect">계좌연동</a>
 	        	<a href="/accounts/sync">계좌 리스트(동기화)</a>
 	        	<a href="/members/mypage/withdraw">회원탈퇴</a>
-	        	<a href="#">마이페이지</a>
-	        	<a href="#">마이페이지</a>
+	        	<a href="/cards/list">카드 리스트</a>
+	        	<a href="/cards/register">카드등록</a>
+	        	<a href="/cards/transactions?cardId=7">카드 거래내역 </a>
 	        </div>
 	    </div>
     </div>
