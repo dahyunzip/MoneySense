@@ -20,6 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.CardTransactionVO;
 import com.itwillbs.domain.CardVO;
+import com.itwillbs.domain.Criteria;
+import com.itwillbs.domain.PageVO;
 import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.service.CardService;
 
@@ -124,31 +126,27 @@ public class CardController {
 			return "redirect:/cards/list";
 		}
 		
-		int pageSize = 10;
+		Criteria cri = new Criteria(page, 10);
 		List<CardTransactionVO> transactions;
-		int totalCount;
+		PageVO pageVO;
 		
 		// 날짜 필터 여부에 따라 분기
 		if(startDate != null && endDate !=null && !startDate.isEmpty() && !endDate.isEmpty()) {
 			logger.info(" 날짜 필터 적용 : {} ~ {}", startDate, endDate);
-			transactions = cardService.getTransactionsByDateWithPaging(cardId, startDate, endDate, page, pageSize);
-			totalCount = cardService.getTotalCountByDate(cardId, startDate, endDate);
+			transactions = cardService.getTransactionsByDateWithPaging(cardId, startDate, endDate, cri);
+			pageVO = cardService.getPageVOByDate(cardId, startDate, endDate, cri);
 			model.addAttribute("startDate", startDate);
 			model.addAttribute("endDate", endDate);
 		}else {
-			transactions = cardService.getTransactionsByCardId(cardId, page, pageSize);
-			totalCount = cardService.getTotalCount(cardId);
+			transactions = cardService.getTransactionsByCardId(cardId, cri);
+			pageVO= cardService.getPageVO(cardId, cri);
 		}
-		
-		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 		
 		model.addAttribute("card", card);
 		model.addAttribute("transactions", transactions);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("pageVO", pageVO);
 		
-		logger.info(" 카드 사용내역 조회 완료 - 총 {}건, {} 페이지", totalCount, totalPages);
+		logger.info(" 카드 사용내역 조회 완료 - 총 {}건, {} 페이지", pageVO.getTotalCount(), pageVO.getTotalPages());
 		logger.info(" ================================================ ");
 		
 		return "card/transactions";

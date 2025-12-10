@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.itwillbs.domain.CardTransactionVO;
+import com.itwillbs.domain.Criteria;
 
 public interface CardTransactionMapper {
 	// 거래내역 저장
@@ -13,8 +14,7 @@ public interface CardTransactionMapper {
 	// 특정 카드의 거래내역 조회(페이징)
 	List<CardTransactionVO> selectTransactionsByCardId(
 				@Param("cardId") int cardId,
-				@Param("offset") int offset,
-				@Param("pageSize") int pageSize
+				@Param("cri") Criteria cri
 			);
 	
 	// 특정 카드의 모든 거래내역 조회
@@ -25,8 +25,7 @@ public interface CardTransactionMapper {
 				@Param("cardId") int cardId,
 				@Param("startDate") String startDate,
 				@Param("endDate") String endDate,
-				@Param("offset") int offset,
-				@Param("pageSize") int pageSize
+				@Param("cri") Criteria cri
 			);
 	
 	// 전체 거래내역 개수

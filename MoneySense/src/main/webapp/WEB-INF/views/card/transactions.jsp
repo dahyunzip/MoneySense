@@ -31,24 +31,24 @@
 	        
 	        <div class="actions">
 	            <a href="${pageContext.request.contextPath}/cards/list" class="btn btn-secondary">
-	                ← 카드 목록
+	                카드 목록
 	            </a>
-	            <c:if test="${totalCount == 0}">
+	            <c:if test="${pageVO.totalCount == 0}">
 	                <a href="${pageContext.request.contextPath}/cards/generate-mock?cardId=${card.cardId}&days=30&perDay=2" 
 	                   class="btn btn-success"
 	                   onclick="return confirm('테스트용 카드 사용내역을 생성하시겠습니까?');">
-	                    📝 테스트 사용내역 생성
+	                   테스트 사용내역 생성
 	                </a>
 	            </c:if>
 	        </div>
 	        
 	        <!-- 날짜 필터 -->
-	        <c:if test="${totalCount > 0}">
+	        <c:if test="${pageVO.totalCount > 0}">
 	            <div class="filter-section">
 	                <form method="get" action="${pageContext.request.contextPath}/cards/transactions">
 	                    <input type="hidden" name="cardId" value="${card.cardId}">
 	                    <div class="filter-row">
-	                        <span class="filter-label">📅 기간 선택:</span>
+	                        <span class="filter-label">기간 선택:</span>
 	                        <input type="text" 
 	                               id="startDate" 
 	                               name="startDate" 
@@ -76,7 +76,7 @@
 	            <div class="transaction-header">
 	                <h2>사용내역</h2>
 	                <span class="transaction-count">
-	                    총 ${totalCount}건
+	                    총 ${pageVO.totalCount}건
 	                    <c:if test="${not empty startDate && not empty endDate}">
 	                        (${startDate} ~ ${endDate})
 	                    </c:if>
@@ -161,34 +161,18 @@
 	        </div>
 	        
 	        <!-- 페이징 -->
-	        <c:if test="${totalPages > 1}">
+	        <c:if test="${pageVO.totalPages > 1}">
 	            <div class="pagination">
-	                <c:set var="startPage" value="${currentPage - 2}" />
-	                <c:set var="endPage" value="${currentPage + 2}" />
-	                
-	                <c:if test="${startPage < 1}">
-	                    <c:set var="startPage" value="1" />
-	                    <c:set var="endPage" value="${startPage + 4}" />
-	                </c:if>
-	                
-	                <c:if test="${endPage > totalPages}">
-	                    <c:set var="endPage" value="${totalPages}" />
-	                    <c:set var="startPage" value="${endPage - 4}" />
-	                    <c:if test="${startPage < 1}">
-	                        <c:set var="startPage" value="1" />
-	                    </c:if>
-	                </c:if>
-	                
 	                <!-- 맨 처음 -->
-	                <c:if test="${currentPage > 1}">
+	                <c:if test="${pageVO.prev}">
 	                    <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}&page=1<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
 	                       class="page-link">«</a>
 	                </c:if>
 	                
 	                <!-- 이전 페이지 -->
 	                <c:choose>
-	                    <c:when test="${currentPage > 1}">
-	                        <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}&page=${currentPage - 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+	                    <c:when test="${pageVO.prev}">
+	                        <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}&page=${pageVO.currentPage - 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
 	                           class="page-link">‹</a>
 	                    </c:when>
 	                    <c:otherwise>
@@ -197,9 +181,9 @@
 	                </c:choose>
 	                
 	                <!-- 페이지 번호 -->
-	                <c:forEach var="i" begin="${startPage}" end="${endPage}">
+	                <c:forEach var="i" begin="${pageVO.startPage}" end="${pageVO.endPage}">
 	                    <c:choose>
-	                        <c:when test="${i == currentPage}">
+	                        <c:when test="${i == pageVO.currentPage}">
 	                            <span class="page-link active">${i}</span>
 	                        </c:when>
 	                        <c:otherwise>
@@ -211,8 +195,8 @@
 	                
 	                <!-- 다음 페이지 -->
 	                <c:choose>
-	                    <c:when test="${currentPage < totalPages}">
-	                        <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}&page=${currentPage + 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+	                    <c:when test="${pageVO.next}">
+	                        <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}&page=${pageVO.currentPage + 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
 	                           class="page-link">›</a>
 	                    </c:when>
 	                    <c:otherwise>
@@ -221,8 +205,8 @@
 	                </c:choose>
 	                
 	                <!-- 맨 끝 -->
-	                <c:if test="${currentPage < totalPages}">
-	                    <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}&page=${totalPages}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+	                <c:if test="${pageVO.next}">
+	                    <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}&page=${pageVO.totalPages}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
 	                       class="page-link">»</a>
 	                </c:if>
 	            </div>

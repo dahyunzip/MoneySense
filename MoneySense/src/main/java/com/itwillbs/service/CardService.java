@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.itwillbs.domain.CardTransactionVO;
 import com.itwillbs.domain.CardVO;
+import com.itwillbs.domain.Criteria;
+import com.itwillbs.domain.PageVO;
 import com.itwillbs.mapper.CardMapper;
 import com.itwillbs.mapper.CardTransactionMapper;
 
@@ -233,18 +235,16 @@ public class CardService {
 	}
 	
 	// 특정 카드의 거래내역 조회 (페이징)
-	public List<CardTransactionVO> getTransactionsByCardId(int cardId, int page, int pageSize){
-		logger.info(" 카드 거래내역 조회 - cardId : {}, page : {}", cardId, page);
-		int offset = (page -1) * pageSize;
-		return cardTransactionMapper.selectTransactionsByCardId(cardId, offset, pageSize);
+	public List<CardTransactionVO> getTransactionsByCardId(int cardId, Criteria cri){
+		logger.info(" 카드 거래내역 조회 - cardId : {}, page : {}", cardId, cri.getPage());
+		return cardTransactionMapper.selectTransactionsByCardId(cardId, cri);
 	}
 	
 	// 날짜 필터 + 페이징
-	public List<CardTransactionVO> getTransactionsByDateWithPaging(int cardId, String startDate, String endDate, int page, int pageSize){
+	public List<CardTransactionVO> getTransactionsByDateWithPaging(int cardId, String startDate, String endDate, Criteria cri){
 		logger.info(" 날짜 필터 카드 거래내역 조회 -  cardId : {}", cardId);
 		logger.info("기간 : {} ~ {}",startDate, endDate);
-		int offset = (page - 1) * pageSize;
-		return cardTransactionMapper.selectTransactionsByDateWithPaging(cardId, startDate, endDate, offset, pageSize);
+		return cardTransactionMapper.selectTransactionsByDateWithPaging(cardId, startDate, endDate, cri);
 	}
 	
 	// 전체 거래내역 개수
@@ -255,6 +255,18 @@ public class CardService {
 	// 날짜 필터 적용한 거래내역 개수
 	public int getTotalCountByDate(int cardId, String startDate, String endDate) {
 		return cardTransactionMapper.countTransactionsByDate(cardId, startDate, endDate);
+	}
+	
+	// PageVO 생성 (날짜 필터 없음)
+	public PageVO getPageVO(int cardId, Criteria cri) {
+		int totalCount = getTotalCount(cardId);
+		return new PageVO(cri, totalCount);
+	}
+	
+	// PageVO 생성 (날짜 필터 있음)
+	public PageVO getPageVOByDate(int cardId, String startDate, String endDate, Criteria cri) {
+		int totalCount = getTotalCountByDate(cardId, startDate, endDate);
+		return new PageVO(cri, totalCount);
 	}
 	
 	// 회원의 최근 카드 사용 내역 조회

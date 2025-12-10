@@ -51,7 +51,7 @@
 		FROM card_transaction
 		WHERE card_id = #{cardId}
 		ORDER BY transacted_at DESC, transaction_id DESC
-		LIMIT #{pageSize} OFFSET #{offset}
+		LIMIT #{cri.pageSize} OFFSET #{cri.offset}
 	</select>
 	
 	<!-- 특정 카드의 모든 거래내역 조회 -->
@@ -87,7 +87,7 @@
 		WHERE card_id = #{cardId}
 		AND DATE(transacted_at) BETWEEN #{startDate} AND #{endDate}
 		ORDER BY transacted_at DESC, transaction_id DESC
-		LIMIT #{pageSize} OFFSET #{offset}
+		LIMIT #{cri.pageSize} OFFSET #{cri.offset}
 	</select>
 	
 	<!-- 전체 거래 내역 개수 -->
