@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.itwillbs.domain.BankTransactionVO;
+import com.itwillbs.domain.Criteria;
 
 public interface BankTransactionMapper {
 	// 거래내역 저장
@@ -13,7 +14,7 @@ public interface BankTransactionMapper {
 	// 특정 계좌의 거래내역 조회 (최신순)
 	List<BankTransactionVO> selectTransactionsByAccountId(
 							@Param("accountId") int accountId,
-							@Param("limit") int limit);
+							@Param("cri") Criteria cri);
 	
 	// 특정 계좌의 모든 거래내역 조회
 	List<BankTransactionVO> selectAllTransactionsByAccountId(int accountId);
@@ -24,19 +25,12 @@ public interface BankTransactionMapper {
 							@Param("startDate") String startDate,
 							@Param("endDate") String endDate);
 	
-	// 페이징 처리된 거래내역 조회
-	List<BankTransactionVO> selectTransactionsWithPaging(
-			@Param("accountId") int accountId,
-			@Param("offset") int offset,
-			@Param("pageSize") int pageSize);
-	
 	// 날짜 필터 + 페이징
     List<BankTransactionVO> selectTransactionsByDateWithPaging(
         @Param("accountId") int accountId,
         @Param("startDate") String startDate,
         @Param("endDate") String endDate,
-        @Param("offset") int offset,
-        @Param("pageSize") int pageSize
+        @Param("cri") Criteria cri
     );
     
     // 전체 거래내역 개수
@@ -53,7 +47,7 @@ public interface BankTransactionMapper {
 	int deleteTransaction(int transactionId);
 	
 	// 계좌의 모든 거래내역 삭제
-	int deleteTransactionByAccountId(int accountId);
+	int deleteTransactionsByAccountId(int accountId);
 	
 	// 메모 업데이트
 	int updateMemo(@Param("transactionId") int transactionId,

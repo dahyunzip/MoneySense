@@ -19,6 +19,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.BankAccountVO;
 import com.itwillbs.domain.BankTransactionVO;
+import com.itwillbs.domain.Criteria;
+import com.itwillbs.domain.PageVO;
 import com.itwillbs.service.OpenBankingService;
 import com.itwillbs.service.TransactionService;
 
@@ -51,33 +53,30 @@ public class TransactionController {
 			return "redirect:/accounts/list";
 		}
 		
-		int pageSize = 10;  // 한 페이지에 10개씩
-	    List<BankTransactionVO> transactions;
-	    int totalCount;
+		Criteria cri = new Criteria(page, 10);
+		List<BankTransactionVO> transactions;
+		PageVO pageVO;
 		
 	    // 날짜 필터 여부에 따라 분기
 	    if(startDate != null && endDate != null && !startDate.isEmpty() && !endDate.isEmpty()) {
 	        // 날짜 필터 적용
 	        transactions = transactionService.getTransactionsByDateWithPaging(
-	            accountId, startDate, endDate, page, pageSize);
-	        totalCount = transactionService.getTotalCountByDate(accountId, startDate, endDate);
+	            accountId, startDate, endDate, cri);
+	        pageVO = transactionService.getPageVOByDate(accountId, startDate, endDate, cri);
+	        
+	        model.addAttribute("startDate", startDate);
+	        model.addAttribute("endDate", endDate);
 	    } else {
 	        // 전체 조회
-	        transactions = transactionService.getTransactionsWithPaging(accountId, page, pageSize);
-	        totalCount = transactionService.getTotalCount(accountId);
+	        transactions = transactionService.getTransactionsByAccountId(accountId, cri);
+	        pageVO = transactionService.getPageVO(accountId, cri);
 	    }
 	    
-	    // 총 페이지 수 계산
-	    int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 		
 	    model.addAttribute("account", account);
 	    model.addAttribute("transactions", transactions);
-	    model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", totalPages);
-	    model.addAttribute("totalCount", totalCount);
-	    model.addAttribute("startDate", startDate);
-	    model.addAttribute("endDate", endDate);
-	    logger.info("총 {}건, {}페이지", totalCount, page);
+	    model.addAttribute("pageVO", pageVO);
+	    logger.info("총 {}건, {}페이지", pageVO.getTotalCount(), pageVO.getTotalPages());
 		return "transaction/list";
 	}
 	

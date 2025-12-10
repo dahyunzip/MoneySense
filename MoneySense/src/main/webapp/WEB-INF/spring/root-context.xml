@@ -38,8 +38,8 @@
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 		<!-- MySQL 8.0 설정 -->
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/moneysense"/>
-		<property name="username" value="root"/>
+		<property name="jdbcUrl" value="jdbc:mysql://itwillbs.com:3306/c6d2507t1p2"/>
+		<property name="username" value="c6d2507t1p2"/>
 		<property name="password" value="1234"/>
 		
 		<!-- HikariCP 성능 최적화 설정 -->
