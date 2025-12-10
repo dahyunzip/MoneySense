@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.itwillbs.domain.BankTransactionVO;
+import com.itwillbs.domain.Criteria;
+import com.itwillbs.domain.PageVO;
 import com.itwillbs.mapper.BankAccountMapper;
 import com.itwillbs.mapper.BankTransactionMapper;
 
@@ -133,34 +135,24 @@ public class TransactionService {
     }
     
     // 특정 계좌의 거래내역 조회
-    public List<BankTransactionVO> getTransactionsByAccountId(int accountId, int limit){
-    	logger.info(" 거래내역 조회 - accountId : {}, limit : {}", accountId, limit);
-    	return transactionMapper.selectTransactionsByAccountId(accountId, limit);
-    }
-    
-    // 특정 계좌의 모든 거래내역 조회
-    public List<BankTransactionVO> getAllTransactionsByAccountId(int accountId){
-    	logger.info("전체 거래내역 조회 - accountId : {}", accountId);
-    	return transactionMapper.selectAllTransactionsByAccountId(accountId);
+    public List<BankTransactionVO> getTransactionsByAccountId(int accountId, Criteria cri){
+    	logger.info(" 거래내역 조회 - accountId : {}, limit : {}", accountId, cri.getPage());
+    	return transactionMapper.selectTransactionsByAccountId(accountId, cri);
     }
     
     //페이징 처리된 거래내역 조회
-    public List<BankTransactionVO> getTransactionsWithPaging(int accountId, int page, int pageSize) {
-        logger.info("페이징 거래내역 조회 - page: {}, pageSize: {}", page, pageSize);
+    public List<BankTransactionVO> getTransactionsWithPaging(int accountId, Criteria cri) {
+        logger.info("페이징 거래내역 조회 - page: {}, pageSize: {}", cri.getPage(), cri.getPageSize());
         
-        int offset = (page - 1) * pageSize;
-        
-        return transactionMapper.selectTransactionsWithPaging(accountId, offset, pageSize);
+        return transactionMapper.selectTransactionsByAccountId(accountId, cri);
     }
     
     // 날짜 필터 + 페이징
     public List<BankTransactionVO> getTransactionsByDateWithPaging(
-            int accountId, String startDate, String endDate, int page, int pageSize) {
-        
-        int offset = (page - 1) * pageSize;
+            int accountId, String startDate, String endDate, Criteria cri) {
         
         return transactionMapper.selectTransactionsByDateWithPaging(
-            accountId, startDate, endDate, offset, pageSize);
+            accountId, startDate, endDate, cri);
     }
     
     //전체 거래내역 개수
@@ -173,11 +165,16 @@ public class TransactionService {
         return transactionMapper.countTransactionsByDate(accountId, startDate, endDate);
     }
     
-    // 특정 기간의 거래내역 조회
-    public List<BankTransactionVO> getTransactionsByDateRange(int accountId, String startDate, String endDate){
-    	logger.info(" 기간별 거래내역 조회 - accountId : {}", accountId );
-    	logger.info(" 기간 : {} ~ {}", startDate, endDate);
-    	return transactionMapper.selectTransactionsByDateRange(accountId, startDate, endDate);
+    // PageVO 생성 (날짜 필터 없음)
+    public PageVO getPageVO(int accountId, Criteria cri) {
+    	int totalCount = getTotalCount(accountId);
+    	return new PageVO(cri, totalCount);
+    }
+    
+    // PageVO 생성 (날짜 필터 있음)
+    public PageVO getPageVOByDate(int accountId, String startDate, String endDate, Criteria cri) {
+    	int totalCount = getTotalCountByDate(accountId, startDate, endDate);
+    	return new PageVO(cri, totalCount);
     }
     
     // 메모 저장 / 수정

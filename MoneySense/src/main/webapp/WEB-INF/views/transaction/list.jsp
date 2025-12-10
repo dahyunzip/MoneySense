@@ -32,7 +32,7 @@
 	            <a href="${pageContext.request.contextPath}/accounts/list" class="btn btn-secondary">
 	                계좌 목록
 	            </a>
-	            <c:if test="${empty transactions}">
+	            <c:if test="${pageVO.totalCount == 0}">
 	                <a href="${pageContext.request.contextPath}/transactions/generate-mock?accountId=${account.accountId}" 
 	                   class="btn btn-success"
 	                   onclick="return confirm('테스트용 거래내역을 생성하시겠습니까?');">
@@ -42,7 +42,7 @@
 	        </div>
 	        
 	        <!-- 날짜 필터 -->
-	        <c:if test="${totalCount > 0}">
+	        <c:if test="${pageVO.totalCount > 0}">
 	            <div class="filter-section mb30">
 	                <form method="get" action="${pageContext.request.contextPath}/transactions/list">
 	                    <input type="hidden" name="accountId" value="${account.accountId}">
@@ -133,77 +133,50 @@
 	        </div>
 	        
 	        <!-- 페이징 -->
-	        <c:if test="${totalPages > 1}">
+	        <c:if test="${pageVO.totalPages > 1}">
 	            <div class="pagination">
-	                <%-- 
-			            페이징 로직:
-			            - 현재 페이지 기준 앞뒤 2개씩 = 총 5개 페이지 표시
-			            - 예: 현재 3페이지면 → 1 2 [3] 4 5
-			        --%>
-			        <c:set var="startPage" value="${currentPage - 2}" />
-			        <c:set var="endPage" value="${currentPage + 2}" />
-			        
-			        <%-- 시작 페이지가 1보다 작으면 1로 --%>
-			        <c:if test="${startPage < 1}">
-			            <c:set var="startPage" value="1" />
-			            <c:set var="endPage" value="${startPage + 4}" />
-			        </c:if>
-			        
-			        <%-- 끝 페이지가 총 페이지보다 크면 조정 --%>
-			        <c:if test="${endPage > totalPages}">
-			            <c:set var="endPage" value="${totalPages}" />
-			            <c:set var="startPage" value="${endPage - 4}" />
-			            <c:if test="${startPage < 1}">
-			                <c:set var="startPage" value="1" />
-			            </c:if>
-			        </c:if>
-			        
-			        <!-- 맨 처음 -->
-			        <c:if test="${currentPage > 1}">
-			            <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=1<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
-			               class="page-link">«</a>
-			        </c:if>
-			        
-			        <!-- 이전 페이지 -->
-			        <c:choose>
-			            <c:when test="${currentPage > 1}">
-			                <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${currentPage - 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
-			                   class="page-link">‹</a>
-			            </c:when>
-			            <c:otherwise>
-			                <span class="page-link disabled">‹</span>
-			            </c:otherwise>
-			        </c:choose>
-			        
-			        <!-- 페이지 번호 (5개씩만) -->
-			        <c:forEach var="i" begin="${startPage}" end="${endPage}">
-			            <c:choose>
-			                <c:when test="${i == currentPage}">
-			                    <span class="page-link active">${i}</span>
-			                </c:when>
-			                <c:otherwise>
-			                    <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${i}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
-			                       class="page-link">${i}</a>
-			                </c:otherwise>
-			            </c:choose>
-			        </c:forEach>
-			        
-			        <!-- 다음 페이지 -->
-			        <c:choose>
-			            <c:when test="${currentPage < totalPages}">
-			                <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${currentPage + 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
-			                   class="page-link">›</a>
-			            </c:when>
-			            <c:otherwise>
-			                <span class="page-link disabled">›</span>
-			            </c:otherwise>
-			        </c:choose>
-			        
-			        <!-- 맨 끝 -->
-			        <c:if test="${currentPage < totalPages}">
-			            <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${totalPages}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
-			               class="page-link">»</a>
-			        </c:if>
+	               <!-- 맨 처음 -->
+                    <c:if test="${pageVO.prev}">
+                        <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=1<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+                           class="page-link">«</a>
+                    </c:if>
+                    <!-- 이전 페이지 -->
+                    <c:choose>
+                        <c:when test="${pageVO.prev}">
+                            <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${pageVO.currentPage - 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+                               class="page-link">‹</a>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="page-link disabled">‹</span>
+                        </c:otherwise>
+                    </c:choose>
+                    <!-- 페이지 번호 -->
+                    <c:forEach var="i" begin="${pageVO.startPage}" end="${pageVO.endPage}">
+                        <c:choose>
+                            <c:when test="${i == pageVO.currentPage}">
+                                <span class="page-link active">${i}</span>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${i}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+                                   class="page-link">${i}</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                    <!-- 다음 페이지 -->
+                    <c:choose>
+                        <c:when test="${pageVO.next}">
+                            <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${pageVO.currentPage + 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+                               class="page-link">›</a>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="page-link disabled">›</span>
+                        </c:otherwise>
+                    </c:choose>
+                    <!-- 맨 끝 -->
+                    <c:if test="${pageVO.next}">
+                        <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${pageVO.totalPages}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+                           class="page-link">»</a>
+                    </c:if>
 	            </div>
 	        </c:if>
 	    </div>
