@@ -5,7 +5,7 @@
     <div class="container">
         <h3>새 비밀번호 설정</h3>
         
-        <form id="resetForm" action="${pageContext.request.contextPath}/members/reset-password" method="post">
+        <form id="resetForm" action="${ctx}/members/reset-password" method="post">
             <sec:csrfInput/>
             
             <input type="hidden" name="email" value="${email}">
@@ -28,7 +28,7 @@
             <button type="submit" class="btn">비밀번호 변경</button>
             
             <div class="text-center">
-                <a href="${pageContext.request.contextPath}/members/login">로그인으로 돌아가기</a>
+                <a href="${ctx}/members/login">로그인으로 돌아가기</a>
             </div>
         </form>
     </div>

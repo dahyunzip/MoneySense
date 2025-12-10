@@ -3,7 +3,7 @@
 <%@ include file="../include/Header.jsp"%>
 <div id="subContents">
 	<div class="fix-layout">    
-	    <div class="container">
+	    <div class="container" id="callback">
 	        <div class="success-icon text-center">✓</div>
 	        <h1 class="page-title">계좌 연동 완료!</h1>
 	        <p class="message">${msg}</p>
@@ -28,7 +28,7 @@
 	            </div>
 	        </div>
 	        
-	        <a href="${pageContext.request.contextPath}/" class="btn-dashboard">
+	        <a href="${ctx}/" class="btn-dashboard">
 	            홈으로 이동
 	        </a>
 	    </div>

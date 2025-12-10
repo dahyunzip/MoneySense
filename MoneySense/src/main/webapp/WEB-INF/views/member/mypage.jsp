@@ -34,11 +34,11 @@
 		    </div>
 		    
 		    <div class="btn-group">
-		        <a href="${pageContext.request.contextPath}/members/mypage/edit" class="btn btn-primary">정보 수정</a>
-		        <a href="${pageContext.request.contextPath}/accounts/connect" class="btn btn-primary">계좌연동</a>
-		        <a href="${pageContext.request.contextPath}/accounts/sync" class="btn btn-danger">계좌 리스트</a>
+		        <a href="${ctx}/members/mypage/edit" class="btn btn-primary">정보 수정</a>
+		        <a href="${ctx}/accounts/connect" class="btn btn-primary">계좌연동</a>
+		        <a href="${ctx}/accounts/sync" class="btn btn-danger">계좌 리스트</a>
 		        <%-- <a href="${pageContext.request.contextPath}/members/mypage/password" class="btn btn-warning">비밀번호 변경</a> --%>
-		        <a href="${pageContext.request.contextPath}/members/mypage/withdraw" class="btn btn-danger">회원 탈퇴</a>
+		        <a href="${ctx}/members/mypage/withdraw" class="btn btn-danger">회원 탈퇴</a>
 		    </div>
 	    </div>
     </div>

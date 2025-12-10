@@ -2,12 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file ="../include/Header.jsp"%>
-<!-- jQuery 먼저 로드 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-
-<!-- jQuery UI CSS -->
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="${ctx}/resources/js/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="${ctx}/resources/css/jquery-ui.css">
 
 <div id="subContents">
 	<div class="fix-layout">
@@ -30,11 +26,11 @@
 	        </c:if>
 	        
 	        <div class="actions">
-	            <a href="${pageContext.request.contextPath}/cards/list" class="btn btn-secondary">
+	            <a href="${ctx}/cards/list" class="btn btn-secondary">
 	                카드 목록
 	            </a>
 	            <c:if test="${pageVO.totalCount == 0}">
-	                <a href="${pageContext.request.contextPath}/cards/generate-mock?cardId=${card.cardId}&days=30&perDay=2" 
+	                <a href="${ctx}/cards/generate-mock?cardId=${card.cardId}&days=30&perDay=2" 
 	                   class="btn btn-success"
 	                   onclick="return confirm('테스트용 카드 사용내역을 생성하시겠습니까?');">
 	                   테스트 사용내역 생성
@@ -45,7 +41,7 @@
 	        <!-- 날짜 필터 -->
 	        <c:if test="${pageVO.totalCount > 0}">
 	            <div class="filter-section">
-	                <form method="get" action="${pageContext.request.contextPath}/cards/transactions">
+	                <form method="get" action="${ctx}/cards/transactions">
 	                    <input type="hidden" name="cardId" value="${card.cardId}">
 	                    <div class="filter-row">
 	                        <span class="filter-label">기간 선택:</span>
@@ -65,7 +61,7 @@
 	                               value="${endDate}"
 	                               autocomplete="off">
 	                        <button type="submit" class="btn btn-primary">조회</button>
-	                        <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}" 
+	                        <a href="${ctx}/cards/transactions?cardId=${card.cardId}" 
 	                           class="btn btn-secondary">전체</a>
 	                    </div>
 	                </form>
@@ -165,14 +161,14 @@
 	            <div class="pagination">
 	                <!-- 맨 처음 -->
 	                <c:if test="${pageVO.prev}">
-	                    <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}&page=1<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+	                    <a href="${ctx}/cards/transactions?cardId=${card.cardId}&page=1<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
 	                       class="page-link">«</a>
 	                </c:if>
 	                
 	                <!-- 이전 페이지 -->
 	                <c:choose>
 	                    <c:when test="${pageVO.prev}">
-	                        <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}&page=${pageVO.currentPage - 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+	                        <a href="${ctx}/cards/transactions?cardId=${card.cardId}&page=${pageVO.currentPage - 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
 	                           class="page-link">‹</a>
 	                    </c:when>
 	                    <c:otherwise>
@@ -187,7 +183,7 @@
 	                            <span class="page-link active">${i}</span>
 	                        </c:when>
 	                        <c:otherwise>
-	                            <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}&page=${i}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+	                            <a href="${ctx}/cards/transactions?cardId=${card.cardId}&page=${i}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
 	                               class="page-link">${i}</a>
 	                        </c:otherwise>
 	                    </c:choose>
@@ -196,7 +192,7 @@
 	                <!-- 다음 페이지 -->
 	                <c:choose>
 	                    <c:when test="${pageVO.next}">
-	                        <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}&page=${pageVO.currentPage + 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+	                        <a href="${ctx}/cards/transactions?cardId=${card.cardId}&page=${pageVO.currentPage + 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
 	                           class="page-link">›</a>
 	                    </c:when>
 	                    <c:otherwise>
@@ -206,7 +202,7 @@
 	                
 	                <!-- 맨 끝 -->
 	                <c:if test="${pageVO.next}">
-	                    <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}&page=${pageVO.totalPages}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+	                    <a href="${ctx}/cards/transactions?cardId=${card.cardId}&page=${pageVO.totalPages}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
 	                       class="page-link">»</a>
 	                </c:if>
 	            </div>

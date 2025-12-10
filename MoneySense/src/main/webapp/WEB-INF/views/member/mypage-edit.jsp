@@ -12,7 +12,7 @@
 	    <div class="container">
 	        <h1 class="page-title">회원정보 수정</h1>
 	        
-	        <form action="${pageContext.request.contextPath}/members/mypage/update-name" method="post">
+	        <form action="${ctx}/members/mypage/update-name" method="post">
 	        	<sec:csrfInput/>
 	            <div class="form-group">
 	                <label>이메일</label>
@@ -27,7 +27,7 @@
 	            
 	            <div class="btn-group center">
 	                <button type="submit" class="btn btn-primary">수정하기</button>
-	                <a href="${pageContext.request.contextPath}/members/mypage" class="btn btn-secondary">취소</a>
+	                <a href="${ctx}/members/mypage" class="btn btn-secondary">취소</a>
 	            </div>
 	        </form>
 	    </div>

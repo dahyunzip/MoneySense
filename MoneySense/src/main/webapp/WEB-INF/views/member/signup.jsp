@@ -253,7 +253,7 @@
             <div class="alert alert-danger">${msg}</div>
         </c:if>
         
-        <form action="${pageContext.request.contextPath}/members/signup" method="post" id="signupForm">
+        <form action="${ctx}/members/signup" method="post" id="signupForm">
             <!-- CSRF 토큰 -->
             <sec:csrfInput/>
             
@@ -310,7 +310,7 @@
         </form>
         
         <div class="login-link">
-            이미 계정이 있으신가요? <a href="${pageContext.request.contextPath}/members/login">로그인</a>
+            이미 계정이 있으신가요? <a href="${ctx}/members/login">로그인</a>
         </div>
     </div>
     
@@ -344,7 +344,7 @@
                 
                 // AJAX 요청 (RESTful URL)
                 $.ajax({
-                    url: '${pageContext.request.contextPath}/members/check-email',
+                    url: '${ctx}/members/check-email',
                     type: 'GET',
                     data: { email: email },
                     success: function(response) {
