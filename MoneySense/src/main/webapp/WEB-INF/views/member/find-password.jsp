@@ -4,7 +4,7 @@
 <div id="subContents">
     <div class="container" id="loginPage">
         <h1 class="page-title">비밀번호 찾기</h1>
-        <form action="${pageContext.request.contextPath}/members/find-password" method="post">
+        <form action="${ctx}/members/find-password" method="post">
         	<sec:csrfInput/>
             <div class="form-group">
                 <label>가입 시 이메일</label>
@@ -21,7 +21,7 @@
         </c:if>
         
         <div class="text-center">
-            <a href="${pageContext.request.contextPath}/members/login">로그인으로 돌아가기</a>
+            <a href="${ctx}/members/login">로그인으로 돌아가기</a>
         </div>
     </div>
 </div>

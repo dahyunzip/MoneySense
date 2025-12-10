@@ -19,17 +19,17 @@
 	        </c:if>
 	        
 	        <div class="actions">
-	            <a href="${pageContext.request.contextPath}/main" class="btn btn-secondary">
-	                ← 메인으로
+	            <a href="${ctx}/main" class="btn btn-secondary">
+	                메인으로
 	            </a>
-	            <a href="${pageContext.request.contextPath}/cards/register" class="btn btn-primary">
-	                ➕ 카드 등록
+	            <a href="${ctx}/cards/register" class="btn btn-primary">
+	                카드 등록
 	            </a>
 	            <c:if test="${empty cards}">
-	                <a href="${pageContext.request.contextPath}/cards/generate-dummy?count=3" 
+	                <a href="${ctx}/cards/generate-dummy?count=3" 
 	                   class="btn btn-success"
 	                   onclick="return confirm('테스트용 카드 3장을 생성하시겠습니까?');">
-	                    📝 테스트 카드 생성
+	                    테스트 카드 생성
 	                </a>
 	            </c:if>
 	        </div>
@@ -39,7 +39,7 @@
 	                <div class="empty-message">
 	                    <h3>등록된 카드가 없습니다</h3>
 	                    <p>카드를 등록하거나 테스트용 카드를 생성해보세요.</p>
-	                    <a href="${pageContext.request.contextPath}/cards/register" class="btn btn-primary">
+	                    <a href="${ctx}/cards/register" class="btn btn-primary">
 	                        카드 등록하기
 	                    </a>
 	                </div>
@@ -54,11 +54,11 @@
 	                            <div class="card-type">${card.cardType}</div>
 	                            
 	                            <div class="card-actions">
-	                                <a href="${pageContext.request.contextPath}/cards/transactions?cardId=${card.cardId}" 
+	                                <a href="${ctx}/cards/transactions?cardId=${card.cardId}" 
 	                                   class="btn btn-primary btn-sm" style="flex: 1;">
 	                                    사용내역 보기
 	                                </a>
-	                                <form action="${pageContext.request.contextPath}/cards/delete" 
+	                                <form action="${ctx}/cards/delete" 
 	                                      method="post" 
 	                                      style="display: inline;"
 	                                      onsubmit="return confirm('이 카드를 삭제하시겠습니까?\n관련된 모든 사용내역도 함께 삭제됩니다.');">

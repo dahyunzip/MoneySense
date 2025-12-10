@@ -6,12 +6,12 @@
 	    <h3>비밀번호 재설정 실패</h3>
 	    <p class="msg">${msg}</p>
 	    
-	    <a href="${pageContext.request.contextPath}/members/find-password" class="btn">
+	    <a href="${ctx}/members/find-password" class="btn">
 	        다시 시도하기
 	    </a>
 	    
 	    <div class="mt-3">
-	        <a href="${pageContext.request.contextPath}/members/login">로그인으로 돌아가기</a>
+	        <a href="${ctx}/members/login">로그인으로 돌아가기</a>
 	    </div>
 	</div>
 </div>

@@ -12,7 +12,7 @@
             </div>
         </c:if>
         
-        <form action="${pageContext.request.contextPath}/members/login-process" method="post" id="loginForm">
+        <form action="${ctx}/members/login-process" method="post" id="loginForm">
             <!-- CSRF 토큰 -->
             <sec:csrfInput/>
             
@@ -29,10 +29,10 @@
             <button type="submit" class="btn-login">로그인</button>
         </form>
         <div class="text-right">
-		    <a href="${pageContext.request.contextPath}/members/find-password">비밀번호 찾기</a>
+		    <a href="${ctx}/members/find-password">비밀번호 찾기</a>
 		</div>
         <div class="signup-link">
-            계정이 없으신가요? <a href="${pageContext.request.contextPath}/members/signup">회원가입</a>
+            계정이 없으신가요? <a href="${ctx}/members/signup">회원가입</a>
         </div>
     </div>
 </div>

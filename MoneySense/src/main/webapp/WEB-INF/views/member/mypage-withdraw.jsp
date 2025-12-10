@@ -38,7 +38,7 @@
 	            </ul>
 	        </div>
 	        
-	        <form action="${pageContext.request.contextPath}/members/mypage/withdraw" method="post" onsubmit="return confirmWithdraw()">
+	        <form action="${ctx}/members/mypage/withdraw" method="post" onsubmit="return confirmWithdraw()">
 	        	<sec:csrfInput/>
 	            <div class="form-group">
 	                <label>비밀번호 확인</label>
@@ -55,7 +55,7 @@
 	            
 	            <div class="btn-group center">
 	                <button type="submit" class="btn btn-danger">탈퇴하기</button>
-	                <a href="${pageContext.request.contextPath}/members/mypage" class="btn btn-secondary">취소</a>
+	                <a href="${ctx}/members/mypage" class="btn btn-secondary">취소</a>
 	            </div>
 	        </form>
 	    </div>

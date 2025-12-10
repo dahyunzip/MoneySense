@@ -2,220 +2,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file ="../include/Header.jsp"%>
-<!-- jQuery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
 <!-- FullCalendar -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css">
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+<script src="${ctx }/resources/js/index.global.min.js"></script>
 
 <!-- Bootstrap for Modal -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<link href="${ctx }/resources/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Flatpickr -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="${ctx}/resources/js/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="${ctx}/resources/css/jquery-ui.css">
 
-<!-- Flatpickr Month Select Plugin -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
-
-<style>
-    /* Summary */
-    #summaryRow {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        background: white;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    
-    #summaryRow > div {
-        font-size: 15px;
-        color: #333;
-    }
-    
-    #monthExpense {
-        color: #dc3545;
-        font-weight: bold;
-    }
-    
-    #monthIncome {
-        color: #28a745;
-        font-weight: bold;
-    }
-    
-    #monthNet {
-        color: #007bff;
-        font-weight: bold;
-    }
-    
-    /* Month Picker */
-    .picker-box {
-        margin-bottom: 15px;
-    }
-    
-    #monthPicker, #weekPicker {
-        width: 200px;
-        border-radius: 6px;
-        border: 1px solid #cfd3d7;
-        padding: 10px 12px;
-        transition: 0.2s;
-    }
-    
-    #monthPicker:focus, #weekPicker:focus {
-        border-color: #4c8bf5;
-        box-shadow: 0 0 3px rgba(76, 139, 245, 0.5);
-    }
-    
-    /* Buttons */
-    .view-buttons {
-        margin-bottom: 15px;
-    }
-    
-    /* Calendar */
-    #calendar {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    
-    .daily-spend {
-        margin-top: 5px;
-        font-size: 11px;
-        color: #666;
-        text-align: right;
-        padding-right: 4px;
-    }
-    
-    .fc-daygrid-day {
-        transition: background-color 0.2s ease;
-        cursor: pointer;
-    }
-    
-    .fc-daygrid-day:hover {
-        background: rgba(0, 123, 255, 0.05);
-    }
-    
-    /* Modal */
-    .transaction-item {
-        padding: 15px;
-        border-bottom: 1px solid #dee2e6;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    
-    .transaction-item:hover {
-        background: #f8f9fa;
-    }
-    
-    .transaction-item:last-child {
-        border-bottom: none;
-    }
-    
-    .transaction-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 5px;
-    }
-    
-    .transaction-time {
-        font-size: 12px;
-        color: #6c757d;
-    }
-    
-    .transaction-amount {
-        font-size: 16px;
-        font-weight: bold;
-    }
-    
-    .amount-income {
-        color: #28a745;
-    }
-    
-    .amount-expense {
-        color: #dc3545;
-    }
-    
-    .transaction-detail {
-        font-size: 14px;
-        color: #333;
-        margin-bottom: 3px;
-    }
-    
-    .transaction-source {
-        font-size: 12px;
-        color: #6c757d;
-    }
-    
-    /* Detail Modal */
-    .detail-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 10px 0;
-        border-bottom: 1px solid #dee2e6;
-    }
-    
-    .detail-row:last-child {
-        border-bottom: none;
-    }
-    
-    .detail-label {
-        font-weight: bold;
-        color: #495057;
-    }
-    
-    .detail-value {
-        color: #333;
-    }
-    
-    /* Mobile */
-    @media (max-width: 768px) {
-        body {
-            padding: 10px;
-        }
-        
-        h1 {
-            font-size: 22px;
-        }
-        
-        #summaryRow {
-            padding: 15px;
-            font-size: 13px;
-        }
-        
-        #monthPicker, #weekPicker {
-            width: 100%;
-        }
-        
-        .btn {
-            font-size: 13px;
-            padding: 8px 16px;
-        }
-        
-        .fc-toolbar-title {
-            font-size: 18px !important;
-        }
-        
-        .fc-daygrid-day-number {
-            font-size: 11px !important;
-        }
-        
-        .daily-spend {
-            font-size: 10px;
-        }
-    }
-</style>
 <div id="subContents">
-	<div class="fix-layout">
+	<div class="fix-layout" id="calendarPage">
 		<div class="container">
 			<h1 class="page-title">💰 가계부</h1>
 	        <!-- Summary -->
@@ -227,12 +25,12 @@
 	        
 	        <!-- Month Picker -->
 	        <div id="monthPickerBox" class="picker-box">
-	            <input id="monthPicker" placeholder="월 선택" class="form-control">
+	            <input id="monthPicker" placeholder="월 선택" class="form-control" readonly>
 	        </div>
 	        
 	        <!-- Week Picker -->
 	        <div id="weekPickerBox" class="picker-box" style="display:none;">
-	            <input id="weekPicker" placeholder="날짜 선택" class="form-control">
+	            <input id="weekPicker" placeholder="날짜 선택" class="form-control" readonly>
 	        </div>
 	        
 	        <!-- View Buttons -->
@@ -246,6 +44,27 @@
 		</div>
 	</div>
 </div>
+
+<!-- Month Picker Modal -->
+<div class="modal fade" id="monthPickerModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">월 선택</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="year-selector">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="prevYear">&lt;</button>
+                    <span class="year-display" id="yearDisplay"></span>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="nextYear">&gt;</button>
+                </div>
+                <div class="month-grid" id="monthGrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Daily Modal (일별 내역) -->
 <div class="modal fade" id="dailyModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -260,6 +79,7 @@
         </div>
     </div>
 </div>
+
 <!-- Detail Modal (거래 상세) -->
 <div class="modal fade" id="detailModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -274,6 +94,7 @@
         </div>
     </div>
 </div>
+
 <script>
 $(document).ready(function() {
     
@@ -284,6 +105,30 @@ $(document).ready(function() {
     let currentYear = new Date().getFullYear();
     let currentMonth = new Date().getMonth() + 1;
     let dailyTotalsMap = {};
+    
+    let selectedYear = new Date().getFullYear();
+    let selectedMonth = new Date().getMonth() + 1;
+    let monthPickerModalInstance;
+    
+    // jQuery UI Datepicker 한국어 설정
+    $.datepicker.regional['ko'] = {
+        closeText: '닫기',
+        prevText: '이전달',
+        nextText: '다음달',
+        currentText: '오늘',
+        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+        monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+        dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'],
+        dayNamesShort: ['일','월','화','수','목','금','토'],
+        dayNamesMin: ['일','월','화','수','목','금','토'],
+        weekHeader: 'Wk',
+        dateFormat: 'yy-mm-dd',
+        firstDay: 0,
+        isRTL: false,
+        showMonthAfterYear: true,
+        yearSuffix: '년'
+    };
+    $.datepicker.setDefaults($.datepicker.regional['ko']);
     
     // ========================================
     // FullCalendar 초기화
@@ -354,7 +199,7 @@ $(document).ready(function() {
         console.log('월별 데이터 로딩: ' + year + '년 ' + month + '월');
         
         $.ajax({
-            url: '${pageContext.request.contextPath}/ledger/month',
+            url: '${ctx}/ledger/month',
             type: 'GET',
             data: {
                 year: year,
@@ -402,7 +247,7 @@ $(document).ready(function() {
         console.log('일별 모달 열기:', dateStr);
         
         $.ajax({
-            url: '${pageContext.request.contextPath}/ledger/day',
+            url: '${ctx}/ledger/day',
             type: 'GET',
             data: {
                 date: dateStr
@@ -465,7 +310,7 @@ $(document).ready(function() {
         console.log('거래 상세 열기:', key);
         
         $.ajax({
-            url: '${pageContext.request.contextPath}/ledger/detail',
+            url: '${ctx}/ledger/detail',
             type: 'GET',
             data: {
                 key: key
@@ -569,33 +414,97 @@ $(document).ready(function() {
     });
     
     // ========================================
-    // Flatpickr 초기화
+    // 월 선택 모달 초기화
     // ========================================
-    flatpickr("#monthPicker", {
-        locale: "ko",
-        plugins: [
-            new monthSelectPlugin({
-                shorthand: true,
-                dateFormat: "Y-m",
-                altFormat: "Y년 m월",
-                theme: "material_blue"
-            })
-        ],
-        onChange: function(selected) {
-            const date = selected[0];
+    function initMonthPicker() {
+        const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', 
+                           '7월', '8월', '9월', '10월', '11월', '12월'];
+        
+        // 월 그리드 생성
+        function renderMonthGrid() {
+            $('#yearDisplay').text(selectedYear + '년');
+            
+            let html = '';
+            for(let i = 0; i < 12; i++) {
+                let isSelected = (selectedYear === currentYear && (i + 1) === currentMonth) ? 'selected' : '';
+                html += '<div class="month-item ' + isSelected + '" data-month="' + (i + 1) + '">' + 
+                        monthNames[i] + '</div>';
+            }
+            
+            $('#monthGrid').html(html);
+        }
+        
+        // 이전 년도
+        $('#prevYear').click(function() {
+            selectedYear--;
+            renderMonthGrid();
+        });
+        
+        // 다음 년도
+        $('#nextYear').click(function() {
+            selectedYear++;
+            renderMonthGrid();
+        });
+        
+        // 월 선택
+        $(document).on('click', '.month-item', function() {
+            selectedMonth = parseInt($(this).data('month'));
+            
+            // 선택된 월로 이동
+            let date = new Date(selectedYear, selectedMonth - 1, 1);
+            $('#monthPicker').val(selectedYear + '년 ' + selectedMonth.toString().padStart(2, '0') + '월');
+            
             calendar.changeView("dayGridMonth");
             calendar.gotoDate(date);
+            
+            // 모달 닫기
+            monthPickerModalInstance.hide();
+        });
+        
+        // 초기 렌더링
+        renderMonthGrid();
+    }
+    
+    // 월 선택 input 클릭
+    $('#monthPicker').click(function() {
+        selectedYear = currentYear;
+        selectedMonth = currentMonth;
+        
+        if(!monthPickerModalInstance) {
+            monthPickerModalInstance = new bootstrap.Modal(document.getElementById('monthPickerModal'));
+            initMonthPicker();
         }
+        
+        // 모달 열 때마다 현재 년/월로 재설정
+        selectedYear = currentYear;
+        selectedMonth = currentMonth;
+        $('#yearDisplay').text(selectedYear + '년');
+        
+        // 월 그리드 다시 렌더링
+        const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', 
+                           '7월', '8월', '9월', '10월', '11월', '12월'];
+        let html = '';
+        for(let i = 0; i < 12; i++) {
+            let isSelected = (selectedYear === currentYear && (i + 1) === currentMonth) ? 'selected' : '';
+            html += '<div class="month-item ' + isSelected + '" data-month="' + (i + 1) + '">' + 
+                    monthNames[i] + '</div>';
+        }
+        $('#monthGrid').html(html);
+        
+        monthPickerModalInstance.show();
     });
     
-    flatpickr("#weekPicker", {
-        locale: "ko",
-        dateFormat: "Y-m-d",
-        theme: "material_blue",
-        onChange: function(selected) {
-            if(!selected || selected.length == 0) return;
+    // ========================================
+    // 주 선택 Datepicker (기존 유지)
+    // ========================================
+    $('#weekPicker').datepicker({
+        dateFormat: 'yy-mm-dd',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: '-10:+10',
+        onSelect: function(dateText) {
+            let date = $(this).datepicker('getDate');
             
-            const date = selected[0];
             calendar.changeView("listWeek");
             calendar.gotoDate(date);
             
@@ -605,6 +514,12 @@ $(document).ready(function() {
             }, 10);
         }
     });
+    
+    // 현재 월로 초기화
+    let now = new Date();
+    let currentMonthText = now.getFullYear() + '년 ' + 
+                          (now.getMonth() + 1).toString().padStart(2, '0') + '월';
+    $('#monthPicker').val(currentMonthText);
     
 });
 </script>

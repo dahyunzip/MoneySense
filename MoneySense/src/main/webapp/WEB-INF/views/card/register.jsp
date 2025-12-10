@@ -7,7 +7,7 @@
 		<div class="container">
         <div class="form-card">
             <h1>💳 카드 등록</h1>
-            <form action="${pageContext.request.contextPath}/cards/register" method="post">
+            <form action="${ctx}/cards/register" method="post">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 
                 <div class="form-group">
@@ -61,7 +61,7 @@
                 <div class="form-actions">
                     <button type="button" 
                             class="btn btn-secondary" 
-                            onclick="location.href='${pageContext.request.contextPath}/cards/list'">
+                            onclick="location.href='${ctx}/cards/list'">
                         취소
                     </button>
                     <button type="submit" class="btn btn-primary">

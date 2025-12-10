@@ -3,7 +3,7 @@
 <%@ include file="../include/Header.jsp"%>
 <div id="subContents">
 	<div class="fix-layout">  
-	    <div class="container">
+	    <div class="container" id="connect">
 	        <h1 class="page-title">오픈뱅킹 계좌 연동</h1>
 	        
 	        <div class="info-box">
@@ -25,7 +25,7 @@
 		           class="btn btn-info">
 		            계좌 연동하기
 		        </a>
-		        <a href="${pageContext.request.contextPath}/main" class="btn btn-secondary">나중에 하기</a>
+		        <a href="${ctx}/main" class="btn btn-secondary">나중에 하기</a>
 	        </div>
 	    </div>
 	</div>

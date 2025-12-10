@@ -3,8 +3,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ include file="../include/Header.jsp"%>
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="${ctx}/resources/js/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="${ctx}/resources/css/jquery-ui.css">
 <div id="subContents">
 	<div class="fix-layout">
 	    <div class="container" id="transList">
@@ -29,11 +29,11 @@
 	        </c:if>
 	        
 	        <div class="actions">
-	            <a href="${pageContext.request.contextPath}/accounts/list" class="btn btn-secondary">
+	            <a href="${ctx}/accounts/list" class="btn btn-secondary">
 	                계좌 목록
 	            </a>
 	            <c:if test="${pageVO.totalCount == 0}">
-	                <a href="${pageContext.request.contextPath}/transactions/generate-mock?accountId=${account.accountId}" 
+	                <a href="${ctx}/transactions/generate-mock?accountId=${account.accountId}" 
 	                   class="btn btn-success"
 	                   onclick="return confirm('테스트용 거래내역을 생성하시겠습니까?');">
 	                    테스트 거래내역 생성
@@ -44,7 +44,7 @@
 	        <!-- 날짜 필터 -->
 	        <c:if test="${pageVO.totalCount > 0}">
 	            <div class="filter-section mb30">
-	                <form method="get" action="${pageContext.request.contextPath}/transactions/list">
+	                <form method="get" action="${ctx}/transactions/list">
 	                    <input type="hidden" name="accountId" value="${account.accountId}">
 	                    <div class="filter-row">
 	                        <!-- <span class="filter-label">기간 선택</span> -->
@@ -64,7 +64,7 @@
 	                               value="${endDate}"
 	                               readonly>
 	                        <button type="submit" class="btn btn-primary">조회</button>
-	                        <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}" 
+	                        <a href="${ctx}/transactions/list?accountId=${account.accountId}" 
 	                           class="btn btn-secondary">전체</a>
 	                    </div>
 	                </form>
@@ -137,13 +137,13 @@
 	            <div class="pagination">
 	               <!-- 맨 처음 -->
                     <c:if test="${pageVO.prev}">
-                        <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=1<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+                        <a href="${ctx}/transactions/list?accountId=${account.accountId}&page=1<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
                            class="page-link">«</a>
                     </c:if>
                     <!-- 이전 페이지 -->
                     <c:choose>
                         <c:when test="${pageVO.prev}">
-                            <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${pageVO.currentPage - 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+                            <a href="${ctx}/transactions/list?accountId=${account.accountId}&page=${pageVO.currentPage - 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
                                class="page-link">‹</a>
                         </c:when>
                         <c:otherwise>
@@ -157,7 +157,7 @@
                                 <span class="page-link active">${i}</span>
                             </c:when>
                             <c:otherwise>
-                                <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${i}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+                                <a href="${ctx}/transactions/list?accountId=${account.accountId}&page=${i}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
                                    class="page-link">${i}</a>
                             </c:otherwise>
                         </c:choose>
@@ -165,7 +165,7 @@
                     <!-- 다음 페이지 -->
                     <c:choose>
                         <c:when test="${pageVO.next}">
-                            <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${pageVO.currentPage + 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+                            <a href="${ctx}/transactions/list?accountId=${account.accountId}&page=${pageVO.currentPage + 1}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
                                class="page-link">›</a>
                         </c:when>
                         <c:otherwise>
@@ -174,7 +174,7 @@
                     </c:choose>
                     <!-- 맨 끝 -->
                     <c:if test="${pageVO.next}">
-                        <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}&page=${pageVO.totalPages}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
+                        <a href="${ctx}/transactions/list?accountId=${account.accountId}&page=${pageVO.totalPages}<c:if test='${not empty startDate}'>&startDate=${startDate}&endDate=${endDate}</c:if>" 
                            class="page-link">»</a>
                     </c:if>
 	            </div>
@@ -254,7 +254,7 @@ $(function() {
         }
         
         $.ajax({
-            url: '${pageContext.request.contextPath}/transactions/save-memo',
+            url: '${ctx}/transactions/save-memo',
             type: 'POST',
             data: {
                 transactionId: txId,
@@ -302,7 +302,7 @@ $(function() {
         }
         
         $.ajax({
-            url: '${pageContext.request.contextPath}/transactions/delete-memo',
+            url: '${ctx}/transactions/delete-memo',
             type: 'POST',
             data: {
                 transactionId: txId
