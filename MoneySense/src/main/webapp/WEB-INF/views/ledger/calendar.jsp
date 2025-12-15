@@ -12,20 +12,102 @@
 <script src="${ctx}/resources/js/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="${ctx}/resources/css/jquery-ui.css">
 
+<style>
+#calendar a{color:#777777; font-size:10px; text-decoration:none;}
+.fc-theme-standard th{border-top:0 !important; border-right:0 !important; border-left:0 !important }
+.fc-theme-standard td{border-right:0 !important; border-left:0 !important}
+.fc-theme-standard .fc-scrollgrid{border:0 !important;}
+.fc-day-sun a{color:#FF5555 !important;}
+.fc-day-sat a{color:#408CFF !important;}
+#calendarPage .fc-daygrid-day{height:80px; text-align:center}
+.fc .fc-daygrid-day-top{justify-content:center;}
+.fc .fc-daygrid-day-frame{min-height:unset; margin-bottom:5px;}
+.fc-daygrid-day-events{display: none;}
+/* Modal Styles 추가 */
+.transaction-item {
+    padding: 15px;
+    border-bottom: 1px solid #dee2e6;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.transaction-item:hover {
+    background: #f8f9fa;
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.transaction-time {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.transaction-amount {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.amount-income {
+    color: #28a745;
+}
+
+.amount-expense {
+    color: #dc3545;
+}
+
+.transaction-detail {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 3px;
+}
+
+.transaction-source {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: bold;
+    color: #495057;
+}
+
+.detail-value {
+    color: #333;
+}
+</style>
 <div id="subContents">
 	<div class="fix-layout" id="calendarPage">
-		<h1 class="page-title">💰 가계부</h1>
-        <!-- Summary -->
-        <div id="summaryRow">
-            <div id="monthExpense">이번달 총 지출: 0원</div>
-            <div id="monthIncome">이번달 총 수입: 0원</div>
-            <div id="monthNet">순 변화: 0원</div>
-        </div>
-        
-        <!-- Month Picker -->
-        <div id="monthPickerBox" class="picker-box">
-            <input id="monthPicker" placeholder="월 선택" class="form-control" readonly>
-        </div>
+		<div id="calendarHead">
+			<div id="monthWrap">
+				<input id="monthPicker" placeholder="월 선택" class="text-like" readonly>
+			</div>
+			<!-- 소비 요약 -->
+	        <div id="summaryRow">
+	            <div id="monthIncome"></div>
+	            <div id="monthExpense"></div>
+	            <!-- <div id="monthNet">순 변화: 0원</div> -->
+	        </div>
+		</div>
         
         <!-- Week Picker -->
         <div id="weekPickerBox" class="picker-box" style="display:none;">
@@ -33,10 +115,10 @@
         </div>
         
         <!-- View Buttons -->
-        <div class="view-buttons">
+        <!-- <div class="view-buttons">
             <button id="monthViewBtn" class="btn btn-primary">월 보기</button>
             <button id="weekViewBtn" class="btn btn-secondary">주 보기</button>
-        </div>
+        </div> -->
         
         <!-- Calendar -->
         <div id="calendar"></div>			
@@ -103,98 +185,127 @@ $(document).ready(function() {
     let currentYear = new Date().getFullYear();
     let currentMonth = new Date().getMonth() + 1;
     let dailyTotalsMap = {};
+    let dailySummaryMap = {};
+    let isLoading = false;
+    let isInitializing = false;
     
     let selectedYear = new Date().getFullYear();
     let selectedMonth = new Date().getMonth() + 1;
     let monthPickerModalInstance;
     
-    // jQuery UI Datepicker 한국어 설정
-    $.datepicker.regional['ko'] = {
-        closeText: '닫기',
-        prevText: '이전달',
-        nextText: '다음달',
-        currentText: '오늘',
-        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
-        monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
-        dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'],
-        dayNamesShort: ['일','월','화','수','목','금','토'],
-        dayNamesMin: ['일','월','화','수','목','금','토'],
-        weekHeader: 'Wk',
-        dateFormat: 'yy-mm-dd',
-        firstDay: 0,
-        isRTL: false,
-        showMonthAfterYear: true,
-        yearSuffix: '년'
-    };
-    $.datepicker.setDefaults($.datepicker.regional['ko']);
-    
     // ========================================
     // FullCalendar 초기화
     // ========================================
-    calendar = new FullCalendar.Calendar(document.getElementById("calendar"), {
-        initialView: "dayGridMonth",
-        locale: "ko",
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: ''
-        },
-        buttonText: {
-            today: "오늘",
-            month: "월",
-            week: "주",
-            day: "일",
-            list: "리스트"
-        },
-        height: "auto",
-        events: [],
-        
-        // 날짜 클릭
-        dateClick: function(info) {
-            openDailyModal(info.dateStr);
-        },
-        
-        // 이벤트 클릭
-        eventClick: function(info) {
-            openDailyModal(info.event.startStr);
-        },
-        
-        // 날짜 셀 렌더링
-        dayCellDidMount: function(info) {
-            let date = info.date.toISOString().slice(0, 10);
-            let total = dailyTotalsMap[date] || 0;
-            let maxSpend = 100000;
-            
-            // 지출이 있으면 배경색 (히트맵)
-            if(total < 0) {
-                let ratio = Math.min(Math.abs(total) / maxSpend, 1);
-                info.el.style.backgroundColor = 'rgba(255, 130, 130, ' + (ratio * 0.3) + ')';
-            }
-            
-            // 일별 합계 표시
-            if(total !== 0) {
-                info.el.insertAdjacentHTML("beforeend",
-                    '<div class="daily-spend">' + total.toLocaleString() + '원</div>'
-                );
-            }
-        },
-        
-        // 날짜 범위 변경
-        datesSet: function(info) {
-            let date = info.view.currentStart;
-            currentYear = date.getFullYear();
-            currentMonth = date.getMonth() + 1;
-            loadMonthlyData(currentYear, currentMonth);
+    function initCalendar() {
+    	isInitializing = true;
+    	
+        if(calendar) {
+            calendar.destroy();
         }
-    });
+        
+        calendar = new FullCalendar.Calendar(document.getElementById("calendar"), {
+            initialView: "dayGridMonth",
+            locale: "ko",
+            initialDate: new Date(currentYear, currentMonth - 1, 1),
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: ''
+            },
+            buttonText: {
+                today: "오늘"
+            },
+            height: "auto",
+            timeZone: 'local',
+            dateClick: function(info) {
+                openDailyModal(info.dateStr);
+            },
+            
+            dayCellDidMount: function(info) {
+            	let year = info.date.getFullYear();
+                let month = String(info.date.getMonth() + 1).padStart(2, '0');
+                let day = String(info.date.getDate()).padStart(2, '0');
+                let date = year + '-' + month + '-' + day;
+                
+                let summary = dailySummaryMap[date];
+                
+                if(!summary) return;
+                
+                let income = summary.income || 0;
+                let expense = summary.expense || 0;
+                
+                let html = '';
+                
+             	// 지출 표시
+                if(expense != 0) {
+                    let expenseDisplay = expense < 0 ? expense : -expense;  // 음수로 변환
+                    html += '<div style="color:#7B838D; font-size:8px; font-weight:500;">' +
+                    expenseDisplay.toLocaleString() + '</div>';
+                }
+                
+                // 수입 표시
+                if(income > 0) {
+                	html += '<div style="color:#00AEEE; font-size:8px; font-weight:500;">+' +
+                    income.toLocaleString() + '</div>';
+                }
+                
+                if(html) {
+                    info.el.insertAdjacentHTML("beforeend", html);
+                }
+                
+                // 히트맵 제거
+                /* if(expense < 0) {
+                    let maxSpend = 100000;
+                    let ratio = Math.min(Math.abs(expense) / maxSpend, 1);
+                    info.el.style.backgroundColor = 'rgba(255, 130, 130, ' + (ratio * 0.15) + ')';
+                }
+                
+                if(income > 0 && expense >= 0) {
+                    info.el.style.backgroundColor = 'rgba(40, 167, 69, 0.08)';
+                } */
+            },
+            
+            datesSet: function(info) {
+            	if(isInitializing) {
+                    isInitializing = false;
+                    return;
+                }
+            	
+                let date = info.view.currentStart;
+                let newYear = date.getFullYear();
+                let newMonth = date.getMonth() + 1;
+                
+                console.log('datesSet 이벤트:', newYear + '년 ' + newMonth + '월');
+                
+                if(newYear != currentYear || newMonth != currentMonth) {
+                    currentYear = newYear;
+                    currentMonth = newMonth;
+                    
+                    // 월 표시 업데이트
+                    let monthText = newYear + '년 ' + newMonth.toString().padStart(2, '0') + '월';
+                    $('#monthPicker').val(monthText);
+                    
+                    // 데이터만 로딩 (캘린더 재생성 안함)
+                    loadMonthlyDataOnly(newYear, newMonth);
+                }
+            }
+        });
+        
+        calendar.render();
+        isInitializing = false;
+    }
     
-    calendar.render();
-    
+ 	// ========================================
+    // 월별 데이터만 로딩 (캘린더 재생성 안함)
     // ========================================
-    // 월별 데이터 로딩
-    // ========================================
-    function loadMonthlyData(year, month) {
-        console.log('월별 데이터 로딩: ' + year + '년 ' + month + '월');
+    function loadMonthlyDataOnly(year, month) {
+        if(isLoading) {
+            console.log('이미 로딩 중...');
+            return;
+        }
+        
+        isLoading = true;
+        console.log('월별 데이터만 로딩: ' + year + '년 ' + month + '월');
         
         $.ajax({
             url: '${ctx}/ledger/month',
@@ -209,22 +320,86 @@ $(document).ready(function() {
             success: function(data) {
                 console.log('데이터 로딩 성공:', data);
                 
-                // 캘린더 이벤트 업데이트
-                calendar.removeAllEvents();
-                calendar.addEventSource(data.events);
-                
-                // 일별 합계 저장
                 dailyTotalsMap = data.dailyTotals;
                 
-                // Summary 업데이트
+                if(data.dailySummary) {
+                    dailySummaryMap = data.dailySummary;
+                } else {
+                    console.log('dailySummary가 없습니다.');
+                    dailySummaryMap = {};
+                }
+                
+                console.log('dailySummaryMap:', dailySummaryMap);
+                
                 updateSummary(data.summary);
                 
-                // 캘린더 리렌더링 (히트맵 업데이트)
+                // ✅ 캘린더 다시 렌더링 (재생성 안함)
                 calendar.refetchEvents();
+                calendar.render();
+                
+                isLoading = false;
             },
             error: function(xhr, status, error) {
                 console.error('데이터 로딩 실패:', error);
                 alert('데이터를 불러오는데 실패했습니다.');
+                isLoading = false;
+            }
+        });
+    }
+    
+	// ========================================
+    // 월별 데이터 로딩 (캘린더 재생성 포함)
+    // ========================================
+    function loadMonthlyData(year, month) {
+        if(isLoading) {
+            console.log('이미 로딩 중...');
+            return;
+        }
+        
+        isLoading = true;
+        console.log('월별 데이터 로딩: ' + year + '년 ' + month + '월');
+        
+        currentYear = year;
+        currentMonth = month;
+        
+        $.ajax({
+            url: '${ctx}/ledger/month',
+            type: 'GET',
+            data: {
+                year: year,
+                month: month
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function(data) {
+                console.log('데이터 로딩 성공:', data);
+                
+                dailyTotalsMap = data.dailyTotals;
+                
+                if(data.dailySummary) {
+                    dailySummaryMap = data.dailySummary;
+                } else {
+                    console.log('dailySummary가 없습니다.');
+                    dailySummaryMap = {};
+                }
+                
+                console.log('dailySummaryMap:', dailySummaryMap);
+                
+                updateSummary(data.summary);
+                
+                // ✅ 캘린더 재생성
+                initCalendar();
+                
+                let monthText = year + '년 ' + month.toString().padStart(2, '0') + '월';
+                $('#monthPicker').val(monthText);
+                
+                isLoading = false;
+            },
+            error: function(xhr, status, error) {
+                console.error('데이터 로딩 실패:', error);
+                alert('데이터를 불러오는데 실패했습니다.');
+                isLoading = false;
             }
         });
     }
@@ -233,9 +408,8 @@ $(document).ready(function() {
     // Summary 업데이트
     // ========================================
     function updateSummary(summary) {
-        $('#monthExpense').text('이번달 총 지출: ' + summary.expense.toLocaleString() + '원');
-        $('#monthIncome').text('이번달 총 수입: ' + summary.income.toLocaleString() + '원');
-        $('#monthNet').text('순 변화: ' + summary.net.toLocaleString() + '원');
+        $('#monthExpense').html('<span>지출</span>' + summary.expense.toLocaleString() + '원');
+        $('#monthIncome').html('<span>수입</span>' + summary.income.toLocaleString() + '원');
     }
     
     // ========================================
@@ -290,7 +464,6 @@ $(document).ready(function() {
                 
                 $('#dailyList').html(html);
                 
-                // 모달 표시
                 new bootstrap.Modal(document.getElementById('dailyModal')).show();
             },
             error: function(xhr, status, error) {
@@ -351,7 +524,6 @@ $(document).ready(function() {
                                 '<span class="detail-value">' + tx.sourceNumber + '</span>' +
                             '</div>';
                 
-                // 계좌 거래면 잔액 표시
                 if(tx.transactionType == 'BANK' && tx.balanceAfter !== null) {
                     html += '<div class="detail-row">' +
                                 '<span class="detail-label">거래 후 잔액</span>' +
@@ -359,7 +531,6 @@ $(document).ready(function() {
                             '</div>';
                 }
                 
-                // 카드면 할부 표시
                 if(tx.transactionType == 'CARD' && tx.installment > 0) {
                     html += '<div class="detail-row">' +
                                 '<span class="detail-label">할부</span>' +
@@ -367,7 +538,6 @@ $(document).ready(function() {
                             '</div>';
                 }
                 
-                // 메모
                 if(tx.memo) {
                     html += '<div class="detail-row">' +
                                 '<span class="detail-label">메모</span>' +
@@ -377,7 +547,6 @@ $(document).ready(function() {
                 
                 $('#detailContent').html(html);
                 
-                // Daily 모달 숨기고 Detail 모달 표시
                 bootstrap.Modal.getInstance(document.getElementById('dailyModal')).hide();
                 new bootstrap.Modal(document.getElementById('detailModal')).show();
             },
@@ -389,42 +558,18 @@ $(document).ready(function() {
     });
     
     // ========================================
-    // 월 보기 / 주 보기 전환
-    // ========================================
-    $('#monthViewBtn').click(function() {
-        calendar.changeView('dayGridMonth');
-        calendar.gotoDate(new Date());
-        
-        setTimeout(function() {
-            $('#monthPickerBox').show();
-            $('#weekPickerBox').hide();
-        }, 10);
-    });
-    
-    $('#weekViewBtn').click(function() {
-        calendar.changeView('listWeek');
-        calendar.gotoDate(new Date());
-        
-        setTimeout(function() {
-            $('#weekPickerBox').show();
-            $('#monthPickerBox').hide();
-        }, 10);
-    });
-    
-    // ========================================
     // 월 선택 모달 초기화
     // ========================================
     function initMonthPicker() {
         const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', 
                            '7월', '8월', '9월', '10월', '11월', '12월'];
         
-        // 월 그리드 생성
         function renderMonthGrid() {
             $('#yearDisplay').text(selectedYear + '년');
             
             let html = '';
             for(let i = 0; i < 12; i++) {
-                let isSelected = (selectedYear === currentYear && (i + 1) === currentMonth) ? 'selected' : '';
+                let isSelected = (selectedYear == currentYear && (i + 1) == currentMonth) ? 'selected' : '';
                 html += '<div class="month-item ' + isSelected + '" data-month="' + (i + 1) + '">' + 
                         monthNames[i] + '</div>';
             }
@@ -432,38 +577,28 @@ $(document).ready(function() {
             $('#monthGrid').html(html);
         }
         
-        // 이전 년도
-        $('#prevYear').click(function() {
+        $('#prevYear').off('click').on('click', function() {
             selectedYear--;
             renderMonthGrid();
         });
         
-        // 다음 년도
-        $('#nextYear').click(function() {
+        $('#nextYear').off('click').on('click', function() {
             selectedYear++;
             renderMonthGrid();
         });
         
-        // 월 선택
-        $(document).on('click', '.month-item', function() {
+        $(document).off('click', '.month-item').on('click', '.month-item', function() {
             selectedMonth = parseInt($(this).data('month'));
             
-            // 선택된 월로 이동
-            let date = new Date(selectedYear, selectedMonth - 1, 1);
-            $('#monthPicker').val(selectedYear + '년 ' + selectedMonth.toString().padStart(2, '0') + '월');
+            //월 선택 시 캘린더 재생성
+            loadMonthlyData(selectedYear, selectedMonth);
             
-            calendar.changeView("dayGridMonth");
-            calendar.gotoDate(date);
-            
-            // 모달 닫기
             monthPickerModalInstance.hide();
         });
         
-        // 초기 렌더링
         renderMonthGrid();
     }
     
-    // 월 선택 input 클릭
     $('#monthPicker').click(function() {
         selectedYear = currentYear;
         selectedMonth = currentMonth;
@@ -473,17 +608,15 @@ $(document).ready(function() {
             initMonthPicker();
         }
         
-        // 모달 열 때마다 현재 년/월로 재설정
         selectedYear = currentYear;
         selectedMonth = currentMonth;
         $('#yearDisplay').text(selectedYear + '년');
         
-        // 월 그리드 다시 렌더링
         const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', 
                            '7월', '8월', '9월', '10월', '11월', '12월'];
         let html = '';
         for(let i = 0; i < 12; i++) {
-            let isSelected = (selectedYear === currentYear && (i + 1) === currentMonth) ? 'selected' : '';
+            let isSelected = (selectedYear == currentYear && (i + 1) == currentMonth) ? 'selected' : '';
             html += '<div class="month-item ' + isSelected + '" data-month="' + (i + 1) + '">' + 
                     monthNames[i] + '</div>';
         }
@@ -491,33 +624,15 @@ $(document).ready(function() {
         
         monthPickerModalInstance.show();
     });
-    
+ 	// ========================================
+    // 초기 실행
     // ========================================
-    // 주 선택 Datepicker (기존 유지)
-    // ========================================
-    $('#weekPicker').datepicker({
-        dateFormat: 'yy-mm-dd',
-        changeMonth: true,
-        changeYear: true,
-        yearRange: '-10:+10',
-        onSelect: function(dateText) {
-            let date = $(this).datepicker('getDate');
-            
-            calendar.changeView("listWeek");
-            calendar.gotoDate(date);
-            
-            setTimeout(function() {
-                $('#weekPickerBox').show();
-                $('#monthPickerBox').hide();
-            }, 10);
-        }
-    });
-    
-    // 현재 월로 초기화
     let now = new Date();
     let currentMonthText = now.getFullYear() + '년 ' + 
                           (now.getMonth() + 1).toString().padStart(2, '0') + '월';
     $('#monthPicker').val(currentMonthText);
+    
+    loadMonthlyData(currentYear, currentMonth);
     
 });
 </script>

@@ -21,19 +21,19 @@
 	            <div class="message">${msg}</div>
 	        </c:if>
 	        
+	        <c:if test="${pageVO.totalCount == 0}">
 	        <div class="actions text-right mb10">
-	            <c:if test="${pageVO.totalCount == 0}">
 	                <a href="${ctx}/transactions/generate-mock?accountId=${account.accountId}" 
 	                   class="btn btn-success"
 	                   onclick="return confirm('테스트용 거래내역을 생성하시겠습니까?');">
 	                    테스트 거래내역 생성
 	                </a>
-	            </c:if>
 	        </div>
+	        </c:if>
 	        
 	        <!-- 날짜 필터 -->
 	        <c:if test="${pageVO.totalCount > 0}">
-	            <div class="filter-section mb30">
+	            <div class="filter-section mb20">
 	                <form method="get" action="${ctx}/transactions/list">
 	                    <input type="hidden" name="accountId" value="${account.accountId}">
 	                    <div class="filter-row">
@@ -45,7 +45,6 @@
 	                               placeholder="거래 시작일"
 	                               value="${startDate}"
 	                               readonly>
-	                        <span>~</span>
 	                        <input type="text" 
 	                               id="endDate" 
 	                               name="endDate" 
@@ -62,8 +61,6 @@
 	        </c:if>
 	        
 	        <div class="transaction-list">
-	            <h2 style="margin-bottom: 20px;">거래내역</h2>
-	            
 	            <c:choose>
 	                <c:when test="${empty transactions}">
 	                    <div class="empty-message">
@@ -71,49 +68,54 @@
 	                        <p>테스트용 거래내역을 생성하거나 실제 거래가 발생하면 여기에 표시됩니다.</p>
 	                    </div>
 	                </c:when>
+	                
 	                <c:otherwise>
 	                    <c:forEach var="tx" items="${transactions}">
 	                        <div class="transaction-item" id="tx-${tx.transactionId}">
+	                        	<div class="transaction-month-day">
+	                        		<fmt:formatDate value="${tx.transactedAt}" pattern="MM.dd"/>
+	                        	</div>
 	                            <div class="transaction-main">
-	                                <div class="transaction-info">
-	                                    <div class="transaction-date">
-	                                        <fmt:formatDate value="${tx.transactedAt}" pattern="yyyy-MM-dd HH:mm"/>
-	                                    </div>
-	                                    <div class="transaction-desc">${tx.description}</div>
+	                            	<div class="transaction-wrap">
+		                                <div class="transaction-info">
+		                                    <div class="transaction-desc">${tx.description}</div>
+		                                    <div class="transaction-date">
+		                                        <fmt:formatDate value="${tx.transactedAt}" pattern="yyyy-MM-dd HH:mm"/>
+		                                    </div>
+		                                </div>
+		                                <div class="transaction-amount">
+		                                    <div class="amount-value ${tx.inoutType == 'I' ? 'amount-in' : 'amount-out'}">
+		                                        ${tx.inoutType == 'I' ? '+' : '-'}
+		                                        <fmt:formatNumber value="${tx.amount}" type="number" groupingUsed="true"/>원
+		                                    </div>
+		                                    <div class="balance-after">
+		                                        잔액 <fmt:formatNumber value="${tx.balanceAfter}" type="number" groupingUsed="true"/>원
+		                                    </div>
+		                                </div>
 	                                </div>
-	                                <div class="transaction-amount">
-	                                    <div class="amount-value ${tx.inoutType == 'I' ? 'amount-in' : 'amount-out'}">
-	                                        ${tx.inoutType == 'I' ? '+' : '-'}
-	                                        <fmt:formatNumber value="${tx.amount}" type="number" groupingUsed="true"/>원
-	                                    </div>
-	                                    <div class="balance-after">
-	                                        잔액 <fmt:formatNumber value="${tx.balanceAfter}" type="number" groupingUsed="true"/>원
-	                                    </div>
-	                                </div>
-	                            </div>
-	                            
-	                            <!-- 메모 섹션 -->
-	                            <div class="memo-section">
-	                                <div id="memo-display-${tx.transactionId}" style="${empty tx.memo ? 'display:none;' : ''}">
-	                                    <div class="memo-display" id="memo-text-${tx.transactionId}">
-	                                        ${tx.memo}
-	                                    </div>
-	                                    <div class="memo-actions btn-group right mt0">
-	                                        <button data-action="edit-memo" data-tx-id="${tx.transactionId}" class="btn btn-sm btn-primary">수정</button>
-	                                        <button data-action="delete-memo" data-tx-id="${tx.transactionId}" class="btn btn-sm btn-secondary">삭제</button>
-	                                    </div>
-	                                </div>
-	                                
-	                                <div id="memo-edit-${tx.transactionId}" style="${empty tx.memo ? '' : 'display:none;'}">
-	                                    <input type="text" 
-	                                           class="memo-input" 
-	                                           id="memo-input-${tx.transactionId}"
-	                                           placeholder="메모를 입력하세요"
-	                                           value="${tx.memo}">
-	                                    <div class="memo-actions btn-group right mt0">
-	                                        <button data-action="save-memo" data-tx-id="${tx.transactionId}" class="btn btn-sm btn-success">저장</button>
-	                                        <button data-action="cancel-memo" data-tx-id="${tx.transactionId}" data-original-memo="${tx.memo}"  class="btn btn-sm btn-secondary">취소</button>
-	                                    </div>
+		                            <!-- 메모 섹션 -->
+	                                <div class="memo-section">
+		                                <div id="memo-display-${tx.transactionId}" style="${empty tx.memo ? 'display:none;' : ''}">
+		                                    <div class="memo-display" id="memo-text-${tx.transactionId}">
+		                                        ${tx.memo}
+		                                    </div>
+		                                    <div class="memo-actions btn-group right mt0">
+		                                        <button data-action="edit-memo" data-tx-id="${tx.transactionId}" class="modify">수정</button>
+		                                        <button data-action="delete-memo" data-tx-id="${tx.transactionId}" class="delete">삭제</button>
+		                                    </div>
+		                                </div>
+		                                
+		                                <div id="memo-edit-${tx.transactionId}" style="${empty tx.memo ? '' : 'display:none;'}">
+		                                    <input type="text" 
+		                                           class="memo-input" 
+		                                           id="memo-input-${tx.transactionId}"
+		                                           placeholder="메모를 입력하세요"
+		                                           value="${tx.memo}">
+		                                    <div class="memo-actions btn-group right mt0">
+		                                        <button data-action="save-memo" data-tx-id="${tx.transactionId}" class="save">저장</button>
+		                                        <button data-action="cancel-memo" data-tx-id="${tx.transactionId}" data-original-memo="${tx.memo}"  class="delete">취소</button>
+		                                    </div>
+		                                </div>
 	                                </div>
 	                            </div>
 	                        </div>
