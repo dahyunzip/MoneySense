@@ -18,19 +18,19 @@ h1.page-title{color: #222;margin-bottom: 30px;text-align:center; font-weight:700
 .btn-group.right{justify-content:end;}
 .btn {padding: 12px 24px;border: none;border-radius: 5px;cursor: pointer;font-size: 14px;text-decoration: none;display: inline-block;text-align: center;transition: all 0.3s; line-height:1;}
 .btn-sm{padding:8px 16px; font-size:12px;}
-.btn-primary {background: #007bff;color: white;}
-.btn-primary:hover {background: #0056b3;}
+.btn-primary {background: #00DB7C;color: white;}
+.btn-primary:hover {background: #00DB7C;}
 .btn-warning {background: #ffc107;color: #000;}
 .btn-warning:hover {background: #e0a800;}
-.btn-danger {background: #dc3545;color: white;}
-.btn-danger:hover {background: #c82333;}
-.btn-secondary {background: #6c757d;color: white;}
-.btn-secondary:hover {background: #5a6268;}
+.btn-danger {background: #EE0057;color: white;}
+.btn-danger:hover {background: #EE0057;}
+.btn-secondary {background: #C0CAD7;color: white;}
+.btn-secondary:hover {background: #C0CAD7;}
 .btn-login {width: 100%;padding: 14px;background: #38b274;color: white;border: none;border-radius: 5px;font-size: 16px;font-weight: 500;cursor: pointer;line-height:1;}
-.btn-success {background: #28a745;color: white;}
-.btn-success:hover {background: #218838;}
-.btn-info {background: #17a2b8;color: white;}
-.btn-info:hover {background: #138496;}
+.btn-success {background: #00AEEE;color: white;}
+.btn-success:hover {background: #00AEEE;}
+.btn-info {background: #E8E8E8;color: #848484;}
+.btn-info:hover {background: #E8E8E8;}
 
 /* 입력폼 css */
 .form-group {margin: 20px 0;}
