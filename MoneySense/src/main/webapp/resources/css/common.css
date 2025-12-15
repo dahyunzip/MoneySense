@@ -53,27 +53,52 @@ body {font-family:'Pretendard', 'Paperlogy', sans-serif !important;}
 
 
 /* (S) Header */
-.header { background: #fff; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-.header-content {display: flex; justify-content: space-between; align-items: center; height:100px;}
+.header { background: #fff; color: white; border-bottom:1px solid #e5e5e5; position:relative;}
+.header-content {display: flex; justify-content: space-between; align-items: center; height:70px;}
 .logo img{width:100px; height:auto;}
-.user-info { display: flex; align-items: center; gap: 25px; }
+.user-info { display: flex; align-items: center; gap: 25px; font-size:13px; }
 .user-info .name{color:#5a5a5a;}
 .btn-logout {color:#5a5a5a; font-size: 14px; border:none; background:none; cursor:pointer;}
 .btn-logout:hover { text-decoration: underline;}
+#menu .menu-wrap{position:absolute; width:100%; height:100vh; background:#fff; top:0; left:0; padding:70px 50px}
+#menu .menu-wrap li{border-bottom:1px solid #e5e5e5; padding:15px;}
 /* (E) Header */
 
 
 /* (S) Footer */
-#footer{background:#fff; border-top:1px solid #e5e5e5; padding:40px 0 60px 0;}
-#footer .footer-top{display:flex; justify-content:space-between; flex-direction:row; margin-bottom:40px;}
+#footer{background:#fff; border-top:1px solid #e5e5e5; padding:24px 0 100px 0; }
+#footer .footer-top{display:flex; justify-content:space-between; flex-direction:row; margin-bottom:20px;}
 #footer .footer-top .logo img{width:130px;}
-#footer .footer-top .logo p{color:#222; font-weight:600; font-size:14px; margin-bottom:5px; font-family: 'Paperlogy';}
+#footer .footer-top .logo p{color:#222; font-weight:600; font-size:12px; margin-bottom:5px; font-family: 'Paperlogy';}
 #footer .footer-top .links{display:flex; flex-direction:row; gap:20px}
-#footer .footer-top .links a{font-size:16px; color:#5a5a5a; font-weight:500; }
-#footer .copy{border-top:1px solid #e5e5e5; padding:20px 0 10px 0; color:#a1a1a1 }
+#footer .footer-top .links a{font-size:12px; color:#5a5a5a; font-weight:500; }
+#footer .copy{border-top:1px solid #e5e5e5; padding:20px 0 10px 0; color:#a1a1a1; font-size:12px;}
 /* (E) Footer */
 
+/* (S) fixedMenu */
+#fixedMenu{position:fixed; background:#fff; box-shadow:0 -5px 10px rgba(0,0,0,.1); bottom:0;max-width:480px; width:100%; box-sizing: border-box; z-index:10;}
+#fixedMenu *{line-height:1;}
+#fixedMenu ul{display:flex; flex-wrap:wrap; flex-direction: row; justify-content: space-between; align-items:center; height:70px; padding-left:0; margin-bottom:0;}
+#fixedMenu ul li{width:20%; text-align:center;}
+#fixedMenu span{color:#87909A; font-size:12px; font-weight:400; }
+#fixedMenu .selected span{font-size:12px; font-weight:700; color:#595F67;}
+#fixedMenu li .ico{display:block; padding-top:40px; position:relative; color:#87909A; text-decoration: none}
+#fixedMenu li .ico::before{display:block; content:''; width:25px; height:25px; background:red; position:absolute; top:10px; left:50%; transform:translateX(-50%);}
+#fixedMenu li .ico01::before{background:url(/resources/images/ico01.svg) no-repeat center; }
+#fixedMenu li .ico01.selected::before{background:url(/resources/images/ico01_on.svg) no-repeat center;}
+#fixedMenu li .ico02::before{background:url(/resources/images/ico02.svg) no-repeat center;}
+#fixedMenu li .ico02.selected::before{background:url(/resources/images/ico02_on.svg) no-repeat center;}
+#fixedMenu li .ico03::before{background:url(/resources/images/ico03.svg) no-repeat center;}
+#fixedMenu li .ico03.selected::before{background:url(/resources/images/ico03_on.svg) no-repeat center;}
+#fixedMenu li .ico04::before{background:url(/resources/images/ico04.svg) no-repeat center;}
+#fixedMenu li .ico04.selected::before{background:url(/resources/images/ico04_on.svg) no-repeat center;}
+#fixedMenu li .ico05::before{background:url(/resources/images/ico05.svg) no-repeat center;}
+#fixedMenu li .ico05.selected::before{background:url(/resources/images/ico05_on.svg) no-repeat center;}
 
+
+/* (E) fixedMenu */
+html{overflow:hidden;}
+#RESPONSE_POINT{max-width:480px; width:100%; margin:0 auto;min-height:100vh; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow-y:auto; max-height:100vh;}
 
 /******************************RESET.CSS **************************************/
 /* (S) RESET */

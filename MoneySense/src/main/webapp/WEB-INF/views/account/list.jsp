@@ -5,7 +5,17 @@
 <div id="subContents" class="accounts">
 	<div class="fix-layout">
 	    <div class="container">
-	        <h1 class="page-title">내 계좌 목록</h1>
+	    	<div class="title-btn">
+	        	<h1 class="page-title">내 계좌 목록</h1>
+	    		<div class="btn-group right">
+	    			<a href="${pageContext.request.contextPath}/accounts/sync" class="btn btn-primary">
+	                    계좌 동기화
+	                </a>
+	                <a href="${pageContext.request.contextPath}/accounts/connect" class="btn btn-success">
+	                    계좌 추가 연동
+	                </a>
+	    		</div>
+	    	</div>
 	        
 	        <c:if test="${not empty msg}">
 	            <div class="message">${msg}</div>
@@ -16,12 +26,7 @@
 	                <span style="color: #6c757d;">총 ${accounts.size()}개의 계좌</span>
 	            </div>
 	            <div>
-	                <a href="${pageContext.request.contextPath}/accounts/sync" class="btn btn-success">
-	                    계좌 동기화
-	                </a>
-	                <a href="${pageContext.request.contextPath}/accounts/connect" class="btn btn-primary">
-	                    계좌 추가 연동
-	                </a>
+	                
 	            </div>
 	        </div>
 	        
@@ -38,30 +43,20 @@
 	            <c:otherwise>
 	                <div class="account-grid">
 	                    <c:forEach var="account" items="${accounts}">
-	                        <div class="account-card">
+	                        <div class="account-card" onclick="location.href='${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}'">
 	                            <div class="account-header">
-	                                <span class="bank-name">${account.bankName}</span>
+	                                <p class="bank-name">
+	                                	${account.bankName}
+	                                	<span class="info-value">${account.accountName }</span>
+	                                </p>
 	                            </div>
 	                            
 	                            <div class="account-info">
-	                                <div class="info-label">계좌명</div>
-	                                <div class="info-value">${account.accountName}</div>
-	                            </div>
-	                            
-	                            <div class="account-info">
-	                                <div class="info-label">계좌번호</div>
 	                                <div class="info-value">${account.accountNum}</div>
 	                            </div>
 	                            
 	                            <div class="balance">
 	                                <fmt:formatNumber value="${account.balance}" type="number" groupingUsed="true"/>원
-	                            </div>
-	                            
-	                            <div class="btn-group right">
-	                                <a href="${pageContext.request.contextPath}/transactions/list?accountId=${account.accountId}" 
-	                                   class="btn btn-info btn-sm">
-	                                    거래내역 보기
-	                                </a>
 	                            </div>
 	                        </div>
 	                    </c:forEach>

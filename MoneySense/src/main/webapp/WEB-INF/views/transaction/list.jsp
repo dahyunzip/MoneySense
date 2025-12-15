@@ -6,32 +6,22 @@
 <script src="${ctx}/resources/js/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="${ctx}/resources/css/jquery-ui.css">
 <div id="subContents">
+	<div class="trans-title-section">
+		<div class="account-details fix-layout">
+           <div class="bank-name">${account.bankName}<span class="account-name">${account.accountName}</span></div>
+           <div class="account-num">${account.accountNum}</div>
+           <div class="balance-amount">
+              <fmt:formatNumber value="${account.balance}" type="number" groupingUsed="true"/>원
+          </div>
+       </div>
+	</div>
 	<div class="fix-layout">
 	    <div class="container" id="transList">
-	    	<h1 class="page-title">거래 내역</h1>
-	        <div class="account-header">
-	            <div class="account-info">
-	                <div class="account-details">
-	                    <div class="bank-name">${account.bankName}</div>
-	                    <div class="account-num">${account.accountName} · ${account.accountNum}</div>
-	                </div>
-	                <div class="balance">
-	                    <div class="balance-label">현재 잔액</div>
-	                    <div class="balance-amount">
-	                        <fmt:formatNumber value="${account.balance}" type="number" groupingUsed="true"/>원
-	                    </div>
-	                </div>
-	            </div>
-	        </div>
-	        
 	        <c:if test="${not empty msg}">
 	            <div class="message">${msg}</div>
 	        </c:if>
 	        
-	        <div class="actions">
-	            <a href="${ctx}/accounts/list" class="btn btn-secondary">
-	                계좌 목록
-	            </a>
+	        <div class="actions text-right mb10">
 	            <c:if test="${pageVO.totalCount == 0}">
 	                <a href="${ctx}/transactions/generate-mock?accountId=${account.accountId}" 
 	                   class="btn btn-success"
