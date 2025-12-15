@@ -14,34 +14,32 @@
 
 <div id="subContents">
 	<div class="fix-layout" id="calendarPage">
-		<div class="container">
-			<h1 class="page-title">💰 가계부</h1>
-	        <!-- Summary -->
-	        <div id="summaryRow">
-	            <div id="monthExpense">이번달 총 지출: 0원</div>
-	            <div id="monthIncome">이번달 총 수입: 0원</div>
-	            <div id="monthNet">순 변화: 0원</div>
-	        </div>
-	        
-	        <!-- Month Picker -->
-	        <div id="monthPickerBox" class="picker-box">
-	            <input id="monthPicker" placeholder="월 선택" class="form-control" readonly>
-	        </div>
-	        
-	        <!-- Week Picker -->
-	        <div id="weekPickerBox" class="picker-box" style="display:none;">
-	            <input id="weekPicker" placeholder="날짜 선택" class="form-control" readonly>
-	        </div>
-	        
-	        <!-- View Buttons -->
-	        <div class="view-buttons">
-	            <button id="monthViewBtn" class="btn btn-primary">월 보기</button>
-	            <button id="weekViewBtn" class="btn btn-secondary">주 보기</button>
-	        </div>
-	        
-	        <!-- Calendar -->
-	        <div id="calendar"></div>			
-		</div>
+		<h1 class="page-title">💰 가계부</h1>
+        <!-- Summary -->
+        <div id="summaryRow">
+            <div id="monthExpense">이번달 총 지출: 0원</div>
+            <div id="monthIncome">이번달 총 수입: 0원</div>
+            <div id="monthNet">순 변화: 0원</div>
+        </div>
+        
+        <!-- Month Picker -->
+        <div id="monthPickerBox" class="picker-box">
+            <input id="monthPicker" placeholder="월 선택" class="form-control" readonly>
+        </div>
+        
+        <!-- Week Picker -->
+        <div id="weekPickerBox" class="picker-box" style="display:none;">
+            <input id="weekPicker" placeholder="날짜 선택" class="form-control" readonly>
+        </div>
+        
+        <!-- View Buttons -->
+        <div class="view-buttons">
+            <button id="monthViewBtn" class="btn btn-primary">월 보기</button>
+            <button id="weekViewBtn" class="btn btn-secondary">주 보기</button>
+        </div>
+        
+        <!-- Calendar -->
+        <div id="calendar"></div>			
 	</div>
 </div>
 

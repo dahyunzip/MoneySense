@@ -16,3 +16,4 @@
 		<p class="copy">Copyright ⓒ 2025 MoneySense. All rights reserved.</p>
 	</div>
 </footer>
+<%@ include file="Fixed.jsp" %>

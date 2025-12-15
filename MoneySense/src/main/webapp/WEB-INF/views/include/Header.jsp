@@ -29,6 +29,7 @@
 	
 	<!-- (S) JS -->
 	<script src="${ctx}/resources/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="${ctx}/resources/js/common.js" type="text/javascript"></script>
 	<!-- (E) JS -->
 </head>
 <body id="RESPONSE_POINT">
@@ -42,18 +43,41 @@
 		            <span class="name">
 		                <sec:authentication property="principal.member.name"/>님
 		            </span>
-		            <form action="${ctx}/members/logout" method="post" style="display: inline;">
-		                <sec:csrfInput/>
-		                <button type="submit" class="btn-logout">로그아웃</button>
-		            </form>
-		            <button class="btn-logout" onclick="location.href='/members/mypage'">마이페이지</button>
 		        </sec:authorize>
 		        
 		        <!-- 비로그인 상태일 때만 표시 -->
 	            <sec:authorize access="isAnonymous()">
 	                <button onclick="location.href='${ctx}/members/signup'" class="btn-logout">회원가입</button>
-	                <button onclick="location.href='${ctx}/members/login'" class="btn-login">로그인</button>
+	                <button onclick="location.href='${ctx}/members/login'" class="btn-logout">로그인</button>
 	            </sec:authorize>
+	            
+	            <div id="menu">
+	            	<a href="#" class="open">메뉴열기</a>
+	            	<div class="menu-wrap">
+	            		<a href="#" class="close">메뉴닫기</a>
+	            		<ul>
+		            		<sec:authorize access="isAuthenticated()">
+		            		<li><a href="/main">홈</a></li>
+		            		<li><a href="/members/mypage">계좌목록</a></li>
+		            		<li><a href="/members/mypage">카드목록</a></li>
+		            		<li><a href="/members/mypage">가계부</a></li>
+		            		<li><a href="/members/mypage">마이페이지</a></li>
+		            		<li>
+		            			<form action="${ctx}/members/logout" method="post" style="display: inline;">
+					                <sec:csrfInput/>
+					                <button type="submit" class="btn-logout">로그아웃</button>
+					            </form>
+		            		</li>
+		            		</sec:authorize>
+		            		<!-- 비로그인 상태일 때만 표시 -->
+				            <sec:authorize access="isAnonymous()">
+		            			<li><a href="/">홈</a></li>
+				                <li><button onclick="location.href='${ctx}/members/signup'" class="btn-logout">회원가입</button></li>
+				                <li><button onclick="location.href='${ctx}/members/login'" class="btn-login">로그인</button></li>
+				            </sec:authorize>
+	            		</ul>
+            		</div>
+	            </div>
 	        </div>
 	    </div>
 	</div>
