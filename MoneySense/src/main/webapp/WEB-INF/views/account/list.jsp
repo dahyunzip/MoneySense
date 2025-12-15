@@ -21,14 +21,9 @@
 	            <div class="message">${msg}</div>
 	        </c:if>
 	        
-	        <div class="header-actions">
-	            <div>
-	                <span style="color: #6c757d;">총 ${accounts.size()}개의 계좌</span>
-	            </div>
-	            <div>
-	                
-	            </div>
-	        </div>
+            <div class="total-account">
+                <span>총 ${accounts.size()}개의 계좌</span>
+            </div>
 	        
 	        <c:choose>
 	            <c:when test="${empty accounts}">

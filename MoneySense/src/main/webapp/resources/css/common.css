@@ -60,7 +60,7 @@ body {font-family:'Pretendard', 'Paperlogy', sans-serif !important;}
 .user-info .name{color:#5a5a5a;}
 .btn-logout {color:#5a5a5a; font-size: 14px; border:none; background:none; cursor:pointer;}
 .btn-logout:hover { text-decoration: underline;}
-#menu .menu-wrap{position:absolute; width:100%; height:100vh; background:#fff; top:0; left:0; padding:70px 50px}
+#menu .menu-wrap{position:absolute; width:100%; height:100vh; background:#fff; top:0; left:0; padding:70px 50px; z-index:30;}
 #menu .menu-wrap li{border-bottom:1px solid #e5e5e5; padding:15px;}
 /* (E) Header */
 
@@ -98,8 +98,8 @@ body {font-family:'Pretendard', 'Paperlogy', sans-serif !important;}
 
 /* (E) fixedMenu */
 html{overflow:hidden;}
-#RESPONSE_POINT{max-width:480px; width:100%; margin:0 auto;min-height:100vh; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow-y:auto; max-height:100vh;}
-
+#contents{min-height:800px;}
+#RESPONSE_POINT{max-width:480px; width:100%; margin:0 auto;min-height:100vh; display:flex; flex-direction:column; /* justify-content:space-between; */ position:relative; overflow-y:auto; max-height:100vh;}
 /******************************RESET.CSS **************************************/
 /* (S) RESET */
 * {margin: 0; padding: 0; box-sizing: border-box; letter-spacing:-0.05em;}

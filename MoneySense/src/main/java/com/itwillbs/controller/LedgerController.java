@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import com.itwillbs.service.OpenBankingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +25,17 @@ import com.itwillbs.service.LedgerService;
 @Controller
 @RequestMapping("/ledger")
 public class LedgerController {
+
+    private final OpenBankingService openBankingService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(LedgerController.class);
 	
 	@Autowired
 	private LedgerService ledgerService;
+
+    LedgerController(OpenBankingService openBankingService) {
+        this.openBankingService = openBankingService;
+    }
 	
 	// 가계부 메인 페이지
 	@GetMapping("/calendar")
@@ -75,15 +81,51 @@ public class LedgerController {
 		Map<String, Integer> dailyTotals = 
 				ledgerService.getDailyTotalsMap(transactions);
 		
+		// 일별 지출/수입 분리 계산
+		Map<String, Map<String, Integer>> dailySummary = calculateDailySummary(transactions);
+		
 		Map<String, Object> response = new HashMap<>();
 		response.put("events", events);
 		response.put("dailyTotals", dailyTotals);
+		response.put("dailySummary", dailySummary);
 		response.put("summary", summary);
 		
 		logger.info(" 거래내역 {}건 조회 완료", transactions.size());
 		logger.info(" =========================================== ");
 		
 		return ResponseEntity.ok(response);
+	}
+	
+	//일별 지출 / 수입 분리 계산
+	private Map<String, Map<String, Integer>> calculateDailySummary(List<CalendarTransactionVO> transactions){
+		Map<String, Map<String, Integer>> dailySummary = new HashMap<>();
+		for(CalendarTransactionVO tx : transactions) {
+			String date = tx.getTransactedAt().toString().substring(0,10);
+			
+			if(!dailySummary.containsKey(date)) {
+				Map<String, Integer> summary = new HashMap<>();
+				summary.put("income", 0);
+				summary.put("expense", 0);
+				dailySummary.put(date, summary);
+			}
+			
+			Map<String, Integer> summary = dailySummary.get(date);
+			if("I".equals(tx.getInoutType())) {
+	            // 수입
+	            summary.put("income", summary.get("income") + Math.abs(tx.getAmount()));
+	        }else {
+	            // 지출
+	            summary.put("expense", summary.get("expense") - Math.abs(tx.getAmount()));
+	        }
+		}
+		
+	    logger.info("일별 수입/지출 분리 완료:"); 
+	    for(Map.Entry<String, Map<String, Integer>> entry : dailySummary.entrySet()) { 
+	        logger.info("수입: {}, 지출: {}",  
+	            entry.getValue().get("income"),   
+	            entry.getValue().get("expense")); 
+	    }
+		return dailySummary;
 	}
 	
 	// 일별 거래내역 API (JSON)
