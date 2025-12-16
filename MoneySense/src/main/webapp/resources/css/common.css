@@ -98,7 +98,7 @@ body {font-family:'Pretendard', 'Paperlogy', sans-serif !important;}
 
 /* (E) fixedMenu */
 html{overflow:hidden;}
-#contents{min-height:800px;}
+/* #contents{min-height:800px;} */
 #RESPONSE_POINT{max-width:480px; width:100%; margin:0 auto;min-height:100vh; display:flex; flex-direction:column; /* justify-content:space-between; */ position:relative; overflow-y:auto; max-height:100vh;}
 /******************************RESET.CSS **************************************/
 /* (S) RESET */
