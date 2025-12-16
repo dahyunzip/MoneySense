@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <c:if test="${not empty msg}">
     <script>
         alert("${msg}");
@@ -13,239 +14,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 - MoneySense</title>
     <!-- jQuery CDN -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #fafafa;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            width: 100%;
-            max-width: 450px;
-        }
-        
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 28px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
-        }
-        
-        input[type="email"],
-        input[type="password"],
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        input.valid {
-            border-color: #28a745;
-        }
-        
-        input.invalid {
-            border-color: #dc3545;
-        }
-        
-        .email-check {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .email-check input {
-            flex: 1;
-        }
-        
-        .btn-check {
-            padding: 12px 20px;
-            background: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            white-space: nowrap;
-        }
-        
-        .btn-check:hover {
-            background: #5a6268;
-        }
-        
-        .message {
-            font-size: 12px;
-            margin-top: 5px;
-        }
-        
-        .message.success {
-            color: #28a745;
-        }
-        
-        .message.error {
-            color: #dc3545;
-        }
-        
-        .message.info {
-            color: #17a2b8;
-        }
-        
-        .password-strength {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            display: none;
-        }
-        
-        .password-strength.weak {
-            background: #f8d7da;
-            color: #721c24;
-            display: block;
-        }
-        
-        .password-strength.medium {
-            background: #fff3cd;
-            color: #856404;
-            display: block;
-        }
-        
-        .password-strength.strong {
-            background: #d4edda;
-            color: #155724;
-            display: block;
-        }
-        
-        .password-requirements {
-            margin-top: 8px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 5px;
-            font-size: 12px;
-        }
-        
-        .password-requirements ul {
-            margin: 5px 0;
-            padding-left: 20px;
-        }
-        
-        .password-requirements li {
-            margin: 3px 0;
-            color: #6c757d;
-        }
-        
-        .password-requirements li.valid {
-            color: #28a745;
-        }
-        
-        .password-requirements li.invalid {
-            color: #dc3545;
-        }
-        
-        .checkbox-group {
-            margin: 20px 0;
-        }
-        
-        .checkbox-group label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            font-weight: normal;
-            cursor: pointer;
-        }
-        
-        .checkbox-group input[type="checkbox"] {
-            width: auto;
-            margin-right: 8px;
-        }
-        
-        .btn-submit {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        .btn-submit:hover {
-            transform: translateY(-2px);
-        }
-        
-        .btn-submit:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-        }
-        
-        .login-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-        
-        .alert {
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .alert-danger {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
+    <script src="${ctx }/resources/js/jquery-3.7.1.min.js"></script>
+    
+    <link href="${ctx }/resources/css/common.css" rel="stylesheet">
+    <%-- <link href="${ctx }/resources/css/sub.css" rel="stylesheet"> --%>
 </head>
-<body>
+<style>
+#signup {background: #fafafa; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px;}
+#signup .container {background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 100%; max-width: 450px;}
+#signup h2 {text-align: center; color: #333; margin-bottom: 30px; font-size: 28px;}
+#signup .form-group {margin-bottom: 20px;}
+#signup label {display: block; margin-bottom: 8px; color: #555; font-weight: 500;}
+#signup input[type="email"], #signup input[type="password"], #signup input[type="text"] {width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; transition: border-color 0.3s;}
+#signup input:focus {outline: none; border-color: #667eea;}
+#signup input.valid {border-color: #28a745;}
+#signup input.invalid {border-color: #dc3545;}
+#signup .email-check {display: flex; gap: 10px;}
+#signup .email-check input {flex: 1;}
+#signup .btn-check {padding: 12px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; white-space: nowrap;}
+#signup .btn-check:hover {background: #5a6268;}
+#signup .message {font-size: 12px; margin-top: 5px;}
+#signup .message.success {color: #28a745;}
+#signup .message.error {color: #dc3545;}
+#signup .message.info {color: #17a2b8;}
+#signup .password-strength {margin-top: 10px; padding: 10px; border-radius: 5px; font-size: 12px; display: none;}
+#signup .password-strength.weak {background: #f8d7da; color: #721c24; display: block;}
+#signup .password-strength.medium {background: #fff3cd; color: #856404; display: block;}
+#signup .password-strength.strong {background: #d4edda; color: #155724; display: block;}
+#signup .password-requirements {margin-top: 8px; padding: 10px; background: #f8f9fa; border-radius: 5px; font-size: 12px;}
+#signup .password-requirements ul {margin: 5px 0; padding-left: 20px;}
+#signup .password-requirements li {margin: 3px 0; color: #6c757d;}
+#signup .password-requirements li.valid {color: #28a745;}
+#signup .password-requirements li.invalid {color: #dc3545;}
+#signup .checkbox-group {margin: 20px 0;}
+#signup .checkbox-group label {display: flex; align-items: center; margin-bottom: 10px; font-weight: normal; cursor: pointer; font-size:12px;}
+#signup .checkbox-group input[type="checkbox"] {width: auto; margin-right: 8px;}
+#signup .btn-submit {width: 100%; padding: 14px; background: #00AEEE; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s;}
+#signup .btn-submit:hover {transform: translateY(-2px);}
+#signup .btn-submit:disabled {background: #ccc; cursor: not-allowed; transform: none;}
+#signup .alert {padding: 12px; border-radius: 5px; margin-bottom: 20px; text-align: center;}
+#signup .alert-danger {background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;}
+</style>
+<body id="signup">
     <div class="container">
         <h2><img src="/resources/images/logo.svg" width="160px"></h2>
         
@@ -309,8 +119,8 @@
             <button type="submit" class="btn-submit" id="submitBtn" disabled>회원가입</button>
         </form>
         
-        <div class="login-link">
-            이미 계정이 있으신가요? <a href="${ctx}/members/login">로그인</a>
+        <div class="login-link mt20 text-center">
+            이미 계정이 있으신가요? <a href="${ctx}/members/login" class="btn-logout">로그인</a>
         </div>
     </div>
     
