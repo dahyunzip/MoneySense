@@ -23,7 +23,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #fafafa;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -247,7 +247,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>💰 MoneySense</h2>
+        <h2><img src="/resources/images/logo.svg" width="160px"></h2>
         
         <c:if test="${not empty msg}">
             <div class="alert alert-danger">${msg}</div>
