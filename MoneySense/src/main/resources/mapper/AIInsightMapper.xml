@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwillbs.mapper.AIInsightMapper">
+
+    <!-- resultMap -->
+    <resultMap id="aiInsightMap" type="com.itwillbs.domain.AIInsightVO">
+        <id property="insightId" column="insight_id" />
+        <result property="memberId" column="member_id" />
+        <result property="insightType" column="insight_type" />
+        <result property="period" column="period" />
+        <result property="category" column="category" />
+        <result property="currentAmount" column="current_amount" />
+        <result property="previousAmount" column="previous_amount" />
+        <result property="changeRate" column="change_rate" />
+        <result property="summary" column="summary" />
+        <result property="detailData" column="detail_data" />
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+
+    <!-- 인사이트 저장 -->
+    <insert id="insertInsight" useGeneratedKeys="true" keyProperty="insightId">
+        INSERT INTO ai_insight (
+            member_id,
+            insight_type,
+            period,
+            category,
+            current_amount,
+            previous_amount,
+            change_rate,
+            summary,
+            detail_data
+        ) VALUES (
+            #{memberId},
+            #{insightType},
+            #{period},
+            #{category},
+            #{currentAmount},
+            #{previousAmount},
+            #{changeRate},
+            #{summary},
+            #{detailData}
+        )
+    </insert>
+    
+    <!-- 최신 인사이트 조회 -->
+    <select id="selectRecentInsights" resultMap="aiInsightMap">
+        SELECT 
+            insight_id,
+            member_id,
+            insight_type,
+            period,
+            category,
+            current_amount,
+            previous_amount,
+            change_rate,
+            summary,
+            detail_data,
+            created_at
+        FROM ai_insight
+        WHERE member_id = #{memberId}
+        ORDER BY created_at DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 특정 기간 인사이트 조회 -->
+    <select id="selectInsightByPeriod" resultMap="aiInsightMap">
+        SELECT 
+            insight_id,
+            member_id,
+            insight_type,
+            period,
+            category,
+            current_amount,
+            previous_amount,
+            change_rate,
+            summary,
+            detail_data,
+            created_at
+        FROM ai_insight
+        WHERE member_id = #{memberId}
+          AND insight_type = #{insightType}
+          AND period = #{period}
+          AND category IS NULL
+        ORDER BY created_at DESC
+        LIMIT 1
+    </select>
+    
+    <!-- 특정 카테고리 인사이트 조회 -->
+    <select id="selectCategoryInsight" resultMap="aiInsightMap">
+        SELECT 
+            insight_id,
+            member_id,
+            insight_type,
+            period,
+            category,
+            current_amount,
+            previous_amount,
+            change_rate,
+            summary,
+            detail_data,
+            created_at
+        FROM ai_insight
+        WHERE member_id = #{memberId}
+          AND period = #{period}
+          AND category = #{category}
+        ORDER BY created_at DESC
+        LIMIT 1
+    </select>
+    
+    <!-- 월간 인사이트 목록 -->
+    <select id="selectMonthlyInsights" resultMap="aiInsightMap">
+        SELECT 
+            insight_id,
+            member_id,
+            insight_type,
+            period,
+            category,
+            current_amount,
+            previous_amount,
+            change_rate,
+            summary,
+            detail_data,
+            created_at
+        FROM ai_insight
+        WHERE member_id = #{memberId}
+          AND insight_type = 'MONTHLY'
+          AND period LIKE CONCAT(#{year}, '%')
+        ORDER BY period DESC, created_at DESC
+    </select>
+    
+    <!-- 주간 인사이트 목록 -->
+    <select id="selectWeeklyInsights" resultMap="aiInsightMap">
+        SELECT 
+            insight_id,
+            member_id,
+            insight_type,
+            period,
+            category,
+            current_amount,
+            previous_amount,
+            change_rate,
+            summary,
+            detail_data,
+            created_at
+        FROM ai_insight
+        WHERE member_id = #{memberId}
+          AND insight_type = 'WEEKLY'
+          AND period LIKE CONCAT(#{year}, '-W%')
+        ORDER BY period DESC, created_at DESC
+    </select>
+    
+    <!-- 인사이트 존재 확인 -->
+    <select id="existsInsight" resultType="int">
+        SELECT COUNT(*)
+        FROM ai_insight
+        WHERE member_id = #{memberId}
+          AND insight_type = #{insightType}
+          AND period = #{period}
+          AND (category = #{category} OR (category IS NULL AND #{category} IS NULL))
+    </select>
+    
+    <!-- 인사이트 업데이트 -->
+    <update id="updateInsight">
+        UPDATE ai_insight
+        SET current_amount = #{currentAmount},
+            previous_amount = #{previousAmount},
+            change_rate = #{changeRate},
+            summary = #{summary},
+            detail_data = #{detailData}
+        WHERE insight_id = #{insightId}
+    </update>
+    
+    <!-- 인사이트 삭제 -->
+    <delete id="deleteInsight">
+        DELETE FROM ai_insight
+        WHERE insight_id = #{insightId}
+    </delete>
+
+</mapper>

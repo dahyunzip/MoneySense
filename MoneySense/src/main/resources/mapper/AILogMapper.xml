@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwillbs.mapper.AILogMapper">
+
+	<!-- ResultMap -->
+	<resultMap id="aiLogMap" type="com.itwillbs.domain.AILogVO">
+        <id property="aiLogId" column="ai_log_id" />
+        <result property="memberId" column="member_id" />
+        <result property="logType" column="log_type" />
+        <result property="question" column="question" />
+        <result property="answer" column="answer" />
+        <result property="analysisPeriod" column="analysis_period" />
+        <result property="metadata" column="metadata" />
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+    
+    <!-- 챗봇 로그 저장 -->
+    <insert id="insertChatLog" useGeneratedKeys="true" keyProperty="aiLogId">
+        INSERT INTO ai_log (
+            member_id,
+            log_type,
+            question,
+            answer,
+            analysis_period,
+            metadata
+        ) VALUES (
+            #{memberId},
+            #{logType},
+            #{question},
+            #{answer},
+            #{analysisPeriod},
+            #{metadata}
+        )
+    </insert>
+    
+    <!-- 챗봇 이력 조회 (최근 N개) -->
+    <select id="selectChatHistory" resultMap="aiLogMap">
+        SELECT 
+            ai_log_id,
+            member_id,
+            log_type,
+            question,
+            answer,
+            analysis_period,
+            metadata,
+            created_at
+        FROM ai_log
+        WHERE member_id = #{memberId}
+          AND log_type = 'CHAT'
+        ORDER BY created_at DESC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 특정 로그 조회 -->
+    <select id="selectLogById" resultMap="aiLogMap">
+        SELECT 
+            ai_log_id,
+            member_id,
+            log_type,
+            question,
+            answer,
+            analysis_period,
+            metadata,
+            created_at
+        FROM ai_log
+        WHERE ai_log_id = #{aiLogId}
+    </select>
+    
+    <!-- 특정 기간 로그 조회 -->
+    <select id="selectLogsByPeriod" resultMap="aiLogMap">
+        SELECT 
+            ai_log_id,
+            member_id,
+            log_type,
+            question,
+            answer,
+            analysis_period,
+            metadata,
+            created_at
+        FROM ai_log
+        WHERE member_id = #{memberId}
+          AND log_type = #{logType}
+          AND analysis_period = #{analysisPeriod}
+        ORDER BY created_at DESC
+    </select>
+    
+    <!-- 로그 삭제 -->
+    <delete id="deleteLog">
+        DELETE FROM ai_log
+        WHERE ai_log_id = #{aiLogId}
+    </delete>
+    
+    <!-- 회원의 모든 로그 삭제 -->
+    <delete id="deleteLogsByMemberId">
+        DELETE FROM ai_log
+        WHERE member_id = #{memberId}
+    </delete>
+</mapper>
