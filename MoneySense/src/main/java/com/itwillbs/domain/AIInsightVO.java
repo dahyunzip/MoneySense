@@ -11,7 +11,8 @@ public class AIInsightVO {
 	private int memberId;				// 회원ID
 	private String insightType;			// Monthly, Weekly, CATEGORY
 	private String period;				// 분석 기간
-	private String category;			// 카테고리명
+	private Integer categoryId;			// 카테고리Id
+	private String categoryName;
 	private int currentAmount;			// 현재 기간 금액
 	private Integer previousAmount;		// 이전 기간 금액
 	private BigDecimal changeRate;		// 변화율(%)

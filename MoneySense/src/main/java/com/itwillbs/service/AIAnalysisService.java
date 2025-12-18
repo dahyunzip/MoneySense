@@ -89,16 +89,16 @@ public class AIAnalysisService {
     // 카테고리별 인사이트 생성
     @Transactional
     public AIInsightVO generateCategoryInsight(
-            int memberId, int year, int month, String category) throws Exception {
+            int memberId, int year, int month, int categoryId) throws Exception {
         
-        logger.info("카테고리별 인사이트 생성 - memberId: {}", memberId);
+        logger.info("카테고리별 인사이트 생성 - memberId: {}, categoryId: {}", 
+            memberId,categoryId);
         logger.info("{}년 {}월", year, month);
-        logger.info("category: {}", category);
         
         String period = String.format("%d-%02d", year, month);
         
         // 이미 존재하는지 확인
-        AIInsightVO existing = aiInsightMapper.selectCategoryInsight(memberId, period, category);
+        AIInsightVO existing = aiInsightMapper.selectCategoryInsight(memberId, period, categoryId);
         if (existing != null) {
             logger.info("이미 생성된 카테고리 인사이트 존재: {}", existing.getInsightId());
             return existing;
@@ -107,7 +107,7 @@ public class AIAnalysisService {
         // 1. 현재 월 데이터
         List<CalendarTransactionVO> currentTransactions = 
             ledgerMapper.selectMonthlyTransactions(memberId, year, month);
-        int currentExpense = calculateCategoryExpense(currentTransactions, category);
+        int currentExpense = calculateCategoryExpense(currentTransactions, categoryId);
         
         // 2. 이전 월 데이터
         int prevMonth = month - 1;
@@ -118,21 +118,24 @@ public class AIAnalysisService {
         }
         List<CalendarTransactionVO> prevTransactions = 
             ledgerMapper.selectMonthlyTransactions(memberId, prevYear, prevMonth);
-        int prevExpense = calculateCategoryExpense(prevTransactions, category);
+        int prevExpense = calculateCategoryExpense(prevTransactions, categoryId);
         
         // 3. 변화율 계산
         BigDecimal changeRate = calculateChangeRate(currentExpense, prevExpense);
         
-        // 4. GPT로 요약문 생성
-        String summary = generateCategorySummaryText(
-            category, year, month, currentExpense, prevExpense, changeRate);
+        // 4. 카테고리명 가져오기
+        String categoryName = getCategoryNameById(categoryId);
         
-        // 5. 인사이트 저장
+        // 5. GPT로 요약문 생성
+        String summary = generateCategorySummaryText(
+            categoryName, year, month, currentExpense, prevExpense, changeRate);
+        
+        // 6. 인사이트 저장
         AIInsightVO insight = new AIInsightVO();
         insight.setMemberId(memberId);
         insight.setInsightType("CATEGORY");
         insight.setPeriod(period);
-        insight.setCategory(category);
+        insight.setCategoryId(categoryId);  // ✅ 수정
         insight.setCurrentAmount(currentExpense);
         insight.setPreviousAmount(prevExpense);
         insight.setChangeRate(changeRate);
@@ -145,7 +148,7 @@ public class AIAnalysisService {
         return insight;
     }
     
- // 최신 인사이트 조회
+    // 최신 인사이트 조회
     public List<AIInsightVO> getRecentInsights(int memberId, int limit) {
         logger.info("최신 인사이트 조회 - memberId: {}, limit: {}", memberId, limit);
         return aiInsightMapper.selectRecentInsights(memberId, limit);
@@ -163,8 +166,7 @@ public class AIAnalysisService {
     }
     
     // 카테고리별 지출 계산
-    private int calculateCategoryExpense(List<CalendarTransactionVO> transactions, String category) {
-        int categoryId = getCategoryId(category);
+    private int calculateCategoryExpense(List<CalendarTransactionVO> transactions, int categoryId) {
         int total = 0;
         
         for (CalendarTransactionVO tx : transactions) {
@@ -178,20 +180,20 @@ public class AIAnalysisService {
     }
     
     // 카테고리 이름 -> ID 변환
-    private int getCategoryId(String categoryName) {
-        Map<String, Integer> categoryMap = new HashMap<>();
-        categoryMap.put("식비", 1);
-        categoryMap.put("카페", 2);
-        categoryMap.put("쇼핑", 3);
-        categoryMap.put("교통", 4);
-        categoryMap.put("문화", 5);
-        categoryMap.put("의료", 6);
-        categoryMap.put("교육", 7);
-        categoryMap.put("주거", 8);
-        categoryMap.put("통신", 9);
-        categoryMap.put("기타", 10);
+    private String getCategoryNameById(int categoryId) {
+        Map<Integer, String> categoryMap = new HashMap<>();
+        categoryMap.put(1, "식비");
+        categoryMap.put(2, "교육");
+        categoryMap.put(3, "쇼핑");
+        categoryMap.put(4, "문화");
+        categoryMap.put(5, "의료/건강");
+        categoryMap.put(6, "교통");
+        categoryMap.put(7, "주거/통신");
+        categoryMap.put(8, "주거");
+        categoryMap.put(9, "통신");
+        categoryMap.put(10, "기타");
         
-        return categoryMap.getOrDefault(categoryName, 10);
+        return categoryMap.getOrDefault(categoryId, "기타");
     }
     
     // 변화율 계산
@@ -253,7 +255,7 @@ public class AIAnalysisService {
     
     // 카테고리 요약문 생성
     private String generateCategorySummaryText(
-            String category, int year, int month, 
+            String categoryName, int year, int month, 
             int current, int previous, BigDecimal changeRate) throws Exception {
         
         String systemPrompt = 
@@ -263,7 +265,7 @@ public class AIAnalysisService {
         
         String userPrompt = String.format(
             "%s 카테고리 %d년 %d월 분석:\n이번 달: %d원\n지난 달: %d원\n변화율: %s%%",
-            category, year, month, current, previous, changeRate.toString()
+            categoryName, year, month, current, previous, changeRate.toString()
         );
         
         return chatGPTService.askChatGPT(systemPrompt, userPrompt);

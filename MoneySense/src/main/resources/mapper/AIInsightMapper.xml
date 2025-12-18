@@ -8,7 +8,8 @@
         <result property="memberId" column="member_id" />
         <result property="insightType" column="insight_type" />
         <result property="period" column="period" />
-        <result property="category" column="category" />
+        <result property="categoryId" column="category_id" />
+        <result property="categoryName" column="category_name" />
         <result property="currentAmount" column="current_amount" />
         <result property="previousAmount" column="previous_amount" />
         <result property="changeRate" column="change_rate" />
@@ -23,7 +24,7 @@
             member_id,
             insight_type,
             period,
-            category,
+            category_id,
             current_amount,
             previous_amount,
             change_rate,
@@ -33,7 +34,7 @@
             #{memberId},
             #{insightType},
             #{period},
-            #{category},
+            #{categoryId},
             #{currentAmount},
             #{previousAmount},
             #{changeRate},
@@ -42,111 +43,122 @@
         )
     </insert>
     
-    <!-- 최신 인사이트 조회 -->
+    <!-- 최신 인사이트 조회 (카테고리명 JOIN) -->
     <select id="selectRecentInsights" resultMap="aiInsightMap">
         SELECT 
-            insight_id,
-            member_id,
-            insight_type,
-            period,
-            category,
-            current_amount,
-            previous_amount,
-            change_rate,
-            summary,
-            detail_data,
-            created_at
-        FROM ai_insight
-        WHERE member_id = #{memberId}
-        ORDER BY created_at DESC
+            ai.insight_id,
+            ai.member_id,
+            ai.insight_type,
+            ai.period,
+            ai.category_id,
+            c.category_name,
+            ai.current_amount,
+            ai.previous_amount,
+            ai.change_rate,
+            ai.summary,
+            ai.detail_data,
+            ai.created_at
+        FROM ai_insight ai
+        LEFT JOIN category c ON ai.category_id = c.category_id
+        WHERE ai.member_id = #{memberId}
+        ORDER BY ai.created_at DESC
         LIMIT #{limit}
     </select>
     
     <!-- 특정 기간 인사이트 조회 -->
     <select id="selectInsightByPeriod" resultMap="aiInsightMap">
         SELECT 
-            insight_id,
-            member_id,
-            insight_type,
-            period,
-            category,
-            current_amount,
-            previous_amount,
-            change_rate,
-            summary,
-            detail_data,
-            created_at
-        FROM ai_insight
-        WHERE member_id = #{memberId}
-          AND insight_type = #{insightType}
-          AND period = #{period}
-          AND category IS NULL
-        ORDER BY created_at DESC
+            ai.insight_id,
+            ai.member_id,
+            ai.insight_type,
+            ai.period,
+            ai.category_id,
+            c.category_name,
+            ai.current_amount,
+            ai.previous_amount,
+            ai.change_rate,
+            ai.summary,
+            ai.detail_data,
+            ai.created_at
+        FROM ai_insight ai
+        LEFT JOIN category c ON ai.category_id = c.category_id
+        WHERE ai.member_id = #{memberId}
+          AND ai.insight_type = #{insightType}
+          AND ai.period = #{period}
+          AND ai.category_id IS NULL
+        ORDER BY ai.created_at DESC
         LIMIT 1
     </select>
     
     <!-- 특정 카테고리 인사이트 조회 -->
+    <!-- 특정 카테고리 인사이트 조회 -->
     <select id="selectCategoryInsight" resultMap="aiInsightMap">
         SELECT 
-            insight_id,
-            member_id,
-            insight_type,
-            period,
-            category,
-            current_amount,
-            previous_amount,
-            change_rate,
-            summary,
-            detail_data,
-            created_at
-        FROM ai_insight
-        WHERE member_id = #{memberId}
-          AND period = #{period}
-          AND category = #{category}
-        ORDER BY created_at DESC
+            ai.insight_id,
+            ai.member_id,
+            ai.insight_type,
+            ai.period,
+            ai.category_id,
+            c.category_name,
+            ai.current_amount,
+            ai.previous_amount,
+            ai.change_rate,
+            ai.summary,
+            ai.detail_data,
+            ai.created_at
+        FROM ai_insight ai
+        LEFT JOIN category c ON ai.category_id = c.category_id
+        WHERE ai.member_id = #{memberId}
+          AND ai.period = #{period}
+          AND ai.category_id = #{categoryId}
+        ORDER BY ai.created_at DESC
         LIMIT 1
     </select>
     
     <!-- 월간 인사이트 목록 -->
     <select id="selectMonthlyInsights" resultMap="aiInsightMap">
         SELECT 
-            insight_id,
-            member_id,
-            insight_type,
-            period,
-            category,
-            current_amount,
-            previous_amount,
-            change_rate,
-            summary,
-            detail_data,
-            created_at
-        FROM ai_insight
-        WHERE member_id = #{memberId}
-          AND insight_type = 'MONTHLY'
-          AND period LIKE CONCAT(#{year}, '%')
-        ORDER BY period DESC, created_at DESC
+            ai.insight_id,
+            ai.member_id,
+            ai.insight_type,
+            ai.period,
+            ai.category_id,
+            c.category_name,
+            ai.current_amount,
+            ai.previous_amount,
+            ai.change_rate,
+            ai.summary,
+            ai.detail_data,
+            ai.created_at
+        FROM ai_insight ai
+        LEFT JOIN category c ON ai.category_id = c.category_id
+        WHERE ai.member_id = #{memberId}
+          AND ai.insight_type = 'MONTHLY'
+          AND ai.period LIKE CONCAT(#{year}, '%')
+        ORDER BY ai.period DESC, ai.created_at DESC
     </select>
     
     <!-- 주간 인사이트 목록 -->
     <select id="selectWeeklyInsights" resultMap="aiInsightMap">
         SELECT 
-            insight_id,
-            member_id,
-            insight_type,
-            period,
-            category,
-            current_amount,
-            previous_amount,
-            change_rate,
-            summary,
-            detail_data,
-            created_at
-        FROM ai_insight
-        WHERE member_id = #{memberId}
-          AND insight_type = 'WEEKLY'
-          AND period LIKE CONCAT(#{year}, '-W%')
-        ORDER BY period DESC, created_at DESC
+            ai.insight_id,
+            ai.member_id,
+            ai.insight_type,
+            ai.period,
+            ai.category_id,
+            c.category_name,
+            ai.current_amount,
+            ai.previous_amount,
+            ai.change_rate,
+            ai.summary,
+            ai.detail_data,
+            ai.created_at
+        FROM ai_insight ai
+        LEFT JOIN category c ON ai.category_id = c.category_id
+        WHERE ai.member_id = #{memberId}
+          AND ai.insight_type = 'WEEKLY'
+          AND ai.period LIKE CONCAT(#{year}, '-W%')
+        ORDER BY ai.period DESC, ai.created_at DESC
     </select>
     
     <!-- 인사이트 존재 확인 -->
@@ -156,7 +168,7 @@
         WHERE member_id = #{memberId}
           AND insight_type = #{insightType}
           AND period = #{period}
-          AND (category = #{category} OR (category IS NULL AND #{category} IS NULL))
+          AND (category_id = #{categoryId} OR (category_id IS NULL AND #{categoryId} IS NULL))
     </select>
     
     <!-- 인사이트 업데이트 -->

@@ -24,11 +24,11 @@ public interface AIInsightMapper {
 			);
 	
 	// 특정 카테고리 인사이트 조회
-    AIInsightVO selectCategoryInsight(
-        @Param("memberId") int memberId,
-        @Param("period") String period,
-        @Param("category") String category
-    );
+	AIInsightVO selectCategoryInsight(
+	    @Param("memberId") int memberId,
+	    @Param("period") String period,
+	    @Param("categoryId") int categoryId
+	);
 	
 	// 월간 인사이트 목록
 	List<AIInsightVO> selectMonthlyInsights(
@@ -45,11 +45,11 @@ public interface AIInsightMapper {
 	
 	// 인사이트 존재 확인
 	int existsInsight(
-			@Param("memberId") int memberId,
-			@Param("insightType") String insightType,
-			@Param("period") String period,
-			@Param("category") String category
-			);
+	        @Param("memberId") int memberId,
+	        @Param("insightType") String insightType,
+	        @Param("period") String period,
+	        @Param("categoryId") Integer categoryId
+	    );
 	
 	// 인사이트 업데이트
 	void updateInsight(AIInsightVO insight);

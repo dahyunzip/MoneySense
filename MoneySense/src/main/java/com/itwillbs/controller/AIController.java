@@ -150,12 +150,12 @@ public class AIController {
     @PostMapping("/insights/category")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> generateCategoryInsight(
-            @RequestParam String category,
+            @RequestParam int categoryId,
             @RequestParam(defaultValue = "0") int year,
             @RequestParam(defaultValue = "0") int month,
             Authentication auth) {
         
-        logger.info("카테고리 인사이트 생성 요청 - category: {}", category);
+        logger.info("카테고리 인사이트 생성 요청 - categoryId: {}", categoryId);
         logger.info("{}년 {}월", year, month);
         
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
@@ -173,7 +173,7 @@ public class AIController {
         try {
             // 카테고리 인사이트 생성
             AIInsightVO insight = aiAnalysisService.generateCategoryInsight(
-                memberId, year, month, category);
+                memberId, year, month, categoryId);
             
             response.put("success", true);
             response.put("insight", insight);
