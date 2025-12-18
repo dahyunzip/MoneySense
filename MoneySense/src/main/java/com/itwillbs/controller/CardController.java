@@ -20,10 +20,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.CardTransactionVO;
 import com.itwillbs.domain.CardVO;
+import com.itwillbs.domain.CategoryVO;
 import com.itwillbs.domain.Criteria;
 import com.itwillbs.domain.PageVO;
+import com.itwillbs.mapper.CategoryMapper;
 import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.service.CardService;
+import com.itwillbs.service.CategoryService;
 
 @Controller
 @RequestMapping("/cards")
@@ -33,6 +36,12 @@ public class CardController {
 	
 	@Autowired
 	private CardService cardService;
+	
+	@Autowired
+	private CategoryMapper categoryMapper;
+	
+	@Autowired
+	private CategoryService categoryService;
 	
 	// 카드 목록 페이지
 	@GetMapping("/list")
@@ -142,9 +151,12 @@ public class CardController {
 			pageVO= cardService.getPageVO(cardId, cri);
 		}
 		
+		List<CategoryVO> categories = categoryMapper.selectDefaultCategories();
+		
 		model.addAttribute("card", card);
 		model.addAttribute("transactions", transactions);
 		model.addAttribute("pageVO", pageVO);
+		model.addAttribute("categories", categories);
 		
 		logger.info(" 카드 사용내역 조회 완료 - 총 {}건, {} 페이지", pageVO.getTotalCount(), pageVO.getTotalPages());
 		logger.info(" ================================================ ");
@@ -249,7 +261,57 @@ public class CardController {
 		return ResponseEntity.ok(response);
 	}
 	
+	// 카테고리 업데이트 (AJAX)
+	@PostMapping("/update-category")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> updateCategory(
+			@RequestParam("transactionId") long transactionId,
+			@RequestParam("categoryId") int categoryId) {
+		
+		logger.info("카테고리 업데이트 요청 - transactionId: {}, categoryId: {}", transactionId, categoryId);
+		
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			boolean success = cardService.updateCategory(transactionId, categoryId);
+			response.put("success", success);
+			response.put("message", success ? "카테고리가 변경되었습니다." : "카테고리 변경에 실패했습니다.");
+		} catch (Exception e) {
+			logger.error("카테고리 업데이트 오류: {}", e.getMessage());
+			response.put("success", false);
+			response.put("message", "오류가 발생했습니다.");
+		}
+		
+		return ResponseEntity.ok(response);
+	}
 	
+	// 카테고리 학습 (AJAX)
+	@PostMapping("/learn-category")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> learnCategory(
+			@RequestParam("transactionName") String transactionName,
+			@RequestParam("categoryId") int categoryId,
+			Authentication auth) {
+		
+		CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+		int memberId = userDetails.getMember().getMemberId();
+		
+		logger.info("카테고리 학습 - memberId: {}", memberId);
+		logger.info(" transactionName: {}, categoryId: {}", transactionName, categoryId);
+		
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			categoryService.learnFromUser(memberId, transactionName, categoryId);
+			response.put("success", true);
+		} catch (Exception e) {
+			logger.error("카테고리 학습 오류: {}", e.getMessage());
+			response.put("success", false);
+		}
+		
+		return ResponseEntity.ok(response);
+	}
+
 	
 	
 	

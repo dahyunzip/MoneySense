@@ -99,6 +99,21 @@
 		                                            ${tx.installment}개월 할부
 		                                        </div>
 		                                    </c:if>
+		                                    <!-- 카테고리 드롭다운 추가 -->
+						                    <div class="transaction-category">
+						                        <select class="category-select" 
+						                                data-tx-id="${tx.transactionId}"
+						                                data-tx-type="card"
+						                                data-tx-desc="${tx.merchantName}">
+						                            <option value="">카테고리 선택</option>
+						                            <c:forEach var="cat" items="${categories}">
+						                                <option value="${cat.categoryId}" 
+						                                        ${tx.categoryId == cat.categoryId ? 'selected' : ''}>
+						                                    ${cat.categoryName}
+						                                </option>
+						                            </c:forEach>
+						                        </select>
+						                    </div>
 		                                </div>
 		                                <div class="transaction-amount">
 		                                    <div class="amount-value">
@@ -326,6 +341,54 @@ $(function() {
             },
             error: function() {
                 alert('메모 삭제 중 오류가 발생했습니다.');
+            }
+        });
+    });
+    
+	// 카테고리 변경
+    $(document).on('change', '.category-select', function() {
+        const txId = $(this).data('tx-id');
+        const txType = $(this).data('tx-type');
+        const txDesc = $(this).data('tx-desc');
+        const categoryId = $(this).val();
+        
+        if (!categoryId) {
+            alert('카테고리를 선택해주세요.');
+            return;
+        }
+        
+        $.ajax({
+            url: '${ctx}/cards/update-category',
+            type: 'POST',
+            data: {
+                transactionId: txId,
+                categoryId: categoryId
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function(data) {
+                if (data.success) {
+                    // 사용자 학습 호출
+                    $.ajax({
+                        url: '${ctx}/cards/learn-category',
+                        type: 'POST',
+                        data: {
+                            transactionName: txDesc,
+                            categoryId: categoryId
+                        },
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                        }
+                    });
+                    
+                    alert('카테고리가 변경되었습니다.');
+                } else {
+                    alert('카테고리 변경에 실패했습니다.');
+                }
+            },
+            error: function() {
+                alert('카테고리 변경 중 오류가 발생했습니다.');
             }
         });
     });

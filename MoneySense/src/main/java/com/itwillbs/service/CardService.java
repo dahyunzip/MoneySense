@@ -30,6 +30,9 @@ public class CardService {
 	@Autowired
 	private CardTransactionMapper cardTransactionMapper;
 	
+	@Autowired
+	private CategoryService categoryService;
+	
 	// 카드사 목록
 	private static final String[] CARD_COMPANIES = {
 		"삼성카드", "현대카드", "신한카드", "KB국민카드", "하나카드",
@@ -175,9 +178,8 @@ public class CardService {
 				transaction.setTransactedAt(Timestamp.valueOf(txTime));
 				
 				// 가맹점명 랜덤 선택
-				transaction.setMerchantName(
-						MERCHANT_NAMES[random.nextInt(MERCHANT_NAMES.length)]
-				);
+				String merchantName = MERCHANT_NAMES[random.nextInt(MERCHANT_NAMES.length)];
+			    transaction.setMerchantName(merchantName);
 				
 				// 결제 금액
 				int amount = (random.nextInt(200) + 1) * 1000;
@@ -192,8 +194,14 @@ public class CardService {
 								installmentOptions[random.nextInt(installmentOptions.length)]
 					);
 				}
-				
-				transaction.setCategoryId(null);
+				try {
+			        int memberId = cardMapper.selectCardById(cardId).getMemberId();
+			        Integer categoryId = categoryService.autoClassifyCategory(memberId, merchantName);
+			        transaction.setCategoryId(categoryId);
+			    } catch (Exception e) {
+			        logger.warn("카테고리 자동 분류 실패: {}", e.getMessage());
+			        transaction.setCategoryId(10); // 기타
+			    }
 				transaction.setMemo(null);
 				
 				cardTransactionMapper.insertTransaction(transaction);

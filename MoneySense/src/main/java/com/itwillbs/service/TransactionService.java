@@ -28,6 +28,9 @@ public class TransactionService {
 	@Autowired
 	private BankAccountMapper accountMapper;
 	
+	@Autowired
+	private CategoryService categoryService;
+	
 	// Mock 거래 설명 (실제 같은 거래 내역)
     private static final String[] WITHDRAWAL_DESCRIPTIONS = {
         "스타벅스 강남점", "CU편의점", "올리브영 역삼점", "쿠팡 결제",
@@ -94,10 +97,19 @@ public class TransactionService {
     				transaction.setAmount(amount);
     				
     				// 설명 랜덤 선택
-    				transaction.setDescription(
-    						WITHDRAWAL_DESCRIPTIONS[random.nextInt(WITHDRAWAL_DESCRIPTIONS.length)]
-    				);
+    			    String description = WITHDRAWAL_DESCRIPTIONS[random.nextInt(WITHDRAWAL_DESCRIPTIONS.length)];
+    			    transaction.setDescription(description);
     				
+    			    //카테고리 자동 분류 추가
+    			    try {
+    			        // accountId로 memberId 조회 필요
+    			        int memberId = accountMapper.selectAccountById(accountId).getMemberId();
+    			        Integer categoryId = categoryService.autoClassifyCategory(memberId, description);
+    			        transaction.setCategoryId(categoryId);
+    			    } catch (Exception e) {
+    			        logger.warn("카테고리 자동 분류 실패: {}", e.getMessage());
+    			        transaction.setCategoryId(10); // 기타
+    			    }
     				// 잔액 차감
     				currentBalance -= amount;
     			}else {
@@ -109,16 +121,17 @@ public class TransactionService {
     				transaction.setAmount(amount);
     				
     				// 설명 랜덤 선택
-    				transaction.setDescription(
-    						DEPOSIT_DESCRIPTIONS[random.nextInt(DEPOSIT_DESCRIPTIONS.length)]
-    				);
+    			    String description = DEPOSIT_DESCRIPTIONS[random.nextInt(DEPOSIT_DESCRIPTIONS.length)];
+    			    transaction.setDescription(description);
+    			    
+    			    // 입금은 카테고리 없음
+    			    transaction.setCategoryId(null);
     				
     				// 잔액 증가
     				currentBalance += amount;
     			}
     			
     			transaction.setBalanceAfter(currentBalance);
-    			transaction.setCategoryId(null);
     			transaction.setMemo(null);
     			
     			transactionMapper.insertTransaction(transaction);

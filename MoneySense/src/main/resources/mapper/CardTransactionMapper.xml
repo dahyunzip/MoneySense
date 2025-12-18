@@ -13,6 +13,7 @@
 		<result property="categoryId" column="category_id"/>
 		<result property="memo" column="memo"/>
 		<result property="createdAt" column="created_at"/>
+		<result property="categoryName" column="category_name"/>
 	</resultMap>
 	
 	<!-- 거래내역 저장 -->
@@ -36,23 +37,25 @@
 		)
 	</insert>
 	
-	<!-- 특정 카드의 거래내역 조회 (페이징) -->
-	<select id="selectTransactionsByCardId" resultMap="transactionMap">
-		SELECT
-			transaction_id,
-			card_id,
-			transacted_at,
-			merchant_name,
-			amount,
-			installment,
-			category_id,
-			memo,
-			created_at
-		FROM card_transaction
-		WHERE card_id = #{cardId}
-		ORDER BY transacted_at DESC, transaction_id DESC
-		LIMIT #{cri.pageSize} OFFSET #{cri.offset}
-	</select>
+	<!-- 특정 카드의 거래내역 조회(페이징) -->
+    <select id="selectTransactionsByCardId" resultMap="transactionMap">
+        SELECT 
+            ct.transaction_id,
+            ct.card_id,
+            ct.merchant_name,
+            ct.amount,
+            ct.installment,
+            ct.transacted_at,
+            ct.category_id,
+            ct.memo,
+            ct.created_at,
+            c.category_name
+        FROM card_transaction ct
+        LEFT JOIN category c ON ct.category_id = c.category_id
+        WHERE ct.card_id = #{cardId}
+        ORDER BY ct.transacted_at DESC, ct.transaction_id DESC
+        LIMIT #{cri.pageSize} OFFSET #{cri.offset}
+    </select>
 	
 	<!-- 특정 카드의 모든 거래내역 조회 -->
 	<select id="selectAllTransactionsNByCardId" resultMap="transactionMap">
@@ -72,23 +75,25 @@
 	</select>
 	
 	<!-- 날짜 필터 + 페이징 -->
-	<select id="selectTransactionsByDateWithPaging" resultMap="transactionMap">
-		SELECT
-			transaction_id,
-			card_id,
-			transacted_at,
-			merchant_name,
-			amount,
-			installment,
-			category_id,
-			memo,
-			created_at
-		FROM card_transaction
-		WHERE card_id = #{cardId}
-		AND DATE(transacted_at) BETWEEN #{startDate} AND #{endDate}
-		ORDER BY transacted_at DESC, transaction_id DESC
-		LIMIT #{cri.pageSize} OFFSET #{cri.offset}
-	</select>
+    <select id="selectTransactionsByDateWithPaging" resultMap="transactionMap">
+        SELECT 
+            ct.transaction_id,
+            ct.card_id,
+            ct.merchant_name,
+            ct.amount,
+            ct.installment,
+            ct.transacted_at,
+            ct.category_id,
+            ct.memo,
+            ct.created_at,
+            c.category_name
+        FROM card_transaction ct
+        LEFT JOIN category c ON ct.category_id = c.category_id
+        WHERE ct.card_id = #{cardId}
+          AND DATE(ct.transacted_at) BETWEEN #{startDate} AND #{endDate}
+        ORDER BY ct.transacted_at DESC, ct.transaction_id DESC
+        LIMIT #{cri.pageSize} OFFSET #{cri.offset}
+    </select>
 	
 	<!-- 전체 거래 내역 개수 -->
 	<select id="countTransactions" resultType="int">
@@ -105,26 +110,26 @@
 		AND DATE(transacted_at) BETWEEN #{startDate} AND #{endDate}
 	</select>
 	
-	<!-- 회원의 모든 카드 거래 내역 조회(최근순) -->
-	<select id="selectRecentTransactionsByMemberId" resultMap="transactionMap">
-		SELECT
-			ct.transaction_id,
-			ct.card_id,
-			ct.transacted_at,
-			ct.merchant_name,
-			ct.amount,
-			ct.installment,
-			ct.category_id,
-			ct.memo,
-			ct.created_at
-		FROM card_transaction ct
-		JOIN card c ON ct.card_id = c.card_id
-		WHERE c.member_id = #{memberId}
-		ORDER BY ct.transacted_at DESC, ct.transaction_id DESC
-		<if test="limit > 0">
-			LIMIT #{limit}
-		</if>
-	</select>
+	<!-- 회원의 최근 카드 거래내역 -->
+    <select id="selectRecentTransactionsByMemberId" resultMap="transactionMap">
+        SELECT 
+            ct.transaction_id,
+            ct.card_id,
+            ct.merchant_name,
+            ct.amount,
+            ct.installment,
+            ct.transacted_at,
+            ct.category_id,
+            ct.memo,
+            ct.created_at,
+            c.category_name
+        FROM card_transaction ct
+        LEFT JOIN category c ON ct.category_id = c.category_id
+        JOIN card cd ON ct.card_id = cd.card_id
+        WHERE cd.member_id = #{memberId}
+        ORDER BY ct.transacted_at DESC
+        LIMIT #{limit}
+    </select>
 	
 	<!-- 거래내역 삭제 -->
 	<delete id="deleteTransaction">
@@ -146,9 +151,10 @@
 	</update>
 	
 	<!-- 카테고리 업데이트 -->
-	<update id="updateCategory">
-		UPDATE card_transaction
-		SET category_id = #{categoryId}
-		WHERE transaction_id = #{transactionId}
-	</update>
+    <update id="updateCategory">
+        UPDATE card_transaction
+        SET category_id = #{categoryId}
+        WHERE transaction_id = #{transactionId}
+    </update>
+
 </mapper>
