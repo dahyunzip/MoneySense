@@ -18,13 +18,17 @@
         return confirm('정말로 회원 탈퇴하시겠습니까?\n\n이 작업은 되돌릴 수 없으며,\n모든 데이터가 삭제됩니다.');
     }
 </script>
-<div id="subContents" class="mypage">
+<div id="subContents" class="mypage alignCenter">
 	<div class="fix-layout">
 		<div class="container">
-	        <h1 class="page-title">⚠️ 회원 탈퇴</h1>
+	        <h1 class="page-title">회원 탈퇴</h1>
 	        
 	        <c:if test="${not empty msg}">
-	            <div class="message">${msg}</div>
+	            <div class="msg">${msg}</div>
+	        </c:if>
+	        
+	        <c:if test="${not empty msgFail }">
+	        	<div class="msgFail">${msgFail}</div>
 	        </c:if>
 	        
 	        <div class="warning-box">
@@ -46,19 +50,19 @@
 	                       placeholder="본인 확인을 위해 비밀번호를 입력하세요">
 	            </div>
 	            
-	            <div class="checkbox-group">
+	            <div class="checkbox-group text-center">
 	                <label>
 	                    <input type="checkbox" id="agreeWithdraw" required>
 	                    위 내용을 모두 확인했으며 회원 탈퇴에 동의합니다.
 	                </label>
 	            </div>
 	            
-	            <div class="btn-group center">
+	            <div class="btn-block center mt20">
 	                <button type="submit" class="btn btn-danger">탈퇴하기</button>
-	                <a href="${ctx}/members/mypage" class="btn btn-secondary">취소</a>
+	                <a href="${ctx}/members/mypage" class="btn btn-underline">취소</a>
 	            </div>
 	        </form>
 	    </div>
     </div>
 </div>
-<%@ include file="../include/Footer.jsp"%>
+<%@ include file="../include/Fixed.jsp"%>

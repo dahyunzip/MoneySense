@@ -2,8 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ include file="../include/Header.jsp"%>
-<div id="subContents">
-    <div id="loginPage" class="container">
+<div id="subContents" class="fix-layout">
+    <div id="loginPage" class="container alignCenter">
         <h1 class="page-title">Login</h1>
         <p class="page-sub-title">로그인 후 머니센스를 이용해주세요!</p>
         <c:if test="${not empty msg}">
@@ -36,7 +36,7 @@
         </div>
     </div>
 </div>
-<%@ include file="../include/Footer.jsp"%>
+<%@ include file="../include/Fixed.jsp"%>
 <script>
     $(document).ready(function() {
         // 폼 제출 전 유효성 검사

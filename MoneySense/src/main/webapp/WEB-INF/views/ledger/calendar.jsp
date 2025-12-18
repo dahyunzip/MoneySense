@@ -13,88 +13,11 @@
 <link rel="stylesheet" href="${ctx}/resources/css/jquery-ui.css">
 
 <style>
-#calendar a{color:#777777; font-size:10px; text-decoration:none;}
-.fc-theme-standard th{border-top:0 !important; border-right:0 !important; border-left:0 !important }
-.fc-theme-standard td{border-right:0 !important; border-left:0 !important}
-.fc-theme-standard .fc-scrollgrid{border:0 !important;}
-.fc-day-sun a{color:#FF5555 !important;}
-.fc-day-sat a{color:#408CFF !important;}
-#calendarPage .fc-daygrid-day{height:80px; text-align:center}
-.fc .fc-daygrid-day-top{justify-content:center;}
-.fc .fc-daygrid-day-frame{min-height:unset; margin-bottom:5px;}
-.fc-daygrid-day-events{display: none;}
-/* Modal Styles 추가 */
-.transaction-item {
-    padding: 15px;
-    border-bottom: 1px solid #dee2e6;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.transaction-item:hover {
-    background: #f8f9fa;
-}
-
-.transaction-item:last-child {
-    border-bottom: none;
-}
-
-.transaction-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-.transaction-time {
-    font-size: 12px;
-    color: #6c757d;
-}
-
-.transaction-amount {
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.amount-income {
-    color: #28a745;
-}
-
-.amount-expense {
-    color: #dc3545;
-}
-
-.transaction-detail {
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 3px;
-}
-
-.transaction-source {
-    font-size: 12px;
-    color: #6c757d;
-}
-
-.detail-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.detail-row:last-child {
-    border-bottom: none;
-}
-
-.detail-label {
-    font-weight: bold;
-    color: #495057;
-}
-
-.detail-value {
-    color: #333;
-}
+.fc-theme-standard th{border-right:0 !important; border-left:0 !important; }
+.fc-theme-standard td{border-right:0 !important; border-left:0 !important;}
+#calendar .fc-scrollgrid{border:0 !important;}
 </style>
+
 <div id="subContents">
 	<div class="fix-layout" id="calendarPage">
 		<div id="calendarHead">
@@ -253,16 +176,6 @@ $(document).ready(function() {
                     info.el.insertAdjacentHTML("beforeend", html);
                 }
                 
-                // 히트맵 제거
-                /* if(expense < 0) {
-                    let maxSpend = 100000;
-                    let ratio = Math.min(Math.abs(expense) / maxSpend, 1);
-                    info.el.style.backgroundColor = 'rgba(255, 130, 130, ' + (ratio * 0.15) + ')';
-                }
-                
-                if(income > 0 && expense >= 0) {
-                    info.el.style.backgroundColor = 'rgba(40, 167, 69, 0.08)';
-                } */
             },
             
             datesSet: function(info) {
@@ -285,7 +198,7 @@ $(document).ready(function() {
                     let monthText = newYear + '년 ' + newMonth.toString().padStart(2, '0') + '월';
                     $('#monthPicker').val(monthText);
                     
-                    // 데이터만 로딩 (캘린더 재생성 안함)
+                    // 데이터 로딩 (캘린더 재생성 포함)
                     loadMonthlyDataOnly(newYear, newMonth);
                 }
             }
@@ -333,9 +246,7 @@ $(document).ready(function() {
                 
                 updateSummary(data.summary);
                 
-                // ✅ 캘린더 다시 렌더링 (재생성 안함)
-                calendar.refetchEvents();
-                calendar.render();
+                initCalendar();
                 
                 isLoading = false;
             },
@@ -388,7 +299,6 @@ $(document).ready(function() {
                 
                 updateSummary(data.summary);
                 
-                // ✅ 캘린더 재생성
                 initCalendar();
                 
                 let monthText = year + '년 ' + month.toString().padStart(2, '0') + '월';
@@ -636,4 +546,4 @@ $(document).ready(function() {
     
 });
 </script>
-<%@ include file ="../include/Footer.jsp"%>
+<%@ include file ="../include/Fixed.jsp"%>

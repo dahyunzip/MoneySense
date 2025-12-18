@@ -7,7 +7,7 @@
         alert("${msg}");
     </script>
 </c:if>
-<div id="subContents" class="mypage">
+<div id="subContents" class="mypage alignCenter">
 	<div class="fix-layout">
 	    <div class="container">
 	        <h1 class="page-title">회원정보 수정</h1>
@@ -33,4 +33,4 @@
 	    </div>
     </div>
 </div>
-<%@ include file="../include/Footer.jsp"%>
+<%@ include file="../include/Fixed.jsp"%>

@@ -2,16 +2,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file ="../include/Header.jsp"%>
-<div id="subContents">
+<div id="subContents" class="cardRegist bgGray">
 	<div class="fix-layout">
 		<div class="container">
         <div class="form-card">
-            <h1>💳 카드 등록</h1>
+        	<div class="title-btn">
+            	<h1 class="page-title">카드 등록</h1>
+            </div>
             <form action="${ctx}/cards/register" method="post">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 
                 <div class="form-group">
-                    <label for="cardCompany">카드사 *</label>
+                    <label for="cardCompany">카드사 선택*</label>
                     <select id="cardCompany" name="cardCompany" required>
                         <option value="">선택하세요</option>
                         <option value="삼성카드">삼성카드</option>
@@ -34,7 +36,7 @@
                            name="cardName" 
                            placeholder="예: iD LINK, M Edition" 
                            required>
-                    <div class="help-text">카드 상품명을 입력하세요</div>
+                    <p class="help-text">카드 상품명을 입력하세요</p>
                 </div>
                 
                 <div class="form-group">
@@ -46,7 +48,7 @@
                            maxlength="4"
                            pattern="[0-9]{4}"
                            required>
-                    <div class="help-text">카드번호 마지막 4자리만 입력하세요</div>
+                    <p class="help-text">카드번호 마지막 4자리만 입력하세요</p>
                 </div>
                 
                 <div class="form-group">
@@ -58,15 +60,13 @@
                     </select>
                 </div>
                 
-                <div class="form-actions">
-                    <button type="button" 
-                            class="btn btn-secondary" 
-                            onclick="location.href='${ctx}/cards/list'">
-                        취소
-                    </button>
-                    <button type="submit" class="btn btn-primary">
+                <div class="btn-block">
+                    <button type="submit" class="btn btn-success">
                         등록하기
                     </button>
+                    <a href="${ctx}/cards/list" class="btn btn-underline">
+                        취소
+                    </a>
                 </div>
             </form>
         </div>
@@ -93,4 +93,4 @@
         }
     });
 </script>
-<%@ include file ="../include/Footer.jsp"%>
+<%@ include file ="../include/Fixed.jsp"%>

@@ -19,9 +19,9 @@
 	        </c:if>
 	        
             <c:if test="${pageVO.totalCount == 0}">
-	        <div class="actions">
+	        <div class="text-right mb10">
 	                <a href="${ctx}/cards/generate-mock?cardId=${card.cardId}&days=30&perDay=2" 
-	                   class="btn btn-success"
+	                   class="btn btn-primary"
 	                   onclick="return confirm('테스트용 카드 사용내역을 생성하시겠습니까?');">
 	                   테스트 사용내역 생성
 	                </a>
@@ -57,7 +57,7 @@
 	        </c:if>
 	        
 	        <div class="transaction-list">
-	            <div class="transaction-header">
+	            <div class="transaction-header mb10">
 	                <h2>사용내역</h2>
 	                <span class="transaction-count">
 	                    총 ${pageVO.totalCount}건
@@ -331,4 +331,4 @@ $(function() {
     });
 });
 </script>
-<%@ include file ="../include/Footer.jsp"%>
+<%@ include file ="../include/Fixed.jsp"%>

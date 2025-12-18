@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file ="../include/Header.jsp"%>
-<div id="subContents" class="accounts">
+<div id="subContents" class="accounts bgGray">
 	<div class="fix-layout">
 		<div class="container">
 			<div class="title-btn">
@@ -76,4 +76,4 @@
 	    </div>
 	</div>
 </div>
-<%@ include file ="../include/Footer.jsp"%>
+<%@ include file ="../include/Fixed.jsp"%>

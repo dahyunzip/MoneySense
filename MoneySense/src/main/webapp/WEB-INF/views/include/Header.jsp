@@ -47,22 +47,24 @@
 		        
 		        <!-- 비로그인 상태일 때만 표시 -->
 	            <sec:authorize access="isAnonymous()">
-	                <button onclick="location.href='${ctx}/members/signup'" class="btn-logout">회원가입</button>
+	                <%-- <button onclick="location.href='${ctx}/members/signup'" class="btn-logout">회원가입</button> --%>
 	                <button onclick="location.href='${ctx}/members/login'" class="btn-logout">로그인</button>
 	            </sec:authorize>
 	            
 	            <div id="menu">
-	            	<a href="#" class="open">메뉴열기</a>
+            		<a href="#" class="open"></a>
 	            	<div class="menu-wrap">
-	            		<a href="#" class="close">메뉴닫기</a>
+	            		<div class="text-right">
+	            			<a href="#" class="close"></a>
+	            		</div>
 	            		<ul>
 		            		<sec:authorize access="isAuthenticated()">
 		            		<li><a href="/main">홈</a></li>
-		            		<li><a href="/members/mypage">계좌목록</a></li>
-		            		<li><a href="/members/mypage">카드목록</a></li>
-		            		<li><a href="/members/mypage">가계부</a></li>
+		            		<li><a href="/accounts/list">계좌목록</a></li>
+		            		<li><a href="/cards/list">카드목록</a></li>
+		            		<li><a href="/ledger/calendar">가계부</a></li>
 		            		<li><a href="/members/mypage">마이페이지</a></li>
-		            		<li>
+		            		<li class="notMenu">
 		            			<form action="${ctx}/members/logout" method="post" style="display: inline;">
 					                <sec:csrfInput/>
 					                <button type="submit" class="btn-logout">로그아웃</button>
@@ -73,7 +75,7 @@
 				            <sec:authorize access="isAnonymous()">
 		            			<li><a href="/">홈</a></li>
 				                <li><button onclick="location.href='${ctx}/members/signup'" class="btn-logout">회원가입</button></li>
-				                <li><button onclick="location.href='${ctx}/members/login'" class="btn-login">로그인</button></li>
+				                <li><button onclick="location.href='${ctx}/members/login'" class="btn-logout">로그인</button></li>
 				            </sec:authorize>
 	            		</ul>
             		</div>

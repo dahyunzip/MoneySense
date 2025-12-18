@@ -22,9 +22,9 @@
 	        </c:if>
 	        
 	        <c:if test="${pageVO.totalCount == 0}">
-	        <div class="actions text-right mb10">
+	        <div class="text-right mb10">
 	                <a href="${ctx}/transactions/generate-mock?accountId=${account.accountId}" 
-	                   class="btn btn-success"
+	                   class="btn btn-primary"
 	                   onclick="return confirm('테스트용 거래내역을 생성하시겠습니까?');">
 	                    테스트 거래내역 생성
 	                </a>
@@ -319,4 +319,4 @@ $(function() {
     });
 });
 </script>
-<%@ include file="../include/Footer.jsp"%>
+<%@ include file="../include/Fixed.jsp"%>
