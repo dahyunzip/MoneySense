@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.itwillbs.domain.BankTransactionVO;
@@ -35,7 +37,7 @@ public class TransactionService {
     private static final String[] WITHDRAWAL_DESCRIPTIONS = {
         "스타벅스 강남점", "CU편의점", "올리브영 역삼점", "쿠팡 결제",
         "넷플릭스 구독", "전기요금", "통신비", "GS25 편의점",
-        "배달의민족 결제", "요기요 결제", "카카오택시", "지하철",
+        "배달의민족 결제", "요기요 결제", "카카오T", "지하철",
         "이마트", "홈플러스", "CGV영화관", "교보문고",
         "다이소", "맥도날드", "버거킹", "롯데리아",
         "카페베네", "투썸플레이스", "이디야커피", "파리바게뜨",
@@ -52,100 +54,102 @@ public class TransactionService {
             "환불", "이자", "배당금", "판매대금",
             "카카오페이 송금", "토스 송금", "계좌이체"};
     
-    /**
-     * Mock 거래내역 생성
-     */
-    public int generateMockTransactions(int accountId, int days, int transactionsPerDay) {
-    	logger.info(" ========================================== ");
-    	logger.info(" Mock 거래내역 생성 시작 ");
-    	logger.info(" accountId: {}, 기간: {}일", accountId, days);
-    	logger.info("일 평균 : {}", transactionsPerDay);
-    	
-    	Random random = new Random();
-    	LocalDateTime now = LocalDateTime.now();
-    	int totalCount = 0;
-    	
-    	// 초기 잔액 설정
-    	int currentBalance = 1000000 + random.nextInt(4000000);
-    	
-    	// 과거부터 현재까지 거래내역 생성
-    	for(int day = days; day>=0; day--) {
-    		LocalDateTime transactionDate = now.minus(day, ChronoUnit.DAYS);
-    		
-    		// 하루에 몇 건의 거래가 발생할지 랜덤
-    		int todayTransactions = 1 + random.nextInt(transactionsPerDay);
-    		
-    		for(int i =0; i<todayTransactions; i++) {
-    			BankTransactionVO transaction = new BankTransactionVO();
-    			transaction.setAccountId(accountId);
-    			
-    			// 거래 시간 랜덤 (오전 6시 ~ 오후 11시)
-    			int hour = 6 + random.nextInt(17);
-    			int minute = random.nextInt(60);
-    			LocalDateTime txTime = transactionDate.withHour(hour).withMinute(minute);
-    			transaction.setTransactedAt(Timestamp.valueOf(txTime));
-    			
-    			// 입금 / 출금 비율 (출금 70%, 입금 30%)
-    			boolean isWithdrawal = random.nextInt(100) < 70;
-    			
-    			if(isWithdrawal) {
-    				// 출금
-    				transaction.setInoutType("O");
-    				
-    				// 출금액 (1,000원 ~ 100,000원)
-    				int amount = (random.nextInt(100) + 1) * 1000;
-    				transaction.setAmount(amount);
-    				
-    				// 설명 랜덤 선택
-    			    String description = WITHDRAWAL_DESCRIPTIONS[random.nextInt(WITHDRAWAL_DESCRIPTIONS.length)];
-    			    transaction.setDescription(description);
-    				
-    			    //카테고리 자동 분류 추가
-    			    try {
-    			        // accountId로 memberId 조회 필요
-    			        int memberId = accountMapper.selectAccountById(accountId).getMemberId();
-    			        Integer categoryId = categoryService.autoClassifyCategory(memberId, description);
-    			        transaction.setCategoryId(categoryId);
-    			    } catch (Exception e) {
-    			        logger.warn("카테고리 자동 분류 실패: {}", e.getMessage());
-    			        transaction.setCategoryId(10); // 기타
-    			    }
-    				// 잔액 차감
-    				currentBalance -= amount;
-    			}else {
-    				// 입금
-    				transaction.setInoutType("I");
-    				
-    				// 입금액 (10,000원 ~ 5,000,000원)
-    				int amount = (random.nextInt(500) + 1) * 10000;
-    				transaction.setAmount(amount);
-    				
-    				// 설명 랜덤 선택
-    			    String description = DEPOSIT_DESCRIPTIONS[random.nextInt(DEPOSIT_DESCRIPTIONS.length)];
-    			    transaction.setDescription(description);
-    			    
-    			    // 입금은 카테고리 없음
-    			    transaction.setCategoryId(null);
-    				
-    				// 잔액 증가
-    				currentBalance += amount;
-    			}
-    			
-    			transaction.setBalanceAfter(currentBalance);
-    			transaction.setMemo(null);
-    			
-    			transactionMapper.insertTransaction(transaction);
-    			totalCount++;
-    		}
-    	}
-    	// 계좌 잔액 업데이트
-    	accountMapper.updateAccountBalance(accountId, currentBalance);
-    	
-    	logger.info(" Mock 거래내역 생성 완료 : 총 {}건", totalCount);
-    	logger.info(" 최종 잔액 : {} 원", currentBalance);
-    	logger.info(" ============================================= ");
-    	return totalCount;
+ // 비동기 Mock 거래내역 생성
+    @Async("asyncExecutor")
+    public CompletableFuture<Integer> generateMockTransactionsAsync(int accountId, int days, int transactionsPerDay) {
+        logger.info(" ========================================== ");
+        logger.info(" Mock 거래내역 생성 시작 (비동기) ");
+        logger.info(" accountId: {}, 기간: {}일", accountId, days);
+        logger.info(" 일 평균 : {}", transactionsPerDay);
+        
+        Random random = new Random();
+        LocalDateTime now = LocalDateTime.now();
+        int totalCount = 0;
+        
+        // 초기 잔액 설정
+        int currentBalance = 1000000 + random.nextInt(4000000);
+        
+        // 과거부터 현재까지 거래내역 생성
+        for(int day = days; day>=0; day--) {
+            LocalDateTime transactionDate = now.minus(day, ChronoUnit.DAYS);
+            
+            // 하루에 몇 건의 거래가 발생할지 랜덤
+            int todayTransactions = 1 + random.nextInt(transactionsPerDay);
+            
+            for(int i =0; i<todayTransactions; i++) {
+                BankTransactionVO transaction = new BankTransactionVO();
+                transaction.setAccountId(accountId);
+                
+                // 거래 시간 랜덤 (오전 6시 ~ 오후 11시)
+                int hour = 6 + random.nextInt(17);
+                int minute = random.nextInt(60);
+                LocalDateTime txTime = transactionDate.withHour(hour).withMinute(minute);
+                transaction.setTransactedAt(Timestamp.valueOf(txTime));
+                
+                // 입금 / 출금 비율 (출금 70%, 입금 30%)
+                boolean isWithdrawal = random.nextInt(100) < 70;
+                
+                if(isWithdrawal) {
+                    // 출금
+                    transaction.setInoutType("O");
+                    
+                    // 출금액 (1,000원 ~ 50,000원)
+                    int amount = (random.nextInt(50) + 1) * 1000;
+                    transaction.setAmount(amount);
+                    
+                    // 설명 랜덤 선택
+                    String description = WITHDRAWAL_DESCRIPTIONS[random.nextInt(WITHDRAWAL_DESCRIPTIONS.length)];
+                    transaction.setDescription(description);
+                    
+                    // 카테고리 자동 분류 추가
+                    try {
+                        int memberId = accountMapper.selectAccountById(accountId).getMemberId();
+                        Integer categoryId = categoryService.autoClassifyCategory(memberId, description);
+                        transaction.setCategoryId(categoryId);
+                    } catch (Exception e) {
+                        logger.warn("카테고리 자동 분류 실패: {}", e.getMessage());
+                        transaction.setCategoryId(10);
+                    }
+                    
+                    // 잔액 차감
+                    currentBalance -= amount;
+                }else {
+                    // 입금
+                    transaction.setInoutType("I");
+                    
+                    // 입금액 (10,000원 ~ 1,000,000원)
+                    int amount = (random.nextInt(100) + 1) * 10000;
+                    transaction.setAmount(amount);
+                    
+                    // 설명 랜덤 선택
+                    String description = DEPOSIT_DESCRIPTIONS[random.nextInt(DEPOSIT_DESCRIPTIONS.length)];
+                    transaction.setDescription(description);
+                    
+                    // 입금은 카테고리 없음
+                    transaction.setCategoryId(null);
+                    
+                    // 잔액 증가
+                    currentBalance += amount;
+                }
+                
+                transaction.setBalanceAfter(currentBalance);
+                transaction.setMemo(null);
+                
+                transactionMapper.insertTransaction(transaction);
+                totalCount++;
+            }
+        }
+        
+        // 계좌 잔액 업데이트
+        accountMapper.updateAccountBalance(accountId, currentBalance);
+        
+        logger.info(" Mock 거래내역 생성 완료 : 총 {}건", totalCount);
+        logger.info(" 최종 잔액 : {} 원", currentBalance);
+        logger.info(" ============================================= ");
+        
+        return CompletableFuture.completedFuture(totalCount);
     }
+    
     
     // 특정 계좌의 거래내역 조회
     public List<BankTransactionVO> getTransactionsByAccountId(int accountId, Criteria cri){

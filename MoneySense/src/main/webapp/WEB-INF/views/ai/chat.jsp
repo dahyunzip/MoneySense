@@ -14,10 +14,10 @@
         <div class="chat-container">
             <!-- 대화 이력 -->
             <div class="chat-history">
-                <h3>최근 대화<a href="#" class="fold-btn"></a></h3>
-                <c:choose>
-                    <c:when test="${not empty chatHistory}">
-                    	<div class="history-wrap">
+           	 	<c:choose>
+           	 		<c:when test="${not empty chatHistory}">
+                	<h3>최근 대화<a href="#" class="fold-btn"></a></h3>
+                   	<div class="history-wrap">
                         <c:forEach var="chat" items="${chatHistory}">
                             <div class="history-item" data-question="${chat.question}" data-answer="${chat.answer}">
                                 <div class="history-question">${chat.question}</div>
@@ -29,7 +29,7 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <div style="text-align:center; color:#999; padding:20px 0; font-size:13px;">
+                        <div style="text-align:center; color:#c9c9c9; font-size:12px;">
                             아직 대화 이력이 없습니다
                         </div>
                     </c:otherwise>

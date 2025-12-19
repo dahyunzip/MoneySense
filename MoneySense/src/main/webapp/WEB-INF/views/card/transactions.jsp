@@ -4,7 +4,16 @@
 <%@ include file ="../include/Header.jsp"%>
 <script src="${ctx}/resources/js/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="${ctx}/resources/css/jquery-ui.css">
-
+<!-- 로딩 스피너 -->
+<div id="loadingOverlay" style="display:none;">
+    <div class="loading-spinner-overlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>거래내역 생성 중...</p>
+            <p class="loading-subtext">잠시만 기다려주세요</p>
+        </div>
+    </div>
+</div>
 <div id="subContents">
 	<div class="trans-title-section">
 		<div class="account-details fix-layout">
@@ -19,14 +28,14 @@
 	        </c:if>
 	        
             <c:if test="${pageVO.totalCount == 0}">
-	        <div class="text-right mb10">
-	                <a href="${ctx}/cards/generate-mock?cardId=${card.cardId}&days=30&perDay=2" 
-	                   class="btn btn-primary"
-	                   onclick="return confirm('테스트용 카드 사용내역을 생성하시겠습니까?');">
-	                   테스트 사용내역 생성
-	                </a>
-	        </div>
-            </c:if>
+			    <div class="text-right mb10">
+			        <button id="generateMockBtn" 
+			                class="btn btn-primary"
+			                data-card-id="${card.cardId}">
+			            테스트 사용내역 생성
+			        </button>
+			    </div>
+			</c:if>
 	        
 	        <!-- 날짜 필터 -->
 	        <c:if test="${pageVO.totalCount > 0}">
@@ -90,16 +99,7 @@
 	                            <div class="transaction-main">
 	                            	<div class="transaction-wrap">
 		                                <div class="transaction-info">
-		                                    <div class="transaction-desc">${tx.merchantName}</div>
-		                                    <div class="transaction-date">
-		                                        <fmt:formatDate value="${tx.transactedAt}" pattern="yyyy-MM-dd HH:mm"/>
-		                                    </div>
-		                                    <c:if test="${tx.installment > 0}">
-		                                        <div class="transaction-installment">
-		                                            ${tx.installment}개월 할부
-		                                        </div>
-		                                    </c:if>
-		                                    <!-- 카테고리 드롭다운 추가 -->
+		                                	<!-- 카테고리 드롭다운 추가 -->
 						                    <div class="transaction-category">
 						                        <select class="category-select" 
 						                                data-tx-id="${tx.transactionId}"
@@ -114,9 +114,18 @@
 						                            </c:forEach>
 						                        </select>
 						                    </div>
+		                                    <div class="transaction-desc">${tx.merchantName}</div>
+		                                    <div class="transaction-date">
+		                                        <fmt:formatDate value="${tx.transactedAt}" pattern="yyyy-MM-dd HH:mm"/>
+		                                    </div>
+		                                    <c:if test="${tx.installment > 0}">
+		                                        <div class="transaction-installment">
+		                                            ${tx.installment}개월 할부
+		                                        </div>
+		                                    </c:if>
 		                                </div>
 		                                <div class="transaction-amount">
-		                                    <div class="amount-value">
+		                                    <div class="amount-value amount-out">
 		                                        -<fmt:formatNumber value="${tx.amount}" type="number" groupingUsed="true"/>원
 		                                    </div>
 		                                </div>
@@ -389,6 +398,45 @@ $(function() {
             },
             error: function() {
                 alert('카테고리 변경 중 오류가 발생했습니다.');
+            }
+        });
+    });
+	
+ // Mock 데이터 생성
+    $('#generateMockBtn').click(function() {
+        if(!confirm('테스트용 거래내역을 생성하시겠습니까?')) {
+            return;
+        }
+        
+        const cardId = $(this).data('card-id');
+        const csrfToken = '${_csrf.token}';
+        const csrfHeader = '${_csrf.headerName}';
+        
+        // 로딩 표시
+        $('#loadingOverlay').fadeIn();
+        
+        $.ajax({
+            url: '${ctx}/cards/generate-mock',
+            type: 'POST',
+            data: {
+            	cardId: cardId,
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function(response) {
+                $('#loadingOverlay').fadeOut();
+                
+                if(response.success) {
+                    alert(response.message);
+                    location.reload();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function() {
+                $('#loadingOverlay').fadeOut();
+                alert('거래내역 생성 중 오류가 발생했습니다.');
             }
         });
     });

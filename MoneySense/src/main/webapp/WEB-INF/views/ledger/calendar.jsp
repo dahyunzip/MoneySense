@@ -16,6 +16,28 @@
 .fc-theme-standard th{border-right:0 !important; border-left:0 !important; }
 .fc-theme-standard td{border-right:0 !important; border-left:0 !important;}
 #calendar .fc-scrollgrid{border:0 !important;}
+/* 카테고리 배지 (일별 모달) */
+.category-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+/* 카테고리 배지 (상세 모달) */
+.category-badge-detail {
+    display: inline-block;
+    padding: 4px 12px;
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+}
 </style>
 
 <div id="subContents">
@@ -357,14 +379,21 @@ $(document).ready(function() {
                         let amountSign = tx.inoutType == 'I' ? '+' : '-';
                         let icon = tx.transactionType == 'BANK' ? '🏦' : '💳';
                         
+                        let categoryBadge = '';
+                        if(tx.categoryName && tx.inoutType == 'O') {
+                            categoryBadge = '<span class="category-badge">' + tx.categoryName + '</span>';
+                        }
+                        
                         html += '<div class="transaction-item" data-key="' + tx.transactionKey + '">' +
                                     '<div class="transaction-header">' +
                                         '<span class="transaction-time">' + time + '</span>' +
-                                        '<span class="transaction-amount ' + amountClass + '">' +
-                                            amountSign + Math.abs(tx.amount).toLocaleString() + '원' +
-                                        '</span>' +
                                     '</div>' +
-                                    '<div class="transaction-detail">' + tx.detail + '</div>' +
+                                    '<div class="transaction-header">' + 
+                                    	'<div class="transaction-detail">' + tx.detail + '</div>' +
+                                    	'<span class="transaction-amount ' + amountClass + '">' +
+                                        	amountSign + Math.abs(tx.amount).toLocaleString() + '원' +
+                                    	'</span>' +
+                                    '</div>'+
                                     '<div class="transaction-source">' +
                                         icon + ' ' + tx.sourceName +
                                     '</div>' +
@@ -424,8 +453,16 @@ $(document).ready(function() {
                                 '<span class="detail-value" style="font-size:18px; font-weight:bold; color:' + amountColor + '">' +
                                     amountSign + Math.abs(tx.amount).toLocaleString() + '원' +
                                 '</span>' +
-                            '</div>' +
-                            '<div class="detail-row">' +
+                            '</div>';
+                         	// 카테고리 추가
+                            if(tx.categoryName && tx.inoutType == 'O') {
+                                html += '<div class="detail-row">' +
+                                            '<span class="detail-label">카테고리</span>' +
+                                            '<span class="detail-value">' + tx.categoryName + '</span>' +
+                                            '</span>' +
+                                        '</div>';
+                            }
+                            html += '<div class="detail-row">' +
                                 '<span class="detail-label">' + (tx.transactionType == 'BANK' ? '은행' : '카드사') + '</span>' +
                                 '<span class="detail-value">' + tx.sourceName + '</span>' +
                             '</div>' +

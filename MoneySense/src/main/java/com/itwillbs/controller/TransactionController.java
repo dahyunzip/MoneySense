@@ -3,6 +3,7 @@ package com.itwillbs.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,23 +95,38 @@ public class TransactionController {
 		return "transaction/list";
 	}
 	
-	// Mock 거래내역 데이터 생성
-	@GetMapping("/generate-mock")
-	public String generateMock(@RequestParam("accountId") int accountId,
-								RedirectAttributes rttr) {
-		logger.info(" Mock 거래내역 생성 요청 - accountId : {}", accountId);
-		try {
-			int count = transactionService.generateMockTransactions(accountId, 30, 1);
-			
-			rttr.addFlashAttribute("msg", count + "건의 거래내역이 생성되었습니다.");
-			return "redirect:/transactions/list?accountId=" + accountId;
-		}catch(Exception e) {
-			logger.info(" Mock 거래내역 생성 실패 : {}", e.getMessage());
-			e.printStackTrace();
-			
-			rttr.addFlashAttribute("msg", "거래내역 생성에 실패했습니다.");
-			return "redirect:/accounts/list";
-		}
+	// Mock 거래내역 생성 (AJAX)
+	@PostMapping("/generate-mock")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> generateMockAjax(
+	        @RequestParam("accountId") int accountId) {
+	    
+	    logger.info("Mock 거래내역 생성 요청 (AJAX) - accountId: {}", accountId);
+	    
+	    Map<String, Object> response = new HashMap<>();
+	    
+	    try {
+	        // 비동기로 생성 시작
+	        CompletableFuture<Integer> future = 
+	            transactionService.generateMockTransactionsAsync(accountId, 60, 1);
+	        
+	        // 완료 대기
+	        Integer count = future.get();
+	        
+	        response.put("success", true);
+	        response.put("count", count);
+	        response.put("message", count + "건의 거래내역이 생성되었습니다.");
+	        
+	        return ResponseEntity.ok(response);
+	        
+	    } catch (Exception e) {
+	        logger.error("Mock 거래내역 생성 실패: {}", e.getMessage());
+	        
+	        response.put("success", false);
+	        response.put("message", "거래내역 생성에 실패했습니다.");
+	        
+	        return ResponseEntity.status(500).body(response);
+	    }
 	}
 	
 	// 메모 저장 (AJAX)

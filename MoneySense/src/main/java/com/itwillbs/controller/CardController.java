@@ -3,6 +3,7 @@ package com.itwillbs.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,27 +165,40 @@ public class CardController {
 		return "card/transactions";
 	}
 	
-	// Mock 카드 사용내역 생성 (테스트용)
-	@GetMapping("/generate-mock")
-	public String generateMock(@RequestParam("cardId") int cardId,
-								@RequestParam(defaultValue = "30") int days,
-								@RequestParam(defaultValue = "2") int perDay,
-								RedirectAttributes rttr) {
-		
-		logger.info(" ======================================= ");
-		logger.info(" Mock 카드 사용내역 생성 요청 ");
-		logger.info(" cardId : {}", cardId);
-		
-		try {
-			int count = cardService.generateMockTransactions(cardId, days, perDay);
-			rttr.addFlashAttribute("msg", String.format("테스트 카드 사용내역 %d건이 생성되었습니다.", count));
-		}catch(Exception e) {
-			logger.info(" Mock 생성 실패 : {}", e.getMessage());
-			e.printStackTrace();
-			rttr.addFlashAttribute("msg", "사용내역 생성에 실패했습니다.");
-		}
-		logger.info(" ======================================= ");
-		return "redirect:/cards/transactions?cardId="+cardId;
+	// Mock 카드 사용내역 생성 (AJAX)
+	@PostMapping("/generate-mock")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> generateMockAjax(
+	        @RequestParam("cardId") int cardId,
+	        @RequestParam(defaultValue = "60") int days,
+	        @RequestParam(defaultValue = "1") int perDay) {
+	    
+	    logger.info("Mock 카드 사용내역 생성 요청 (AJAX) - cardId: {}", cardId);
+	    
+	    Map<String, Object> response = new HashMap<>();
+	    
+	    try {
+	        // 비동기로 생성 시작
+	        CompletableFuture<Integer> future = 
+	            cardService.generateMockTransactionsAsync(cardId, days, perDay);
+	        
+	        // 완료 대기
+	        Integer count = future.get();
+	        
+	        response.put("success", true);
+	        response.put("count", count);
+	        response.put("message", count + "건의 사용내역이 생성되었습니다.");
+	        
+	        return ResponseEntity.ok(response);
+	        
+	    } catch (Exception e) {
+	        logger.error("Mock 카드 사용내역 생성 실패: {}", e.getMessage());
+	        
+	        response.put("success", false);
+	        response.put("message", "사용내역 생성에 실패했습니다.");
+	        
+	        return ResponseEntity.status(500).body(response);
+	    }
 	}
 	
 	// 카드 삭제
