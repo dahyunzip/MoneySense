@@ -200,7 +200,7 @@ public class MemberController {
 			SecurityContextHolder.clearContext();
 			return "redirect:/members/login";
 		}else {
-			rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
+			rttr.addFlashAttribute("msgFail", "비밀번호가 일치하지 않습니다.");
 			return "redirect:/members/mypage/withdraw";
 		}
 	}

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/Header.jsp"%>
-<div id="subContents">
+<div id="subContents" class="alignCenter">
 	<div class="fix-layout">  
 	    <div class="container" id="connect">
 	        <h1 class="page-title">오픈뱅킹 계좌 연동</h1>
@@ -29,4 +29,4 @@
 	    </div>
 	</div>
 </div>
-<%@ include file="../include/Footer.jsp"%>
+<%@ include file="../include/Fixed.jsp"%>

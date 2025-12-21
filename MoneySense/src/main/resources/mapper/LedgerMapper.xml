@@ -17,6 +17,7 @@
 		<result property="sourceName" column="source_name"/>
 		<result property="sourceNumber" column="source_number"/>
 		<result property="installment" column="installment"/>
+		<result property="categoryName" column="category_name"/>
 	</resultMap>
 	
 	<!-- 월별 거래내역 조회 -->
@@ -32,6 +33,7 @@
 			inout_type,
 			balance_after,
 			category_id,
+			category_name,
 			memo,
 			source_name,
 			source_number,
@@ -56,6 +58,7 @@
 			inout_type,
 			balance_after,
 			category_id,
+			category_name,
 			memo,
 			source_name,
 			source_number,
@@ -79,6 +82,7 @@
 			inout_type,
 			balance_after,
 			category_id,
+			category_name,
 			memo,
 			source_name,
 			source_number,

@@ -15,4 +15,5 @@ public class CardTransactionVO {
 	private Integer categoryId;
 	private String memo;
 	private Timestamp createdAt;
+	private String categoryName;
 }

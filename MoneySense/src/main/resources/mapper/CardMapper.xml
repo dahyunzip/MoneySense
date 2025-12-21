@@ -45,6 +45,19 @@
 		ORDER BY created_at DESC
 	</select>
 	
+	<!-- 기본 카테고리 목록 -->
+	<select id="selectDefaultCategories" resultType="com.itwillbs.domain.CategoryVO">
+	    SELECT 
+	        category_id,
+	        category_name,
+	        parent_id,
+	        is_default
+	    FROM category
+	    WHERE is_default = 1
+	      AND member_id IS NULL
+	    ORDER BY category_id
+	</select>
+	
 	<!-- 특정 카드 조회 -->
 	<select id="selectCardById" resultMap="cardMap">
 		SELECT

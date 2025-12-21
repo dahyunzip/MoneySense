@@ -49,4 +49,9 @@ $(document).ready(function(){
 		$('#fixedMenu a[href="'+selectedMenu+'"]').addClass('selected');
 	}
 	
+	var topCont = $('#contents');
+	if(topCont.children().hasClass('bgGray')){
+		topCont.css({"background" : "#fafafa"});
+	}
+	
 });

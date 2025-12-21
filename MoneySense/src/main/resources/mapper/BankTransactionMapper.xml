@@ -12,6 +12,7 @@
 		<result property="categoryId" column="category_id"/>
 		<result property="memo" column="memo"/>
 		<result property="createdAt" column="created_at"/>
+		<result property="categoryName" column="category_name"/>
 	</resultMap>
 	
 	<!-- 거래내역 저장 -->
@@ -39,21 +40,23 @@
 	
 	<!-- 특정 계좌의 거래내역 조회(최신순, 제한) -->
 	<select id="selectTransactionsByAccountId" resultMap="transactionMap">
-		SELECT
-			transaction_id,
-			account_id,
-			transacted_at,
-			inout_type,
-			amount,
-			balance_after,
-			description,
-			category_id,
-			memo,
-			created_at
-		FROM bank_transaction
-		WHERE account_id = #{accountId}
-		ORDER BY transacted_at DESC, transaction_id DESC
-		LIMIT #{cri.pageSize} OFFSET #{cri.offset}
+	    SELECT
+	        bt.transaction_id,
+	        bt.account_id,
+	        bt.transacted_at,
+	        bt.inout_type,
+	        bt.amount,
+	        bt.balance_after,
+	        bt.description,
+	        bt.category_id,
+	        bt.memo,
+	        bt.created_at,
+	        c.category_name
+	    FROM bank_transaction bt
+	    LEFT JOIN category c ON bt.category_id = c.category_id
+	    WHERE bt.account_id = #{accountId}
+	    ORDER BY bt.transacted_at DESC, bt.transaction_id DESC
+	    LIMIT #{cri.pageSize} OFFSET #{cri.offset}
 	</select>
 	
 	<!-- 특정 계좌의 모든 거래내역 조회 -->
@@ -75,22 +78,25 @@
 	</select>
 	
 	<!-- 날짜 필터 + 페이징 -->
+	<!-- 날짜 필터 + 페이징 -->
 	<select id="selectTransactionsByDateWithPaging" resultMap="transactionMap">
 	    SELECT 
-	        transaction_id,
-	        account_id,
-	        transacted_at,
-	        inout_type,
-	        amount,
-	        balance_after,
-	        description,
-	        category_id,
-	        memo,
-	        created_at
-	    FROM bank_transaction
-	    WHERE account_id = #{accountId}
-	      AND DATE(transacted_at) BETWEEN #{startDate} AND #{endDate}
-	    ORDER BY transacted_at DESC, transaction_id DESC
+	        bt.transaction_id,
+	        bt.account_id,
+	        bt.transacted_at,
+	        bt.inout_type,
+	        bt.amount,
+	        bt.balance_after,
+	        bt.description,
+	        bt.category_id,
+	        bt.memo,
+	        bt.created_at,
+	        c.category_name
+	    FROM bank_transaction bt
+	    LEFT JOIN category c ON bt.category_id = c.category_id
+	    WHERE bt.account_id = #{accountId}
+	      AND DATE(bt.transacted_at) BETWEEN #{startDate} AND #{endDate}
+	    ORDER BY bt.transacted_at DESC, bt.transaction_id DESC
 	    LIMIT #{cri.pageSize} OFFSET #{cri.offset}
 	</select>
 	

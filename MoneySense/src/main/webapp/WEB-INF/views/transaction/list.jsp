@@ -5,6 +5,16 @@
 <%@ include file="../include/Header.jsp"%>
 <script src="${ctx}/resources/js/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="${ctx}/resources/css/jquery-ui.css">
+<!-- 로딩 스피너 -->
+<div id="loadingOverlay" style="display:none;">
+    <div class="loading-spinner-overlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>거래내역 생성 중...</p>
+            <p class="loading-subtext">잠시만 기다려주세요</p>
+        </div>
+    </div>
+</div>
 <div id="subContents">
 	<div class="trans-title-section">
 		<div class="account-details fix-layout">
@@ -22,14 +32,14 @@
 	        </c:if>
 	        
 	        <c:if test="${pageVO.totalCount == 0}">
-	        <div class="actions text-right mb10">
-	                <a href="${ctx}/transactions/generate-mock?accountId=${account.accountId}" 
-	                   class="btn btn-success"
-	                   onclick="return confirm('테스트용 거래내역을 생성하시겠습니까?');">
-	                    테스트 거래내역 생성
-	                </a>
-	        </div>
-	        </c:if>
+			    <div class="text-right mb10">
+			        <button id="generateMockBtn" 
+			                class="btn btn-primary"
+			                data-account-id="${account.accountId}">
+			            테스트 거래내역 생성
+			        </button>
+			    </div>
+			</c:if>
 	        
 	        <!-- 날짜 필터 -->
 	        <c:if test="${pageVO.totalCount > 0}">
@@ -78,6 +88,21 @@
 	                            <div class="transaction-main">
 	                            	<div class="transaction-wrap">
 		                                <div class="transaction-info">
+		                                	<!-- 카테고리 드롭다운-->
+						                    <div class="transaction-category">
+						                        <select class="category-select" 
+						                                data-tx-id="${tx.transactionId}"
+						                                data-tx-type="transaction"
+						                                data-tx-desc="${tx.description}">
+						                            <option value="">카테고리 선택</option>
+						                            <c:forEach var="cat" items="${categories}">
+						                                <option value="${cat.categoryId}" 
+						                                        ${tx.categoryId == cat.categoryId ? 'selected' : ''}>
+						                                    ${cat.categoryName}
+						                                </option>
+						                            </c:forEach>
+						                        </select>
+						                    </div>
 		                                    <div class="transaction-desc">${tx.description}</div>
 		                                    <div class="transaction-date">
 		                                        <fmt:formatDate value="${tx.transactedAt}" pattern="yyyy-MM-dd HH:mm"/>
@@ -220,6 +245,45 @@ $(function() {
         $("#startDate").datepicker("option", "maxDate", "${endDate}");
     </c:if>
     
+ 	// Mock 데이터 생성
+    $('#generateMockBtn').click(function() {
+        if(!confirm('테스트용 거래내역을 생성하시겠습니까?')) {
+            return;
+        }
+        
+        const accountId = $(this).data('account-id');
+        const csrfToken = '${_csrf.token}';
+        const csrfHeader = '${_csrf.headerName}';
+        
+        // 로딩 표시
+        $('#loadingOverlay').fadeIn();
+        
+        $.ajax({
+            url: '${ctx}/transactions/generate-mock',
+            type: 'POST',
+            data: {
+                accountId: accountId
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function(response) {
+                $('#loadingOverlay').fadeOut();
+                
+                if(response.success) {
+                    alert(response.message);
+                    location.reload();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function() {
+                $('#loadingOverlay').fadeOut();
+                alert('거래내역 생성 중 오류가 발생했습니다.');
+            }
+        });
+    });
+    
     
     // ========================================
     // 메모 기능 - jQuery로 이벤트 위임
@@ -317,6 +381,54 @@ $(function() {
             }
         });
     });
+    
+ 	// 카테고리 변경
+    $(document).on('change', '.category-select', function() {
+        const txId = $(this).data('tx-id');
+        const txType = $(this).data('tx-type');
+        const txDesc = $(this).data('tx-desc');
+        const categoryId = $(this).val();
+        
+        if (!categoryId) {
+            alert('카테고리를 선택해주세요.');
+            return;
+        }
+        
+        $.ajax({
+            url: '${ctx}/transactions/update-category',
+            type: 'POST',
+            data: {
+                transactionId: txId,
+                categoryId: categoryId
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function(data) {
+                if (data.success) {
+                    // 사용자 학습 호출
+                    $.ajax({
+                        url: '${ctx}/transactions/learn-category',
+                        type: 'POST',
+                        data: {
+                            transactionName: txDesc,
+                            categoryId: categoryId
+                        },
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                        }
+                    });
+                    
+                    alert('카테고리가 변경되었습니다.');
+                } else {
+                    alert('카테고리 변경에 실패했습니다.');
+                }
+            },
+            error: function() {
+                alert('카테고리 변경 중 오류가 발생했습니다.');
+            }
+        });
+    });
 });
 </script>
-<%@ include file="../include/Footer.jsp"%>
+<%@ include file="../include/Fixed.jsp"%>

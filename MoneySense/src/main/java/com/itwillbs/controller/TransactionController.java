@@ -3,11 +3,13 @@ package com.itwillbs.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +21,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.BankAccountVO;
 import com.itwillbs.domain.BankTransactionVO;
+import com.itwillbs.domain.CategoryVO;
 import com.itwillbs.domain.Criteria;
 import com.itwillbs.domain.PageVO;
+import com.itwillbs.mapper.CategoryMapper;
+import com.itwillbs.security.CustomUserDetails;
+import com.itwillbs.service.CategoryService;
 import com.itwillbs.service.OpenBankingService;
 import com.itwillbs.service.TransactionService;
 
@@ -35,6 +41,12 @@ public class TransactionController {
 	
 	@Autowired
 	private OpenBankingService openbankingService;
+	
+	@Autowired
+	private CategoryMapper categoryMapper;
+	
+	@Autowired
+	private CategoryService categoryService;
 	
 	// 거래내역 조회 페이지
 	@GetMapping("/list")
@@ -72,31 +84,49 @@ public class TransactionController {
 	        pageVO = transactionService.getPageVO(accountId, cri);
 	    }
 	    
+	    //  카테고리 목록 추가
+	    List<CategoryVO> categories = categoryMapper.selectDefaultCategories();
 		
 	    model.addAttribute("account", account);
 	    model.addAttribute("transactions", transactions);
 	    model.addAttribute("pageVO", pageVO);
+	    model.addAttribute("categories", categories);
 	    logger.info("총 {}건, {}페이지", pageVO.getTotalCount(), pageVO.getTotalPages());
 		return "transaction/list";
 	}
 	
-	// Mock 거래내역 데이터 생성
-	@GetMapping("/generate-mock")
-	public String generateMock(@RequestParam("accountId") int accountId,
-								RedirectAttributes rttr) {
-		logger.info(" Mock 거래내역 생성 요청 - accountId : {}", accountId);
-		try {
-			int count = transactionService.generateMockTransactions(accountId, 30, 1);
-			
-			rttr.addFlashAttribute("msg", count + "건의 거래내역이 생성되었습니다.");
-			return "redirect:/transactions/list?accountId=" + accountId;
-		}catch(Exception e) {
-			logger.info(" Mock 거래내역 생성 실패 : {}", e.getMessage());
-			e.printStackTrace();
-			
-			rttr.addFlashAttribute("msg", "거래내역 생성에 실패했습니다.");
-			return "redirect:/accounts/list";
-		}
+	// Mock 거래내역 생성 (AJAX)
+	@PostMapping("/generate-mock")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> generateMockAjax(
+	        @RequestParam("accountId") int accountId) {
+	    
+	    logger.info("Mock 거래내역 생성 요청 (AJAX) - accountId: {}", accountId);
+	    
+	    Map<String, Object> response = new HashMap<>();
+	    
+	    try {
+	        // 비동기로 생성 시작
+	        CompletableFuture<Integer> future = 
+	            transactionService.generateMockTransactionsAsync(accountId, 60, 1);
+	        
+	        // 완료 대기
+	        Integer count = future.get();
+	        
+	        response.put("success", true);
+	        response.put("count", count);
+	        response.put("message", count + "건의 거래내역이 생성되었습니다.");
+	        
+	        return ResponseEntity.ok(response);
+	        
+	    } catch (Exception e) {
+	        logger.error("Mock 거래내역 생성 실패: {}", e.getMessage());
+	        
+	        response.put("success", false);
+	        response.put("message", "거래내역 생성에 실패했습니다.");
+	        
+	        return ResponseEntity.status(500).body(response);
+	    }
 	}
 	
 	// 메모 저장 (AJAX)
@@ -130,6 +160,52 @@ public class TransactionController {
 		
 		result.put("success", success);
 		result.put("message", success ? "메모가 삭제되었습니다." : "메모 삭제에 실패하였습니다.");
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	//  카테고리 업데이트 (AJAX)
+	@PostMapping("/update-category")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> updateCategory(
+			@RequestParam("transactionId") int transactionId,
+			@RequestParam("categoryId") int categoryId) {
+		
+		logger.info("카테고리 업데이트 요청 - transactionId: {}, categoryId: {}", transactionId, categoryId);
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		boolean success = transactionService.updateCategory(transactionId, categoryId);
+		
+		result.put("success", success);
+		result.put("message", success ? "카테고리가 변경되었습니다." : "카테고리 변경에 실패했습니다.");
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	//  카테고리 학습 (AJAX)
+	@PostMapping("/learn-category")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> learnCategory(
+			@RequestParam("transactionName") String transactionName,
+			@RequestParam("categoryId") int categoryId,
+			Authentication auth) {
+		
+		CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+		int memberId = userDetails.getMember().getMemberId();
+		
+		logger.info("카테고리 학습 - memberId: {}", memberId);
+		logger.info(" transactionName: {}, categoryId: {}", transactionName, categoryId);
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		try {
+			categoryService.learnFromUser(memberId, transactionName, categoryId);
+			result.put("success", true);
+		} catch (Exception e) {
+			logger.error("카테고리 학습 오류: {}", e.getMessage());
+			result.put("success", false);
+		}
 		
 		return ResponseEntity.ok(result);
 	}

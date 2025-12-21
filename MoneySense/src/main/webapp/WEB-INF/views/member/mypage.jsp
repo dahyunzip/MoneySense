@@ -7,7 +7,7 @@
         alert("${msg}");
     </script>
 </c:if>
-<div id="subContents" class="mypage">
+<div id="subContents" class="mypage alignCenter">
 	<div class="fix-layout">
 		<div class="container">
 			<h1 class="page-title">마이페이지</h1>
@@ -33,14 +33,12 @@
 		        </div>
 		    </div>
 		    
-		    <div class="btn-group">
-		        <a href="${ctx}/members/mypage/edit" class="btn btn-primary">정보 수정</a>
-		        <a href="${ctx}/accounts/connect" class="btn btn-primary">계좌연동</a>
-		        <a href="${ctx}/accounts/sync" class="btn btn-danger">계좌 리스트</a>
+		    <div class="btn-group right">
+		        <a href="${ctx}/members/mypage/edit" class="btn btn-success">정보 수정</a>
 		        <%-- <a href="${pageContext.request.contextPath}/members/mypage/password" class="btn btn-warning">비밀번호 변경</a> --%>
-		        <a href="${ctx}/members/mypage/withdraw" class="btn btn-danger">회원 탈퇴</a>
+		        <a href="${ctx}/members/mypage/withdraw" class="btn btn-secondary">회원 탈퇴</a>
 		    </div>
 	    </div>
     </div>
 </div>
-<%@ include file="../include/Footer.jsp"%>
+<%@ include file="../include/Fixed.jsp"%>

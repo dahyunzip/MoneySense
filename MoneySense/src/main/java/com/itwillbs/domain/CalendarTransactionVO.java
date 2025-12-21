@@ -20,4 +20,5 @@ public class CalendarTransactionVO {
 	private String sourceName;			// 은행명/카드사
 	private String sourceNumber;		// 계좌번호/카드번호
 	private Integer installment;		// 카드만(계좌는 NULL)
+	private String categoryName;  		// 카테고리명
 }

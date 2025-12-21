@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,9 @@ public class CardService {
 	
 	@Autowired
 	private CardTransactionMapper cardTransactionMapper;
+	
+	@Autowired
+	private CategoryService categoryService;
 	
 	// 카드사 목록
 	private static final String[] CARD_COMPANIES = {
@@ -142,69 +147,76 @@ public class CardService {
 		return count;
 	}
 	
-	/**
-	 * Mock 카드 사용내역 생성
-	 */
-	@Transactional
-	public int generateMockTransactions(int cardId, int days, int transactionsPerDay) {
-		logger.info(" ================================ ");
-		logger.info(" Mock 카드 사용내역 생성 시작 ");
-		logger.info(" cardId : {}", cardId);
-		logger.info(" 기간 : {}일 ", days);
-		logger.info(" 일 평균 : {}", transactionsPerDay);
-		
-		Random random = new Random();
-		LocalDateTime now = LocalDateTime.now();
-		int totalCount = 0;
-		
-		// 과거부터 현재까지 거래내역 생성
-		for(int day = days; day >= 0; day--) {
-			LocalDateTime transactionDate = now.minus(day, ChronoUnit.DAYS);
-			
-			// 하루에 몇 건의 거래가 발생할지 랜덤
-			int todayTransactions = 1 + random.nextInt(transactionsPerDay);
-			
-			for(int i = 0; i < todayTransactions; i++) {
-				CardTransactionVO transaction = new CardTransactionVO();
-				transaction.setCardId(cardId);
-				
-				// 거래 시간 랜덤
-				int hour = 8 + random.nextInt(15);
-				int minute = random.nextInt(60);
-				LocalDateTime txTime = transactionDate.withHour(hour).withMinute(minute);
-				transaction.setTransactedAt(Timestamp.valueOf(txTime));
-				
-				// 가맹점명 랜덤 선택
-				transaction.setMerchantName(
-						MERCHANT_NAMES[random.nextInt(MERCHANT_NAMES.length)]
-				);
-				
-				// 결제 금액
-				int amount = (random.nextInt(200) + 1) * 1000;
-				transaction.setAmount(amount);
-				
-				// 할부
-				if(random.nextInt(100) < 90) {
-					transaction.setInstallment(0);
-				}else {
-					int[] installmentOptions = {3,6,12};
-					transaction.setInstallment(
-								installmentOptions[random.nextInt(installmentOptions.length)]
-					);
-				}
-				
-				transaction.setCategoryId(null);
-				transaction.setMemo(null);
-				
-				cardTransactionMapper.insertTransaction(transaction);
-				totalCount++;
-				
-			}
-		}
-		logger.info(" Mock 카드 사용내역 생성 완료 : 총 {}건", totalCount);
-		logger.info(" ================================================ ");
-		return totalCount;
-	} //generateMockTransactions()
+	// 비동기 Mock 카드 사용내역 생성
+	@Async("asyncExecutor")
+	public CompletableFuture<Integer> generateMockTransactionsAsync(int cardId, int days, int transactionsPerDay) {
+	    logger.info(" ================================ ");
+	    logger.info(" Mock 카드 사용내역 생성 시작 (비동기) ");
+	    logger.info(" cardId : {}", cardId);
+	    logger.info(" 기간 : {}일 ", days);
+	    logger.info(" 일 평균 : {}", transactionsPerDay);
+	    
+	    Random random = new Random();
+	    LocalDateTime now = LocalDateTime.now();
+	    int totalCount = 0;
+	    
+	    // 과거부터 현재까지 거래내역 생성
+	    for(int day = days; day >= 0; day--) {
+	        LocalDateTime transactionDate = now.minus(day, ChronoUnit.DAYS);
+	        
+	        // 하루에 몇 건의 거래가 발생할지 랜덤
+	        int todayTransactions = 1 + random.nextInt(transactionsPerDay);
+	        
+	        for(int i = 0; i < todayTransactions; i++) {
+	            CardTransactionVO transaction = new CardTransactionVO();
+	            transaction.setCardId(cardId);
+	            
+	            // 거래 시간 랜덤
+	            int hour = 8 + random.nextInt(15);
+	            int minute = random.nextInt(60);
+	            LocalDateTime txTime = transactionDate.withHour(hour).withMinute(minute);
+	            transaction.setTransactedAt(Timestamp.valueOf(txTime));
+	            
+	            // 가맹점명 랜덤 선택
+	            String merchantName = MERCHANT_NAMES[random.nextInt(MERCHANT_NAMES.length)];
+	            transaction.setMerchantName(merchantName);
+	            
+	            // 결제 금액
+	            int amount = (random.nextInt(100) + 1) * 1000;
+	            transaction.setAmount(amount);
+	            
+	            // 할부
+	            if(random.nextInt(100) < 90) {
+	                transaction.setInstallment(0);
+	            }else {
+	                int[] installmentOptions = {3,6,12};
+	                transaction.setInstallment(
+	                    installmentOptions[random.nextInt(installmentOptions.length)]
+	                );
+	            }
+	            
+	            // 카테고리 자동 분류
+	            try {
+	                int memberId = cardMapper.selectCardById(cardId).getMemberId();
+	                Integer categoryId = categoryService.autoClassifyCategory(memberId, merchantName);
+	                transaction.setCategoryId(categoryId);
+	            } catch (Exception e) {
+	                logger.warn("카테고리 자동 분류 실패: {}", e.getMessage());
+	                transaction.setCategoryId(10);
+	            }
+	            
+	            transaction.setMemo(null);
+	            
+	            cardTransactionMapper.insertTransaction(transaction);
+	            totalCount++;
+	        }
+	    }
+	    
+	    logger.info(" Mock 카드 사용내역 생성 완료 : 총 {}건", totalCount);
+	    logger.info(" ================================================ ");
+	    
+	    return CompletableFuture.completedFuture(totalCount);
+	}
 	
 	/**
 	 * 회원의 모든 카드 조회

@@ -34,6 +34,8 @@
 	        	<a href="/cards/register">카드등록</a>
 	        	<a href="/cards/transactions?cardId=7">카드 거래내역 </a>
 	        	<a href="/ledger/calendar">가계부 캘린더</a>
+	        	<a href="/ai/chat">센스봇</a>
+	        	<a href="/ai/insights">내 소비 분석</a>
 	        </div>
 	    </div>
     </div>
