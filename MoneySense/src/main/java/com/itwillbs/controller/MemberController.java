@@ -24,7 +24,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.service.MemberService;
-
 @Controller
 @RequestMapping("/members")
 public class MemberController {
@@ -158,17 +157,21 @@ public class MemberController {
 	
 	// 이름 수정 처리
 	@PostMapping("/mypage/update-name")
-	public String updateName(@RequestParam String name, RedirectAttributes rttr) {
+	public String updateName(@RequestParam String name,
+			RedirectAttributes rttr,
+			Authentication auth) {
 		logger.info(" 이름 수정 요청 : " + name );
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
 		int memberId = userDetails.getMember().getMemberId();
 		
 		boolean result = mService.updateMemberName(memberId, name);
 		
 		if(result) {
-			rttr.addFlashAttribute("msg", "이름이 수정되었습니다.");
+	        MemberVO updatedMember = mService.getMemberById(memberId);
+	        userDetails.setMember(updatedMember);
+	        
+	        rttr.addFlashAttribute("msg", "이름이 수정되었습니다.");
 		}else {
 			rttr.addFlashAttribute("msg", "이름 수정에 실패했습니다.");
 		}

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwillbs.mapper.StatisticsMapper">
+	<!-- 이 달의 카테고리별 지출 -->
+    <select id="selectMonthlyCategoryExpense" resultType="map">
+        SELECT 
+            c.category_name as categoryName,
+            ABS(SUM(vt.amount)) as totalAmount,
+            COUNT(*) as transactionCount
+        FROM v_all_transactions vt
+        JOIN category c ON vt.category_id = c.category_id
+        WHERE vt.member_id = #{memberId}
+          AND YEAR(vt.transacted_at) = #{year}
+          AND MONTH(vt.transacted_at) = #{month}
+          AND vt.inout_type = 'O'
+          AND vt.category_id IS NOT NULL
+          AND vt.category_id != 10
+        GROUP BY c.category_id, c.category_name
+        ORDER BY totalAmount DESC
+    </select>
+    
+    <!-- 주간 지출 추세 (최근 N주) -->
+    <select id="selectWeeklyExpenseTrend" resultType="map">
+        SELECT 
+            DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (a.week_num) WEEK), '%Y-%m-%d') as weekStart,
+            CONCAT(YEAR(DATE_SUB(CURDATE(), INTERVAL (a.week_num) WEEK)), '년 ', 
+                   WEEK(DATE_SUB(CURDATE(), INTERVAL (a.week_num) WEEK), 1), '주') as weekLabel,
+            COALESCE(ABS(SUM(vt.amount)), 0) as totalAmount
+        FROM (
+            SELECT 0 as week_num UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+        ) a
+        LEFT JOIN v_all_transactions vt ON 
+            vt.member_id = #{memberId}
+            AND vt.inout_type = 'O'
+            AND vt.transacted_at >= DATE_SUB(CURDATE(), INTERVAL (a.week_num + 1) WEEK)
+            AND vt.transacted_at &lt; DATE_SUB(CURDATE(), INTERVAL a.week_num WEEK)
+        GROUP BY a.week_num, weekStart, weekLabel
+        ORDER BY a.week_num DESC
+    </select>
+    
+    <!-- 월별 소비 트렌드 (최근 N개월) -->
+    <select id="selectMonthlyExpenseTrend" resultType="map">
+        SELECT 
+            DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL a.month_num MONTH), '%Y-%m') as monthKey,
+            CONCAT(YEAR(DATE_SUB(CURDATE(), INTERVAL a.month_num MONTH)), '년 ',
+                   MONTH(DATE_SUB(CURDATE(), INTERVAL a.month_num MONTH)), '월') as monthLabel,
+            COALESCE(ABS(SUM(vt.amount)), 0) as totalAmount
+        FROM (
+            SELECT 0 as month_num UNION ALL SELECT 1 UNION ALL SELECT 2 
+            UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5
+        ) a
+        LEFT JOIN v_all_transactions vt ON 
+            vt.member_id = #{memberId}
+            AND vt.inout_type = 'O'
+            AND YEAR(vt.transacted_at) = YEAR(DATE_SUB(CURDATE(), INTERVAL a.month_num MONTH))
+            AND MONTH(vt.transacted_at) = MONTH(DATE_SUB(CURDATE(), INTERVAL a.month_num MONTH))
+        GROUP BY a.month_num, monthKey, monthLabel
+        ORDER BY a.month_num DESC
+    </select>
+    
+    <!-- 카테고리별 전월 대비 증감률 -->
+    <select id="selectCategoryChangeRate" resultType="map">
+        SELECT 
+            c.category_name as categoryName,
+            COALESCE(ABS(SUM(CASE 
+                WHEN YEAR(vt.transacted_at) = #{year} AND MONTH(vt.transacted_at) = #{month}
+                THEN vt.amount 
+            END)), 0) as currentAmount,
+            COALESCE(ABS(SUM(CASE 
+                WHEN YEAR(vt.transacted_at) = IF(#{month} = 1, #{year} - 1, #{year})
+                AND MONTH(vt.transacted_at) = IF(#{month} = 1, 12, #{month} - 1)
+                THEN vt.amount 
+            END)), 0) as previousAmount
+        FROM category c
+        LEFT JOIN v_all_transactions vt ON 
+            c.category_id = vt.category_id
+            AND vt.member_id = #{memberId}
+            AND vt.inout_type = 'O'
+        WHERE c.category_id BETWEEN 1 AND 9
+        GROUP BY c.category_id, c.category_name
+        ORDER BY c.category_id
+    </select>
+    
+    <!-- 이번 달 총 지출 -->
+	<select id="selectMonthlyTotalExpense" resultType="map">
+	    SELECT 
+	        COALESCE(ABS(SUM(CASE 
+	            WHEN YEAR(transacted_at) = #{year} AND MONTH(transacted_at) = #{month}
+	            THEN amount 
+	        END)), 0) as totalAmount,
+	        COALESCE(ABS(SUM(CASE 
+	            WHEN YEAR(transacted_at) = IF(#{month} = 1, #{year} - 1, #{year})
+	            AND MONTH(transacted_at) = IF(#{month} = 1, 12, #{month} - 1)
+	            THEN amount 
+	        END)), 0) as previousAmount
+	    FROM v_all_transactions
+	    WHERE member_id = #{memberId}
+	      AND inout_type = 'O'
+	</select>
+	
+	<!-- 이번 달 총 수입 -->
+	<select id="selectMonthlyTotalIncome" resultType="map">
+	    SELECT 
+	        COALESCE(SUM(CASE 
+	            WHEN YEAR(transacted_at) = #{year} AND MONTH(transacted_at) = #{month}
+	            THEN amount 
+	        END), 0) as totalAmount,
+	        COALESCE(SUM(CASE 
+	            WHEN YEAR(transacted_at) = IF(#{month} = 1, #{year} - 1, #{year})
+	            AND MONTH(transacted_at) = IF(#{month} = 1, 12, #{month} - 1)
+	            THEN amount 
+	        END), 0) as previousAmount
+	    FROM v_all_transactions
+	    WHERE member_id = #{memberId}
+	      AND inout_type = 'I'
+	</select>
+    
+</mapper>

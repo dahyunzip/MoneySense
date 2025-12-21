@@ -60,11 +60,12 @@
 	            		<ul>
 		            		<sec:authorize access="isAuthenticated()">
 		            		<li><a href="/main">홈</a></li>
-		            		<li><a href="/accounts/list">계좌목록</a></li>
-		            		<li><a href="/cards/list">카드목록</a></li>
+		            		<li><a href="/ai/chat">센스봇</a></li>
+		            		<li><a href="/accounts/list">나의 자산</a></li>
 		            		<li><a href="/ledger/calendar">가계부</a></li>
+		            		<li><a href="/statistics/dashboard">통계</a></li>
 		            		<li><a href="/members/mypage">마이페이지</a></li>
-		            		<li class="notMenu">
+		            		<li class="notMenu text-right">
 		            			<form action="${ctx}/members/logout" method="post" style="display: inline;">
 					                <sec:csrfInput/>
 					                <button type="submit" class="btn-logout">로그아웃</button>

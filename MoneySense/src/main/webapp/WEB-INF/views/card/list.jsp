@@ -5,6 +5,12 @@
 <div id="subContents" class="accounts bgGray">
 	<div class="fix-layout">
 		<div class="container">
+			<!-- 탭 -->
+	    	<ul id="ui-tab">
+	    		<li onclick="location.href='/accounts/list'">나의 계좌</li>
+	    		<li onclick="location.href='#'" class="on">나의 카드</li>
+	    	</ul>
+		
 			<div class="title-btn">
 	        	<h1 class="page-title">내 카드 목록</h1>
 	    		<div class="btn-group right">

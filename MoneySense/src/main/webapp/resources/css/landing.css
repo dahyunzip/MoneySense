@@ -35,7 +35,8 @@ header .buttons .join_btn{color:#00DB7C; font-size:16px; font-weight:600; paddin
 .sect01-slider .text h4{font-size:40px; font-weight:600; color:#111; margin-bottom:40px}
 .sect01-slider .text p{font-size:20px; font-weight:400; color:#212121; margin-bottom:10px;}
 .sect01-slider .text .sm{font-size:16px; color:#212121; font-weight:300; margin-bottom:40px;}
-.sect01-slider .img{width:50%; height:350px; overflow:hidden;}
+.sect01-slider .img{width:50%; height:500px; overflow:hidden;}
+.sect01-slider .img img{width:100%; height:auto; object-fit:cover;}
 /* (E) sect01 */
 
 /* (S) sect2 */
@@ -44,7 +45,8 @@ header .buttons .join_btn{color:#00DB7C; font-size:16px; font-weight:600; paddin
 .sect02-slider .text{width:45%; padding-top:160px;}
 .sect02-slider .text h4{font-size:30px; font-weight:600; color:#242424; margin-bottom:20px;}
 .sect02-slider .text p{font-size:20px; color:#8C8C8C; margin-bottom:80px; font-weight:400;}
-.sect02-slider .img{background:#8B8B8B; border-radius: 20px; height:450px; width:50%;}
+.sect02-slider .img{ border-radius: 20px; height:450px; width:50%;}
+.sect02-slider .img img{width:100%; height:auto; object-fit:cover;}
 .sect02-slider .swiper-buttons{position:absolute; right:0; bottom:0; z-index:1;}
 .sect02-slider .swiper-slide{background:#fff;}
 /* (E) sect2 */
@@ -65,7 +67,12 @@ header .buttons .join_btn{color:#00DB7C; font-size:16px; font-weight:600; paddin
 /* (S) sect4 : 리뷰 */
 .review ul{display:flex; flex-wrap:wrap; justify-content: space-between; }
 .review li{width:22%; background:#FBFBFB; border-radius: 30px; padding: 65px 0 0 0; min-height: 424px; text-align:center}
-.review .img{background:#00db7c; border-radius: 50%; width:156px; height:156px; margin-bottom:20px; margin:0 auto 20px auto;}
+.review .img{background:#fff; position:relative; border-radius: 50%; width:156px; height:156px; margin-bottom:20px; margin:0 auto 20px auto;}
+.review .img::after{width: 150px; height:150px; display:block; content:''; margin:0 auto;}
+.review .img01::after{background:url(/resources/images/mimo01.png) no-repeat center; background-size:cover;}
+.review .img02::after{background:url(/resources/images/mimo02.png) no-repeat center; background-size:cover;}
+.review .img03::after{background:url(/resources/images/mimo03.png) no-repeat center; background-size:cover;}
+.review .img04::after{background:url(/resources/images/mimo04.png) no-repeat center; background-size:cover;}
 .review .star{height:30px; margin-bottom:20px;}
 .review .text{font-size:20px; color:#000; font-weight:400; line-height:1.5}
 /* (E) sect4 : 리뷰 */
@@ -110,6 +117,7 @@ footer .li-wr a{color:#5a5a5a; font-size:14px; font-weight:500;}
 	.compare .after li{font-size:18px; padding:16px 24px;}
 	.review li{width:48%; padding-top:24px; min-height:286px; margin-bottom:20px;}
 	.review .img{width:100px; height:100px;}
+	.review .img::after{width:90px; height:90px;}
 	.review .text{font-size:16px;}
 	.bot-banner{padding:50px 0;}
 	.bot-banner p{font-size:24px;}
@@ -142,6 +150,7 @@ footer .li-wr a{color:#5a5a5a; font-size:14px; font-weight:500;}
 	.compare .after li{font-size:10px; padding:10px 16px; line-height:1.375; border-radius: 4px; margin:20px 0;}
 	.review li{width:100%; min-height:auto; padding-bottom:24px;}
 	.review .img{width:80px; height:80px;}
+	.review .img::after{width:70px; height:70px;}
 	.review .star{margin-bottom:10px;}
 	.review .text{font-size:12px;}
 	.bot-banner p{font-size:14px;}
