@@ -41,7 +41,7 @@
 .category-section { background: #fff; padding: 20px; margin: 20px 0; border-radius: 12px; }
 .section-title { font-size: 16px; font-weight: 700; color: #333; margin-bottom: 20px; }
 .chart-container { position: relative; height: 250px; }
-@media (max-width: 768px) { .asset-amount { font-size: 28px; } .quick-menu-grid { gap: 10px; } .quick-menu-icon { width: 45px; height: 45px; font-size: 20px; } }
+@media (max-width: 768px) { .asset-amount { font-size: 28px; } .quick-menu-grid { gap: 10px; } .quick-menu-icon { font-size: 20px; } }
 </style>
 <div id="mainContents" class="bgGray">
 	<div class="fix-layout">
@@ -199,4 +199,4 @@ $(document).ready(function() {
     }
 });
 </script>
-<%@ include file="include/Footer.jsp"%>
+<%@ include file="include/Fixed.jsp"%>
