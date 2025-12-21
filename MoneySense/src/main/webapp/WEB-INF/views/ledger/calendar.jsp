@@ -450,7 +450,7 @@ $(document).ready(function() {
                             '</div>' +
                             '<div class="detail-row">' +
                                 '<span class="detail-label">금액</span>' +
-                                '<span class="detail-value" style="font-size:18px; font-weight:bold; color:' + amountColor + '">' +
+                                '<span class="detail-value" style="font-size:14px; font-weight:bold; color:' + amountColor + '">' +
                                     amountSign + Math.abs(tx.amount).toLocaleString() + '원' +
                                 '</span>' +
                             '</div>';

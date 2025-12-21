@@ -31,10 +31,5 @@ public class HomeController {
 		return "home";
 	}
 	
-	@GetMapping("/main")
-	public String main() {
-		logger.info(" 메인 페이지 요청 ");
-		return "main";
-	}
 	
 }

@@ -4,64 +4,73 @@
 <%@ include file="../include/Header.jsp"%>
 <div id="subContents" class="alignCenter">
     <div class="fix-layout ai-chat-page">
-        <!-- 헤더 -->
-        <div class="chat-header">
-            <h1 class="page-title mb20">AI 금융비서 센스봇</h1>
-            <p class="page-sub-title">무엇이든 물어보세요! 소비 패턴, 지출 내역 등을 분석해드립니다.</p>
-        </div>
-        
-        <!-- 채팅 컨테이너 -->
-        <div class="chat-container">
-            <!-- 대화 이력 -->
-            <div class="chat-history">
-           	 	<c:choose>
-           	 		<c:when test="${not empty chatHistory}">
-                	<h3>최근 대화<a href="#" class="fold-btn"></a></h3>
-                   	<div class="history-wrap">
-                        <c:forEach var="chat" items="${chatHistory}">
-                            <div class="history-item" data-question="${chat.question}" data-answer="${chat.answer}">
-                                <div class="history-question">${chat.question}</div>
-                                <div class="history-time">
-                                    <fmt:formatDate value="${chat.createdAt}" pattern="MM/dd HH:mm"/>
-                                </div>
-                            </div>
-                        </c:forEach>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <div style="text-align:center; color:#c9c9c9; font-size:12px;">
-                            아직 대화 이력이 없습니다
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-            
-            <!-- 메인 채팅 -->
-            <div class="chat-main">
-                <div class="chat-messages" id="chatMessages">
-                    <!-- 빈 상태 -->
-                    <div class="empty-chat" id="emptyChat">
-                        <div class="empty-chat-icon">🤖</div>
-                        <div class="empty-chat-text">안녕하세요! 무엇을 도와드릴까요?</div>
-                        <div class="empty-chat-subtext">아래 질문을 클릭하거나 직접 입력해보세요</div>
-                        <div class="suggestion-chips">
-                            <div class="suggestion-chip" data-question="이번 달 어디서 돈을 많이 썼어?">이번 달 어디서 돈을 많이 썼어?</div>
-                            <div class="suggestion-chip" data-question="내가 가장 많이 쓰는 카테고리는 뭐야?">내가 가장 많이 쓰는 카테고리는?</div>
-                            <div class="suggestion-chip" data-question="지난달 대비 지출이 어떻게 변했어?">지난달 대비 지출 변화는?</div>
-                            <div class="suggestion-chip" data-question="이번 달 카페에서 얼마 썼어?">이번 달 카페 지출은?</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 입력 영역 -->
-                <div class="chat-input-area">
-                    <div class="chat-input-wrapper">
-                        <textarea id="chatInput" placeholder="질문을 입력하세요..." rows="2"></textarea>
-                        <button id="sendBtn" type="button">전송</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+	    <div class="container">
+	    	
+	    	<!-- 탭 -->
+	    	<ul id="ui-tab">
+	    		<li onclick="location.href='#'" class="on">센스봇</li>
+	    		<li onclick="location.href='/ai/insights'">인사이트 리포트</li>
+	    	</ul>
+	    	
+	        <!-- 헤더 -->
+	        <div class="chat-header">
+	            <h1 class="page-title">AI 금융비서 센스봇</h1>
+	            <p class="page-sub-title">무엇이든 물어보세요! 소비 패턴, 지출 내역 등을 분석해드립니다.</p>
+	        </div>
+	        
+	        <!-- 채팅 컨테이너 -->
+	        <div class="chat-container">
+	            <!-- 대화 이력 -->
+	            <div class="chat-history">
+	           	 	<c:choose>
+	           	 		<c:when test="${not empty chatHistory}">
+	                	<h3>최근 대화<a href="#" class="fold-btn"></a></h3>
+	                   	<div class="history-wrap">
+	                        <c:forEach var="chat" items="${chatHistory}">
+	                            <div class="history-item" data-question="${chat.question}" data-answer="${chat.answer}">
+	                                <div class="history-question">${chat.question}</div>
+	                                <div class="history-time">
+	                                    <fmt:formatDate value="${chat.createdAt}" pattern="MM/dd HH:mm"/>
+	                                </div>
+	                            </div>
+	                        </c:forEach>
+	                        </div>
+	                    </c:when>
+	                    <c:otherwise>
+	                        <div style="text-align:center; color:#c9c9c9; font-size:12px;">
+	                            아직 대화 이력이 없습니다
+	                        </div>
+	                    </c:otherwise>
+	                </c:choose>
+	            </div>
+	            
+	            <!-- 메인 채팅 -->
+	            <div class="chat-main">
+	                <div class="chat-messages" id="chatMessages">
+	                    <!-- 빈 상태 -->
+	                    <div class="empty-chat" id="emptyChat">
+	                        <div class="empty-chat-icon">🤖</div>
+	                        <div class="empty-chat-text">안녕하세요! 무엇을 도와드릴까요?</div>
+	                        <div class="empty-chat-subtext">아래 질문을 클릭하거나 직접 입력해보세요</div>
+	                        <div class="suggestion-chips">
+	                            <div class="suggestion-chip" data-question="이번 달 어디서 돈을 많이 썼어?">이번 달 어디서 돈을 많이 썼어?</div>
+	                            <div class="suggestion-chip" data-question="내가 가장 많이 쓰는 카테고리는 뭐야?">내가 가장 많이 쓰는 카테고리는?</div>
+	                            <div class="suggestion-chip" data-question="지난달 대비 지출이 어떻게 변했어?">지난달 대비 지출 변화는?</div>
+	                            <div class="suggestion-chip" data-question="이번 달 카페에서 얼마 썼어?">이번 달 카페 지출은?</div>
+	                        </div>
+	                    </div>
+	                </div>
+	                
+	                <!-- 입력 영역 -->
+	                <div class="chat-input-area">
+	                    <div class="chat-input-wrapper">
+	                        <textarea id="chatInput" placeholder="질문을 입력하세요..." rows="2"></textarea>
+	                        <button id="sendBtn" type="button">전송</button>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
     </div>
 </div>
 

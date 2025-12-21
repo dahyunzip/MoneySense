@@ -49,36 +49,36 @@
 		    			<div class="swiper-slide">
 		    				<div class="cont-wrap">
 			    				<div class="text">
-			    					<h4>AI 소비 분석</h4>
-			    					<p>GPT 기반으로 지출 트렌드를 분석해주는 개인 금융 비서</p>
-			    					<p class="sm">GPT는 나의 금융비서! 나의 지출 트렌드를 분석해서 알려줘요!</p>
+			    					<h4>AI 금융비서 센스봇</h4>
+			    					<p>챗봇 형태의 AI 금융비서로 나의 소비 습관을 상담하세요</p>
+			    					<p class="sm">센스봇이 나의 소비 데이터를 기반으로 지출 습관을 분석하고 맞춤형 조언을 제공합니다.</p>
 			    				</div>
 			    				<div class="img">
-			    					<img src="/resources/images/landing_main.png">
+			    					<img src="/resources/images/ld_hero01.png">
 			    				</div>
 		    				</div>
 		    			</div>
 		    			<div class="swiper-slide">
 		    				<div class="cont-wrap">
 			    				<div class="text">
-			    					<h4>AI 소비 분석2222</h4>
-			    					<p>GPT 기반으로 지출 트렌드를 분석해주는 개인 금융 비서</p>
-			    					<p class="sm">GPT는 나의 금융비서! 나의 지출 트렌드를 분석해서 알려줘요!</p>
+			    					<h4>AI 소비 인사이트 리포트</h4>
+			    					<p>GPT 기반으로 나의 소비 패턴을 분석해주는 개인 금융비서</p>
+			    					<p class="sm">GPT가 나의 지출 내역을 분석해 소비 흐름과 특징을 한눈에 정리해줘요.</p>
 			    				</div>
 			    				<div class="img">
-			    					<img src="/resources/images/landing_main.png">
+			    					<img src="/resources/images/ld_hero02.png">
 			    				</div>
 		    				</div>
 		    			</div>
 		    			<div class="swiper-slide">
 		    				<div class="cont-wrap">
 			    				<div class="text">
-			    					<h4>AI 소비 분석33333</h4>
-			    					<p>GPT 기반으로 지출 트렌드를 분석해주는 개인 금융 비서</p>
-			    					<p class="sm">GPT는 나의 금융비서! 나의 지출 트렌드를 분석해서 알려줘요!</p>
+			    					<h4>캘린더 기반 가계부</h4>
+			    					<p>날짜별 소비를 한눈에 확인하는 직관적인 가계부</p>
+			    					<p class="sm">어느 날 어떤 지출을 했는지, 캘린더로 쉽게 확인할 수 있어요.</p>
 			    				</div>
 			    				<div class="img">
-			    					<img src="/resources/images/landing_main.png">
+			    					<img src="/resources/images/ld_hero03.png">
 			    				</div>
 		    				</div>
 		    			</div>
@@ -99,30 +99,22 @@
 		    			<div class="swiper-slide">
 		    				<div class="cont-wrap">
 			    				<div class="img">
+			    					<img src="/resources/images/ld_hero2-01.png">
 			    				</div>
 			    				<div class="text">
-			    					<h4>AI 소비 분석</h4>
-			    					<p>GPT 기반으로 지출 트렌드를 분석해주는 개인 금융 비서</p>
+			    					<h4>소비 통계 분석</h4>
+			    					<p>월별 지출과 카테고리별 소비를 그래프로 쉽게 파악할 수 있어요.</p>
 			    				</div>
 		    				</div>
 		    			</div>
 		    			<div class="swiper-slide">
 		    				<div class="cont-wrap">
 			    				<div class="img">
+			    					<img src="/resources/images/ld_hero2-02.png">
 			    				</div>
 			    				<div class="text">
-			    					<h4>AI 소비 분석222</h4>
-			    					<p>GPT 기반으로 지출 트렌드를 분석해주는 개인 금융 비서</p>
-			    				</div>
-		    				</div>
-		    			</div>
-		    			<div class="swiper-slide">
-		    				<div class="cont-wrap">
-			    				<div class="img">
-			    				</div>
-			    				<div class="text">
-			    					<h4>AI 소비 분석333</h4>
-			    					<p>GPT 기반으로 지출 트렌드를 분석해주는 개인 금융 비서</p>
+			    					<h4>자산 통합 관리</h4>
+			    					<p>여러 계좌와 카드의 거래 내역을 한 번에 모아 확인할 수 있어요.</p>
 			    				</div>
 		    				</div>
 		    			</div>
@@ -182,7 +174,7 @@
 	    					<div class="img img03"></div>
 	    					<div class="star"></div>
 	    					<div class="text">
-	    						AI 챗봇 덕분에 혼자 작성한다는<br>느낌이 전혀 없어요!
+	    						센스봇 덕분에 혼자 작성한다는<br>느낌이 전혀 없어요!
 	    					</div>
 	    				</li>
 	    				
@@ -190,7 +182,7 @@
 	    					<div class="img img04"></div>
 	    					<div class="star"></div>
 	    					<div class="text">
-	    						캘린더로 소비를 보는 게<br>이렇게 편할 줄 몰랐어요.
+	    						어느 카테고리에 지출이 많은지<br>한 눈에 볼 수 있어 편해요.
 	    					</div>
 	    				</li>
 	    			</ul>

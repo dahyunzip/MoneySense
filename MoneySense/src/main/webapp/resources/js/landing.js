@@ -25,7 +25,7 @@ $(document).ready(function(){
         spaceBetween: 0,
         loop: true,
         autoplay: {
-            delay: 3000,
+            delay: 5000,
             disableOnInteraction: false,
         },
         pagination: {
@@ -36,7 +36,7 @@ $(document).ready(function(){
             nextEl: '.button-next',
             prevEl: '.button-prev',
         },
-        speed: 1000,
+        speed: 2000,
         effect: 'slide'
     });
 	
@@ -45,7 +45,7 @@ $(document).ready(function(){
 	        spaceBetween: 0,
 	        loop: true,
 	        autoplay: {
-	            delay: 3000,
+	            delay: 5000,
 	            disableOnInteraction: false,
 	        },
 	        pagination: {
@@ -56,7 +56,7 @@ $(document).ready(function(){
 	            nextEl: '.button-next',
 	            prevEl: '.button-prev',
 	        },
-	        speed: 1000,
+	        speed: 2000,
 	        effect: 'fade'
 	    });
 });

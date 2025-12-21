@@ -6,9 +6,16 @@
 
 <div id="subContents">
     <div class="fix-layout ai-insights-page">
+    	<div class="container">
+    	<!-- 탭 -->
+    	<ul id="ui-tab">
+    		<li onclick="location.href='/ai/chat'">센스봇</li>
+    		<li onclick="location.href='/ai/insights'" class="on">인사이트 리포트</li>
+    	</ul>
+    
         <!-- 헤더 -->
         <div class="insights-header">
-            <h1 class="page-title mb20">AI 소비 인사이트</h1>
+            <h1 class="page-title">AI 소비 인사이트</h1>
             <p class="page-sub-title">AI가 분석한 나의 소비 패턴을 확인해보세요</p>
         </div>
         
@@ -102,6 +109,7 @@
                 </c:otherwise>
             </c:choose>
         </div>
+    </div>
     </div>
 </div>
 
