@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwillbs.mapper.BankTransactionMapper">
+	<resultMap id="transactionMap" type="com.itwillbs.domain.BankTransactionVO">
+		<id property="transactionId" column="transaction_id"/>
+		<result property="accountId" column="account_id"/>
+		<result property="transactedAt" column="transacted_at"/>
+		<result property="inoutType" column="inout_type"/>
+		<result property="amount" column="amount"/>
+		<result property="balanceAfter" column="balance_after"/>
+		<result property="description" column="description"/>
+		<result property="categoryId" column="category_id"/>
+		<result property="memo" column="memo"/>
+		<result property="createdAt" column="created_at"/>
+		<result property="categoryName" column="category_name"/>
+	</resultMap>
+	
+	<!-- 거래내역 저장 -->
+	<insert id="insertTransaction" useGeneratedKeys="true" keyProperty="transactionId">
+		INSERT INTO bank_transaction(
+			account_id,
+			transacted_at,
+			inout_type,
+			amount,
+			balance_after,
+			description,
+			category_id,
+			memo
+		) VALUES(
+			#{accountId},
+			#{transactedAt},
+			#{inoutType},
+			#{amount},
+			#{balanceAfter},
+			#{description},
+			#{categoryId},
+			#{memo}
+		)
+	</insert>
+	
+	<!-- 특정 계좌의 거래내역 조회(최신순, 제한) -->
+	<select id="selectTransactionsByAccountId" resultMap="transactionMap">
+	    SELECT
+	        bt.transaction_id,
+	        bt.account_id,
+	        bt.transacted_at,
+	        bt.inout_type,
+	        bt.amount,
+	        bt.balance_after,
+	        bt.description,
+	        bt.category_id,
+	        bt.memo,
+	        bt.created_at,
+	        c.category_name
+	    FROM bank_transaction bt
+	    LEFT JOIN category c ON bt.category_id = c.category_id
+	    WHERE bt.account_id = #{accountId}
+	    ORDER BY bt.transacted_at DESC, bt.transaction_id DESC
+	    LIMIT #{cri.pageSize} OFFSET #{cri.offset}
+	</select>
+	
+	<!-- 특정 계좌의 모든 거래내역 조회 -->
+	<select id="selectAllTransactionsByAccountId" resultMap="transactionMap">
+		SELECT
+			transaction_id,
+			account_id,
+			transacted_at,
+			inout_type,
+			amount,
+			balance_after,
+			description,
+			category_id,
+			memo,
+			created_at
+		FROM bank_transaction
+		WHERE account_id = #{accountId}
+		ORDER BY transaction_at DESC, transaction_id DESC
+	</select>
+	
+	<!-- 날짜 필터 + 페이징 -->
+	<!-- 날짜 필터 + 페이징 -->
+	<select id="selectTransactionsByDateWithPaging" resultMap="transactionMap">
+	    SELECT 
+	        bt.transaction_id,
+	        bt.account_id,
+	        bt.transacted_at,
+	        bt.inout_type,
+	        bt.amount,
+	        bt.balance_after,
+	        bt.description,
+	        bt.category_id,
+	        bt.memo,
+	        bt.created_at,
+	        c.category_name
+	    FROM bank_transaction bt
+	    LEFT JOIN category c ON bt.category_id = c.category_id
+	    WHERE bt.account_id = #{accountId}
+	      AND DATE(bt.transacted_at) BETWEEN #{startDate} AND #{endDate}
+	    ORDER BY bt.transacted_at DESC, bt.transaction_id DESC
+	    LIMIT #{cri.pageSize} OFFSET #{cri.offset}
+	</select>
+	
+	<!-- 전체 거래내역 개수 -->
+	<select id="countTransactions" resultType="int">
+	    SELECT COUNT(*)
+	    FROM bank_transaction
+	    WHERE account_id = #{accountId}
+	</select>
+	
+	<!-- 날짜 필터 적용한 거래내역 개수 -->
+	<select id="countTransactionsByDate" resultType="int">
+	    SELECT COUNT(*)
+	    FROM bank_transaction
+	    WHERE account_id = #{accountId}
+	      AND DATE(transacted_at) BETWEEN #{startDate} AND #{endDate}
+	</select>
+	
+	<!-- 특정 기간의 거래내역 조회 -->
+	<select id="selectTransactionsByDateRange" resultMap="transactionMap">
+		SELECT
+			transaction_id,
+			account_id,
+			transacted_at,
+			inout_type,
+			amount,
+			balance_after,
+			description,
+			category_id,
+			memo,
+			created_at
+		FROM bank_transaction
+		WHERE account_id = #{accountId}
+			AND DATE(transacted_at) BETWEEN #{startDate} AND #{endDate}
+		ORDER BY transacted_at DESC, transaction_id DESC
+	</select>
+	
+	<!-- 거래내역 삭제 -->
+	<delete id="deleteTransaction">
+		DELETE FROM bank_transaction
+		WHERE transaction_id = #{transactionId}
+	</delete>
+	
+	<!-- 계좌의 모든 거래내역 삭제 -->
+	<delete id="deleteTransactionsByAccountId">
+		DELETE FROM bank_transaction
+		WHERE account_id = #{accountId}
+	</delete>
+	
+	<!-- 메모 업데이트 -->
+	<update id="updateMemo">
+		UPDATE bank_transaction
+		SET memo = #{memo}
+		WHERE transaction_id = #{transactionId}
+	</update>
+	
+	<!-- 카테고리 업데이트 -->
+	<update id="updateCategory">
+		UPDATE bank_transaction
+		SET category_id = #{categoryId}
+		WHERE transaction_id = #{transactionId}
+	</update>
+</mapper>

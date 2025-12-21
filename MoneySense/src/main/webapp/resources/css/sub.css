@@ -1,0 +1,345 @@
+@charset "UTF-8";
+
+.container{padding:24px 0;}
+.box-wrap{max-width: 800px;margin: 50px auto;padding: 30px;background: white;border-radius: 10px;box-shadow: 0 2px 10px rgba(0,0,0,0.1);}
+h1.page-title{color: #222;margin-bottom: 10px;text-align:center; font-weight:700; font-size:20px; font-family: 'Paperlogy'}
+.page-sub-title{font-family: 'Paperlogy'; font-size:16px; font-weight:300; color:#5a5a5a; text-align:center; margin-bottom:30px;}
+.title-btn{display:flex; flex-direction:row; justify-content:space-between; align-items:center;}
+.title-btn .page-title{margin-bottom:0;}
+.title-btn .btn-group{margin-top:0; }
+
+.message { margin-top:10px ;padding: 12px; margin-bottom: 10px;border-radius: 5px;background: #d4edda;color: #155724;border: 1px solid #c3e6cb; font-size:14px; font-weight:600; }
+
+#ui-tab{display:table; margin-bottom:20px}
+#ui-tab li{width:1%; display:table-cell; background:#d8e2ef; text-align:center; color:#595F67; font-weight:600; cursor:pointer; height:36px; line-height:36px; font-size:14px;}
+#ui-tab li:first-child{border-top-left-radius: 8px; border-bottom-left-radius: 10px;}
+#ui-tab li:last-child{border-top-right-radius: 8px; border-bottom-right-radius: 10px;}
+#ui-tab li.on{background:#007bff; color:#fff;}
+
+/* 마이페이지 */
+.mypage .info-section {margin: 25px 0;padding: 25px;background: #f8f9fa;border-radius: 8px;}
+.mypage .info-section h2 {color: #222; margin-bottom: 20px;font-size: 16px;}
+.mypage .info-item {display: flex;justify-content: space-between;padding: 12px 0;border-bottom: 1px solid #dee2e6;}
+.mypage .info-item:last-child {border-bottom: none;}
+.mypage .info-label {font-weight: bold; font-size:14px ;color: #393939;}
+.mypage .info-value {color: #727272; font-size:12px;}
+.mypage .warning-box{background:#F8F8F8; padding:20px 24px; border-radius:10px; line-height:1.5;}
+.mypage .warning-box h3{text-align:center; margin-bottom:10px;}
+.mypage .warning-box li{font-size:12px;}
+.mypage .warning-box li::before{display:inline-block; content:''; width:3px; height:3px; background:#5a5a5a; border-radius: 50%; margin-right:4px; vertical-align:middle;}
+
+/* button css */
+.btn-group {display: flex;gap: 10px;margin-top: 30px;}
+.btn-group.center{justify-content:center;}
+.btn-group.right{justify-content:end;}
+.btn {padding: 10px 14px;border: none;border-radius: 5px;cursor: pointer;font-size: 12px;text-decoration: none;display: inline-block;text-align: center;transition: all 0.3s; line-height:1;}
+.btn-sm{padding:8px 16px; font-size:12px;}
+.btn-primary {background: #00DB7C;color: white;}
+.btn-primary:hover {background: #00DB7C;}
+.btn-warning {background: #ffc107;color: #000;}
+.btn-warning:hover {background: #e0a800;}
+.btn-danger {background: #EE0057;color: white;}
+.btn-danger:hover {background: #EE0057;}
+.btn-secondary {background: #C0CAD7;color: white;}
+.btn-secondary:hover {background: #C0CAD7;}
+.btn-login {width: 100%;padding: 14px;background: #38b274;color: white;border: none;border-radius: 5px;font-size: 14px;font-weight: 500;cursor: pointer;line-height:1;}
+.btn-success {background: #00AEEE;color: white;}
+.btn-success:hover {background: #00AEEE;}
+.btn-info {background: #E8E8E8;color: #848484;}
+.btn-info:hover {background: #E8E8E8;}
+.btn-underline{font-size:12px; color:#323437; text-decoration: underline;}
+.btn-block > a, .btn-block > button{width:100%; margin:0 auto 10px auto; display:block; border-radius: 4px; text-align:center; padding:12px 0; font-size:12px; }
+
+/* 입력폼 css */
+.form-group {margin: 20px 0;}
+.form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: #495057;}
+.form-group input {width: 100%;padding: 12px;border: 1px solid #ced4da;border-radius: 5px;font-size: 14px;}
+.form-group input:disabled {background: #e9ecef;cursor: not-allowed;}
+.form-group input:focus {outline: none;border-color: #007bff;}
+#pwdError {color: #dc3545;font-size: 13px;margin-top: 10px;display: none;}
+label {display: block;margin-bottom: 8px;color: #555;font-weight: 500; font-size:12px}
+input[type="email"], input[type="password"] {width: 100%;padding: 12px;border: 1px solid #ddd;border-radius: 5px;font-size: 12px;transition: border-color 0.3s;}
+input:focus {outline: none;border-color: #667eea;}
+.date-input{padding:12px 16px; outline:0; border-radius: 4px; border:1px solid #e5e5e5; background:url(/resources/images/ico-input-date.svg) no-repeat left 8px center;}
+.checkbox-group input[type="checkbox"]{vertical-align:middle;}
+/* Message */
+.msg {padding: 10px;margin: 20px 0; border-radius: 5px;background: #d4edda;color: #155724;border: 1px solid #c3e6cb; font-size:12px;}
+.msgFail {padding: 10px;margin: 20px 0; border-radius: 5px;background:#ffe4e4;color: #d50000;border: 1px solid #d50000; font-size:12px;}
+
+/* alert */
+.alert {padding: 12px;border-radius: 5px;margin-bottom: 20px;text-align: center;animation: slideDown 0.3s ease-out;}
+@keyframes slideDown {from {opacity: 0;transform: translateY(-10px);} to {opacity: 1;transform: translateY(0);}}
+.alert-success {background: #d4edda;color: #155724;border: 1px solid #c3e6cb;}
+.alert-danger {background: #f8d7da;color: #721c24;border: 1px solid #f5c6cb;}
+
+
+/* (S) 로그인 페이지 */
+#loginPage{max-width:500px; margin:0 auto;}
+#loginPage .signup-link {text-align: center;margin-top: 20px;color: #666;}
+#loginPage .signup-link a {color: #38b274;text-decoration: none;font-weight: 600;}
+#loginPage .signup-link a:hover {text-decoration: underline;}
+#loginPage .text-right {text-align: right; margin-top: 20px;}
+#loginPage .text-right a {color: #8b8b8b; text-decoration: none; font-size:14px;}
+#loginPage .text-right a:hover {text-decoration: underline;}
+#loginPage .page-title{margin-bottom:16px;}
+#loginPage .page-sub-title{font-size:14px;}
+/* (E) 로그인 페이지 */
+
+/* (S) 가계부 캘린더 페이지 */
+#calendarHead{border-radius: 12px; background:#00AEEE; color:#fff; display:flex; flex-wrap:wrap; padding:24px; margin:0 0 20px 0; align-items:center; }
+#monthWrap{position:relative; width:35%;}
+#monthWrap::after{display:inline-block; content:'▼'; color:#fff; position:absolute; right:20px; top:4px; font-size:10px;}
+#monthPicker{padding:0; border:0; background:transparent; color:#fff; font-weight:700; font-size:15px; padding-right:24px; position:relative; width:100%; text-align:center;}
+#summaryRow{border-left:1px solid rgba(255,255,255,.5); padding-left:24px;}
+#summaryRow > div {font-size: 15px;color: #fff; font-weight:700;}
+#summaryRow > div > span{color:rgba(255,255,255,0.5); display:inline-block; width:50px;}
+#monthExpense {color: #dc3545;font-weight: bold;}
+#monthIncome {color: #28a745;font-weight: bold;}
+#monthNet {color: #007bff;font-weight: bold;}
+#calendarPage{padding-top:20px; padding-bottom:20px;}
+#calendarPage .picker-box {margin-bottom: 15px;}
+#weekPicker {width: 200px;border-radius: 6px;border: 1px solid #cfd3d7;padding: 10px 12px;transition: 0.2s;}
+#weekPicker:focus {border-color: #4c8bf5;box-shadow: 0 0 3px rgba(76, 139, 245, 0.5);}
+#calendarPage .view-buttons {margin-bottom: 15px;}
+#calendar{position: relative;}
+#calendar a{color:#777777; font-size:10px; text-decoration:none;}
+#calendar .fc-header-toolbar{position:relative;}
+#calendar .fc-header-toolbar .fc-toolbar-chunk{width:100%;}
+#calendar .fc-toolbar-chunk .fc-button-group{display:block !important;}
+#calendar .fc-prev-button{position:absolute; background:none; border:0; padding:0; left:30%; top:-5px; z-index:1}
+#calendar .fc-next-button{position:absolute; background:none; border:0; padding:0; top:-5px; right:30%; z-index:1}
+#calendar .fc-button .fc-icon{color:#000; }
+#calendar .fc-today-button{position:absolute; right:0; background:#00DB7C; color:#fff; border:0; opacity:1; font-size: 12px;padding: 8px 12px;line-height: 1; z-index:4; top:-5px}
+#calendar .fc-today-button:disabled{background:#e8e8e8; color:#848484; border:0; opacity:1; font-size: 12px;padding: 8px 12px;line-height: 1;}
+#calendar .fc-toolbar-title{text-align:center; font-size:15px;}
+#calendar .fc-header-toolbar{display:block;}
+#calendar .fc-day-sun a{color:#FF5555 !important;}
+#calendar .fc-day-sat a{color:#408CFF !important;}
+#calendar .fc-daygrid-day{height:80px; text-align:center;}
+#calendar .fc-daygrid-day-top{justify-content:center;}
+#calendar .fc-daygrid-day-frame{min-height:unset; margin-bottom:5px;}
+#calendar .fc-daygrid-day-events{display:none;}
+#calendarPage .daily-spend {margin-top: 5px;font-size: 11px;color: #666;text-align: right;padding-right: 4px;}
+#calendarPage .fc-daygrid-day {transition: background-color 0.2s ease;cursor: pointer;}
+#calendarPage .fc-daygrid-day:hover {background: rgba(0, 123, 255, 0.05);}
+.modal .modal-dialog{max-width:480px; width:100%; margin:0 auto;}
+.modal .modal-content{width:95%; margin: 0 auto; }
+.modal .modal-title{font-size:14px; font-weight:600; color:#222;}
+#dailyModal .transaction-item {padding: 15px;border-bottom: 1px solid #dee2e6;cursor: pointer;transition: background 0.2s;}
+#dailyModal .transaction-item:hover {background: #f8f9fa;}
+#dailyModal .transaction-item:last-child {border-bottom: none;}
+#dailyModal .transaction-header {display: flex;justify-content: space-between;align-items: center;margin-bottom: 5px;}
+#dailyModal .transaction-time {font-size: 12px;color: #6c757d;}
+#dailyModal .transaction-amount {font-size: 16px;font-weight: bold;}
+#dailyModal .amount-income {color: #28a745;}
+#dailyModal .amount-expense {color: #dc3545;}
+#dailyModal .transaction-detail {font-size: 14px;color: #333;margin-bottom: 3px;}
+#dailyModal .transaction-source {font-size: 12px;color: #6c757d;}
+#detailModal .detail-row {display: flex;justify-content: space-between;padding: 10px 0;border-bottom: 1px solid #dee2e6; font-size:12px}
+#detailModal .detail-row:last-child {border-bottom: none;}
+#detailModal .detail-label {font-weight: 500;color: #495057;}
+#detailModal .detail-value {color: #333;}
+/* 월 선택 모달창 */
+#monthPickerModal .modal-body { padding: 0; }
+#monthPickerModal .year-selector { display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #f8f9fa; border-bottom: 1px solid #dee2e6; }
+#monthPickerModal .year-selector button { padding: 5px 15px; }
+#monthPickerModal .year-display { font-size: 18px; font-weight: bold; }
+#monthPickerModal .month-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px; }
+#monthPickerModal .month-item { padding: 12px; text-align: center; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background-color: #fff; transition: all 0.2s; }
+#monthPickerModal .month-item:hover { background-color: #f0f0f0; border-color: #999; }
+#monthPickerModal .month-item.selected { background-color: #007bff; color: white; border-color: #007bff; }
+#monthPickerModal .picker-box input { cursor: pointer; background-color: white; }
+@media (max-width: 768px) {
+    #summaryRow {padding: 15px;font-size: 13px;}
+    #monthPicker, #weekPicker {width: 100%;}
+    #monthPickerModal .fc-toolbar-title {font-size: 18px !important;}
+    #monthPickerModal .fc-daygrid-day-number {font-size: 11px !important;}
+    #monthPickerModal .daily-spend {font-size: 10px;}
+}
+@media all and (max-width:400px){
+	#calendarHead{padding:16px;}
+	#summaryRow > div{font-size:12px;}
+	#monthWrap{width:40%;}
+	#monthPicker{font-size:12px}
+}
+/* (E) 가계부 캘린더 페이지 */
+
+/* 계좌연동 성공(완료) */
+#callback .success-icon {font-size: 60px;color: #28a745;margin-bottom: 20px;}
+#callback .token-info {background: #f8f9fa;padding: 20px;border-radius: 5px;margin: 20px 0;text-align: left;}
+#callback .token-item {margin: 10px 0;padding: 10px;border-bottom: 1px solid #dee2e6;}
+#callback .token-item:last-child {border-bottom: none;}
+#callback .token-label {font-weight: bold;color: #495057;display: inline-block;width: 150px;}
+
+/* 오픈뱅킹 계좌연동 페이지 */
+#connect .info-box {padding: 20px;margin: 20px 0;text-align: center;}
+#connect .info-box{line-height:1.5; color: #373737; font-size:12px;}
+
+/* 계좌 & 거래내역 공통 */
+.header-actions {display: flex;justify-content: space-between;align-items: center;margin-bottom: 20px;}
+.account-grid {display: grid;/* grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); */gap: 20px;margin-top: 20px;}
+.account-grid .account-card {background: white;border-radius: 10px;padding: 25px; transition: transform 0.3s, box-shadow 0.3s; cursor:pointer}
+.account-grid .account-card:hover {transform: translateY(-5px);box-shadow: 0 4px 20px rgba(0,0,0,0.15);}
+.account-grid .account-header{margin-bottom:8px;}
+.account-grid .account-info{color:#727272; font-size:12px;}
+.account-grid .bank-name {font-size: 14px;font-weight: bold;color: #2a2a2a; display:inline-block; vertical-align:middle;}
+.account-grid .bank-name .info-value{font-size:14px; font-weight:400; color:#5a5a5a; margin-left:4px;}
+.account-grid .info-label {color: #6c757d;font-size: 14px;margin-bottom: 5px;}
+.account-grid .balance {font-size: 20px;font-weight: bold;color: #141414;margin-top: 10px; text-align:right;}
+.empty-message {text-align: center;padding: 60px 20px;color: #6c757d; background:#f9f9f9; border-radius: 8px}
+.empty-message h3 {color: #6c757d;margin-bottom: 10px;}
+.empty-message p{font-size:12px; line-height:1.5;}
+
+
+/* transaction-list */
+.trans-title-section{background:#00AEEE; color:#fff; padding:36px 0;}
+.trans-title-section .bank-name{font-family: 'Paperlogy'; font-size:18px; font-weight:600; }
+.trans-title-section .account-name{font-size:12px; font-weight:300; margin-left:4px}
+.trans-title-section .account-num{color:#fff; margin-top:10px}
+.trans-title-section .balance-amount{color:#fff; text-align:right; font-size:20px;}
+
+
+/* 날짜 필터 */
+.filter-section .filter-row{text-align:right; }
+.filter-section .date-input{font-size:10px; padding:8px 12px 8px 24px; color:#b3b3b3; width:90px; box-sizing:border-box; height:32px;}
+#ui-datepicker-div{left:50% !important; transform:translateX(-50%);}
+#transList .balance-amount {font-size: 32px;font-weight: bold;color: #28a745;}
+#transList .actions {display: flex;gap: 10px;margin: 20px 0;}
+#transList .account-num {color: #6c757d;font-size: 14px;}
+#transList .transaction-category {margin-bottom: 8px;}
+#transList .category-select { padding: 6px;border: 1px solid #ddd; border-radius: 4px;font-size: 10px;color: #666;background-color: #f8f9fa;cursor: pointer;transition: all 0.2s;}
+#transList .category-select:hover { border-color: #00AEEE; background-color: #fff;}
+#transList .category-select:focus {outline: none;border-color: #00AEEE;background-color: #fff;}
+
+.transaction-list {background: white;}
+.transaction-list .transaction-header{background: #f3f3f3; font-size: 14px; color: #222; font-weight: 600; padding: 12px; border-radius: 4px;margin-top: 16px; display:flex; justify-content:space-between;}
+.transaction-list .transaction-item {padding: 15px;border-bottom: 1px solid #dee2e6;transition: background 0.2s; display:flex; flex-wrap:wrap; flex-direction:row;}
+/* .transaction-list .transaction-item:hover {background: #f8f9fa;} */
+.transaction-list .transaction-item:last-child {border-bottom: none;}
+.transaction-list .transaction-month-day{width:75px; font-size:12px; color:#727272; font-weight:700;}
+.transaction-list .transaction-wrap{display:flex; flex-direction: row; justify-content:space-between; align-items:end;}
+.transaction-list .transaction-main {width:calc(100% - 75px);}
+.transaction-list .transaction-date {color: #6c757d;font-size: 10px;}
+.transaction-list .transaction-desc {font-size: 14px;color: #333;font-weight: 600; margin-bottom:8px;}
+.transaction-list .transaction-amount {text-align: right;}
+.transaction-list .transaction-installment{font-size:10px; margin-top:4px; color:#727272}
+.transaction-amount .amount-value {font-size: 16px;font-weight: bold;margin-bottom: 5px;}
+.transaction-amount .amount-in {color: #28a745;}
+.transaction-amount .amount-out {color: #dc3545;}
+.transaction-amount .balance-after {font-size: 12px;color: #6c757d; font-weight:700;}
+.transaction-item .memo-section {padding-top: 10px;}
+.transaction-item .memo-section > div{position:relative; z-index:0;}
+.transaction-item .memo-display {color: #495057;font-size: 10px;padding: 8px;background: #f8f9fa;border-radius: 4px;margin-bottom: 5px;}
+.transaction-item .memo-input {width: 100%;padding: 8px;border: 1px solid #ced4da;border-radius: 4px;font-size: 10px; background:#fff}
+.transaction-item .memo-actions {display: flex;gap: 8px; position:absolute; right:8px; top:8px;}
+.memo-actions button{border:0; width:12px; height:12px; cursor:pointer}
+.memo-actions .modify{text-indent:-9999px; background:url(/resources/images/ico_pencil.svg) no-repeat center; background-size:12px;}
+.memo-actions .delete{text-indent:-9999px; background:url(/resources/images/ico_delete.svg) no-repeat center; background-size:12px;}
+.memo-actions .save{text-indent:-9999px; background:url(/resources/images/ico_save.svg) no-repeat center; background-size:12px;}
+
+/* 금융비서 센스봇*/
+.ai-chat-page {width:100%; max-width:1200px; margin:0 auto;}
+.ai-chat-page .chat-header {background:#fff;  border-radius:8px; margin-bottom:20px;}
+.ai-chat-page .chat-header h2 {margin:0 0 10px 0; font-size:24px; color:#333;}
+.ai-chat-page .chat-header p {margin:0; color:#666; font-size:14px;}
+.ai-chat-page .chat-container {display:flex; gap:20px; flex-direction: column;}
+.ai-chat-page .chat-history {border-radius:8px; padding:20px; border:1px solid #e5e5e5; max-height:300px; overflow-y:auto; }
+.ai-chat-page .chat-history h3 {position:relative; font-size:16px; color:#333;}
+.ai-chat-page .chat-history .fold-btn{display:inline-block; width:24px; height:24px; background:url(/resources/images/ico_fold_on.svg) no-repeat center; position:absolute; right:0; top:-4px;}
+.ai-chat-page .chat-history .fold-btn.active{ background:url(/resources/images/ico_fold.svg) no-repeat center;}
+.ai-chat-page .history-wrap{height:auto; margin-top:15px}
+.ai-chat-page .history-wrap.fold{margin-top:0;height:0; overflow:hidden;}
+.ai-chat-page .history-item {padding:12px; margin-bottom:10px; border-radius:6px; background:#f8f9fa; cursor:pointer; transition:all 0.2s;}
+.ai-chat-page .history-item:hover {background:#e9ecef;}
+.ai-chat-page .history-item .history-question {font-size:13px; color:#333; margin-bottom:5px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.ai-chat-page .history-item .history-time {font-size:11px; color:#999;}
+.ai-chat-page .chat-main {background:#fff; border-radius:8px; border:1px solid #e5e5e5; display:flex; flex-direction:column; height:600px;}
+.ai-chat-page .chat-messages {flex:1; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:15px;}
+.ai-chat-page .message {display:flex; gap:10px; max-width:80%; padding:0; background:none; border:0;}
+.ai-chat-page .message.user {margin-left:auto; flex-direction:row-reverse;}
+.ai-chat-page .message-avatar {width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;}
+.ai-chat-page .message.user .message-avatar {background:#00AEEE; color:#fff;}
+.ai-chat-page .message.assistant .message-avatar {background:#7B838D; color:#fff;}
+.ai-chat-page .message-content {flex:1; padding:12px 16px; border-radius:12px; font-size:14px; line-height:1.6;}
+.ai-chat-page .message.user .message-content {background:#00AEEE; color:#fff; border-bottom-right-radius:4px;}
+.ai-chat-page .message.assistant .message-content {background:#f0f0f0; color:#333; border-bottom-left-radius:4px;}
+.ai-chat-page .message-time {font-size:11px; color:#999; margin-top:4px;}
+.ai-chat-page .chat-input-area {padding:20px; border-top:1px solid #e9ecef;}
+.ai-chat-page .chat-input-wrapper {display:flex; gap:10px;}
+.ai-chat-page .chat-input-wrapper textarea {flex:1; padding:12px; border:1px solid #ddd; border-radius:8px; resize:none; font-size:14px; font-family:inherit;}
+.ai-chat-page .chat-input-wrapper textarea:focus {outline:none; border-color:#00AEEE;}
+.ai-chat-page .chat-input-wrapper button {padding:12px 24px; background:#00AEEE; color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:14px; font-weight:500; transition:all 0.2s;}
+.ai-chat-page .chat-input-wrapper button:hover {background:#0099d4;}
+.ai-chat-page .chat-input-wrapper button:disabled {background:#ccc; cursor:not-allowed;}
+.ai-chat-page .empty-chat {flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#999;}
+.ai-chat-page .empty-chat-icon {font-size:48px; margin-bottom:15px; opacity:1;}
+.ai-chat-page .empty-chat-text {font-size:16px; margin-bottom:10px; color:#222; font-weight:500;}
+.ai-chat-page .empty-chat-subtext {font-size:13px;}
+.ai-chat-page .suggestion-chips {display:flex; flex-wrap:wrap; gap:8px; margin-top:20px;}
+.ai-chat-page .suggestion-chip {padding:8px 16px; background:#f0f0f0; border:1px solid #ddd; border-radius:20px; font-size:13px; color:#666; cursor:pointer; transition:all 0.2s;}
+.ai-chat-page .suggestion-chip:hover {background:#e0e0e0; border-color:#ccc;}
+.ai-chat-page .loading-indicator {display:flex; gap:5px; padding:12px 16px;}
+.ai-chat-page .loading-dot {width:8px; height:8px; background:#999; border-radius:50%; animation:bounce 1.4s infinite ease-in-out both;}
+.ai-chat-page .loading-dot:nth-child(1) {animation-delay:-0.32s;}
+.ai-chat-page .loading-dot:nth-child(2) {animation-delay:-0.16s;}
+@keyframes bounce {0%, 80%, 100% {transform:scale(0);} 40% {transform:scale(1);}}
+
+/* AI 인사이트 리포트 */
+.ai-insights-page {width:100%; max-width:1200px; margin:0 auto; }
+.ai-insights-page .insights-header {background:#fff; border-radius:8px; margin-bottom:20px;}
+.ai-insights-page .insights-header h2 {margin:0 0 10px 0; font-size:24px; color:#333;}
+.ai-insights-page .insights-header p {margin:0; color:#666; font-size:14px;}
+.ai-insights-page .insights-actions {display:flex; flex-direction:column; gap:10px; margin-bottom:20px;}
+.ai-insights-page .insights-actions button {padding:12px 24px; background:#00AEEE; color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:14px; font-weight:500; transition:all 0.2s;}
+.ai-insights-page .insights-actions button:hover {background:#0099d4;}
+.ai-insights-page .insights-actions button:disabled {background:#ccc; cursor:not-allowed;}
+.ai-insights-page .insights-actions select {padding:13px; border:1px solid #ddd; border-radius:8px; font-size:14px; cursor:pointer; width: calc(100% - 180px)}
+.ai-insights-page .insights-actions .categoryWrap{width:100%}
+.ai-insights-page .insights-grid {display:grid; gap:20px;}
+.ai-insights-page .insight-card {background:#fff; border-radius:8px; padding:20px; border:1px solid #e5e5e5; transition:all 0.2s;}
+.ai-insights-page .insight-card .card-header {display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding-bottom:15px; border-bottom:2px solid #f0f0f0;}
+.ai-insights-page .insight-card .card-type {display:inline-block; padding:4px 12px; background:#e3f2fd; color:#1976d2; border-radius:4px; font-size:12px; font-weight:500;}
+.ai-insights-page .insight-card .card-type.monthly {background:#e8f5e9; color:#388e3c;}
+.ai-insights-page .insight-card .card-type.category {background:#fff3e0; color:#f57c00;}
+.ai-insights-page .insight-card .card-period {font-size:13px; color:#999;}
+.ai-insights-page .insight-card .card-body {margin-bottom:15px;}
+.ai-insights-page .insight-card .amount-info {display:flex; justify-content:space-between; margin-bottom:10px;}
+.ai-insights-page .insight-card .amount-label {font-size:13px; color:#666;}
+.ai-insights-page .insight-card .amount-value {font-size:16px; font-weight:600; color:#333;}
+.ai-insights-page .insight-card .amount-value.positive {color:#388e3c;}
+.ai-insights-page .insight-card .amount-value.negative {color:#d32f2f;}
+.ai-insights-page .insight-card .change-rate {display:inline-flex; align-items:center; gap:4px; padding:4px 8px; border-radius:4px; font-size:13px; font-weight:500;}
+.ai-insights-page .insight-card .change-rate.up {background:#ffebee; color:#d32f2f;}
+.ai-insights-page .insight-card .change-rate.down {background:#e8f5e9; color:#388e3c;}
+.ai-insights-page .insight-card .summary {font-size:12px; line-height:1.6; color:#555; padding:15px; background:#f8f9fa; border-radius:6px; border-left:3px solid #00AEEE;}
+.ai-insights-page .insight-card .card-footer {padding-top:15px; border-top:1px solid #f0f0f0; font-size:12px; color:#999;}
+.ai-insights-page .empty-insights {text-align:center; padding:60px 20px; background:#fff; border-radius:8px; border:1px solid #e5e5e5;}
+.ai-insights-page .empty-insights-icon {font-size:48px; margin-bottom:15px; opacity:0.5;}
+.ai-insights-page .empty-insights-text {font-size:16px; color:#666; margin-bottom:10px;}
+.ai-insights-page .empty-insights-subtext {font-size:14px; color:#999;}
+.ai-insights-page .loading-spinner {text-align:center; padding:40px;}
+.ai-insights-page .loading-spinner .spinner {width:40px; height:40px; margin:0 auto; border:4px solid #f3f3f3; border-top:4px solid #00AEEE; border-radius:50%; animation:spin 1s linear infinite;}
+@keyframes spin {0% {transform:rotate(0deg);} 100% {transform:rotate(360deg);}}
+
+/* 통계 */
+.statistics .container { max-width: 1200px; margin: 0 auto;}
+.statistics .dashboard-header { margin-bottom: 30px; }
+.statistics .chart-grid { display: flex; flex-direction:column; gap: 20px; margin-bottom: 20px; }
+.statistics .chart-card { background: #fff; border-radius: 12px; padding: 20px; border:1px solid #e5e5e5; }
+.statistics .chart-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 15px; font-family: 'Paperlogy' }
+.statistics .chart-container { position: relative; height: 300px; }
+.statistics .loading { text-align: center; padding: 40px; color: #666; }
+
+/* 페이지 네이션 */
+.pagination {display: flex;justify-content: center;align-items: center;gap: 5px;margin-top: 20px;flex-wrap: wrap;}
+.page-link {border: 1px solid #00AEEE;border-radius: 5px;text-decoration: none;color: #00AEEE;transition: all 0.3s;min-width: 32px; line-height:30px; text-align: center; font-size:10px}
+.page-link:hover:not(.disabled) {background: #00AEEE; color: white;border-color: #00AEEE;}
+.page-link.active {background: #00AEEE; color: white;font-weight: bold;border-color: #00AEEE;}
+.page-link.disabled {color: #6c757d;pointer-events: none;opacity: 0.5;background: #f8f9fa; border-color:#5a5a5a;}
+
+/* 계좌 내역 */
+.accounts .total-account{background:#f3f3f3; font-size:14px; color:#222; font-weight:600; padding:12px; border-radius: 4px; margin-top:16px;}
+
+/* 카드 등록 */
+.form-group select{width:100%; border:1px solid #ced4da; padding: 12px; border-radius: 4px; color:#5a5a5a;}
+.help-text{font-size:12px; color:#4f4f4f; margin-top:4px; }

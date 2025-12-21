@@ -21,6 +21,9 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
+	<!-- properties 파일 로드 -->
+	<context:property-placeholder location="classpath:openbanking.properties" ignore-unresolvable="true"/>
+	
 	<context:component-scan base-package="com.itwillbs.controller" />
 	
 	

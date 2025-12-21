@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.itwillbs.moneysense.mapper.MemberMapper">
+<mapper namespace="com.itwillbs.mapper.MemberMapper">
 
 	<!-- MemberVO ResultMap -->
 	<resultMap id="memberMap" type="com.itwillbs.domain.MemberVO">
@@ -73,5 +73,50 @@
 		WHERE email = #{email}
 		AND is_deleted = 0
 	</select>
+	
+	<!-- 마이페이지 관련 추가 쿼리 -->
+	<!--  memberId로 회원 조회 -->
+	<select id="selectMemberById" resultMap="memberMap">
+	    SELECT 
+	        m.member_id,
+	        m.email,
+	        m.password,
+	        m.name,
+	        m.agree_privacy,
+	        m.agree_openbank,
+	        m.joined_at,
+	        m.updated_at,
+	        m.is_deleted,
+	        ma.authority
+	    FROM member m
+	    LEFT JOIN member_auth ma ON m.member_id = ma.member_id
+	    WHERE m.member_id = #{memberId}
+	    AND m.is_deleted = 0
+	</select>
 
+	<!-- 회원 이름 수정 -->
+	<update id="updateMemberName">
+		UPDATE member
+		SET name = #{name},
+			updated_at = CURRENT_TIMESTAMP
+		WHERE member_id = #{memberId}
+		AND is_deleted = 0
+	</update>
+	
+	<!-- 이메일로 비밀번호 업데이트 -->
+	<update id="updatePasswordByEmail">
+		UPDATE member
+		SET password = #{password},
+			updated_at = CURRENT_TIMESTAMP
+		WHERE email = #{email}
+		AND is_deleted = 0
+	</update>
+	
+	<!-- 회원 탈퇴 -->
+	<update id="deleteMember">
+		UPDATE member
+		SET is_deleted = 1,
+			updated_at = CURRENT_TIMESTAMP
+		WHERE member_id = #{memberId}
+	</update>
 </mapper>

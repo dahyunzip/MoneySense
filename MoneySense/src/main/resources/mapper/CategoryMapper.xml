@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwillbs.mapper.CategoryMapper">
+
+    <!-- 카테고리 조회 -->
+    <select id="selectCategoryById" resultType="com.itwillbs.domain.CategoryVO">
+        SELECT 
+            category_id,
+            category_name,
+            parent_id,
+            member_id,
+            is_default,
+            created_at
+        FROM category
+        WHERE category_id = #{categoryId}
+    </select>
+    
+    <!-- 기본 카테고리 목록 -->
+	<select id="selectDefaultCategories" resultType="com.itwillbs.domain.CategoryVO">
+	    SELECT 
+	        category_id,
+	        category_name,
+	        parent_id,
+	        is_default
+	    FROM category
+	    WHERE is_default = 1
+	      AND member_id IS NULL
+	    ORDER BY category_id
+	</select>
+    
+    <!-- 키워드로 카테고리 ID 찾기 -->
+    <select id="selectCategoryIdByKeyword" resultType="int">
+        SELECT ck.category_id
+        FROM category_keyword ck
+        WHERE #{keyword} LIKE CONCAT('%', ck.keyword, '%')
+          AND (ck.member_id IS NULL OR ck.member_id = #{memberId})
+        ORDER BY 
+            ck.priority DESC,
+            CASE WHEN ck.member_id = #{memberId} THEN 1 ELSE 2 END,
+            ck.keyword_id DESC
+        LIMIT 1
+    </select>
+    
+    <!-- 키워드 추가 -->
+    <insert id="insertKeyword">
+        INSERT INTO category_keyword (
+            category_id,
+            keyword,
+            priority,
+            member_id
+        ) VALUES (
+            #{categoryId},
+            #{keyword},
+            #{priority},
+            #{memberId}
+        )
+    </insert>
+    
+    <!-- 카테고리명으로 ID 찾기 -->
+    <select id="selectCategoryIdByName" resultType="int">
+        SELECT category_id
+        FROM category
+        WHERE category_name = #{categoryName}
+          AND (member_id IS NULL OR member_id = #{memberId})
+        ORDER BY 
+            CASE WHEN member_id = #{memberId} THEN 1 ELSE 2 END
+        LIMIT 1
+    </select>
+
+</mapper>

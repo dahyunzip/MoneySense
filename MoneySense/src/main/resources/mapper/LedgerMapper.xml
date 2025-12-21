@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwillbs.mapper.LedgerMapper">
+	<!-- resultMap 정의 -->
+	<resultMap id="calendarTransactionMap" type="com.itwillbs.domain.CalendarTransactionVO">
+		<result property="transactionKey" column="transaction_key"/>
+		<result property="transactionType" column="transaction_type"/>
+		<result property="transactionId" column="transaction_id"/>
+		<result property="memberId" column="member_id"/>
+		<result property="transactedAt" column="transacted_at"/>
+		<result property="detail" column="detail"/>
+		<result property="amount" column="amount"/>
+		<result property="inoutType" column="inout_type"/>
+		<result property="balanceAfter" column="balance_after"/>
+		<result property="categoryId" column="category_id"/>
+		<result property="memo" column="memo"/>
+		<result property="sourceName" column="source_name"/>
+		<result property="sourceNumber" column="source_number"/>
+		<result property="installment" column="installment"/>
+		<result property="categoryName" column="category_name"/>
+	</resultMap>
+	
+	<!-- 월별 거래내역 조회 -->
+	<select id="selectMonthlyTransactions" resultMap="calendarTransactionMap">
+		SELECT
+			transaction_key,
+			transaction_type,
+			transaction_id,
+			member_id,
+			transacted_at,
+			detail,
+			amount,
+			inout_type,
+			balance_after,
+			category_id,
+			category_name,
+			memo,
+			source_name,
+			source_number,
+			installment
+		FROM v_all_transactions
+		WHERE member_id = #{memberId}
+		 AND YEAR(transacted_at) = #{year}
+		 AND MONTH(transacted_at) = #{month}
+		ORDER BY transacted_at DESC, transaction_id DESC
+	</select>
+	
+	<!-- 일별 거래내역 조회 -->
+	<select id="selectDailyTransactions" resultMap="calendarTransactionMap">
+		SELECT
+			transaction_key,
+			transaction_type,
+			transaction_id,
+			member_id,
+			transacted_at,
+			detail,
+			amount,
+			inout_type,
+			balance_after,
+			category_id,
+			category_name,
+			memo,
+			source_name,
+			source_number,
+			installment
+		FROM v_all_transactions
+		WHERE member_id = #{memberId}
+		 AND DATE(transacted_at) = #{date}
+		ORDER BY transacted_at ASC
+	</select>
+	
+	<!-- 거래 상세 조회 -->
+	<select id="selectTransactionDetail" resultMap="calendarTransactionMap">
+		SELECT
+			transaction_key,
+			transaction_type,
+			transaction_id,
+			member_id,
+			transacted_at,
+			detail,
+			amount,
+			inout_type,
+			balance_after,
+			category_id,
+			category_name,
+			memo,
+			source_name,
+			source_number,
+			installment
+		FROM v_all_transactions
+		WHERE transaction_key = #{transactionKey}
+	</select>
+	
+	<!-- 월별 지출 합계 -->
+	<select id="selectMonthlyExpense" resultType="int">
+		SELECT COALESCE(SUM(amount), 0)
+		FROM v_all_transactions
+		WHERE member_id = #{memberId}
+		 AND YEAR(transacted_at) = #{year}
+		 AND MONTH(transacted_at) = #{month}
+		 AND inout_type = 'O'
+	</select>
+	
+	<!-- 월별 수입 합계 -->
+	<select id="selectMonthlyIncome" resultType="int">
+		SELECT COALESCE(SUM(amount), 0)
+		FROM v_all_transactions
+		WHERE member_id = #{memberId}
+		 AND YEAR(transacted_at) = #{year}
+		 AND MONTH(transacted_at) = #{month}
+		 AND inout_type = 'I'
+	</select>
+</mapper>

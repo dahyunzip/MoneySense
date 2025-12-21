@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itwillbs.mapper.CardTransactionMapper">
+	<!-- resultMap 정의 -->
+	<resultMap id="transactionMap" type="com.itwillbs.domain.CardTransactionVO">
+		<id property="transactionId" column="transaction_id"/>
+		<result property="cardId" column="card_id"/>
+		<result property="transactedAt" column="transacted_at"/>
+		<result property="merchantName" column="merchant_name"/>
+		<result property="amount" column="amount"/>
+		<result property="installment" column="installment"/>
+		<result property="categoryId" column="category_id"/>
+		<result property="memo" column="memo"/>
+		<result property="createdAt" column="created_at"/>
+		<result property="categoryName" column="category_name"/>
+	</resultMap>
+	
+	<!-- 거래내역 저장 -->
+	<insert id="insertTransaction" useGeneratedKeys="true" keyProperty="transactionId">
+		INSERT INTO card_transaction(
+			card_id,
+			transacted_at,
+			merchant_name,
+			amount,
+			installment,
+			category_id,
+			memo
+		) VALUES (
+			#{cardId},
+			#{transactedAt},
+			#{merchantName},
+			#{amount},
+			#{installment},
+			#{categoryId},
+			#{memo}
+		)
+	</insert>
+	
+	<!-- 특정 카드의 거래내역 조회(페이징) -->
+    <select id="selectTransactionsByCardId" resultMap="transactionMap">
+        SELECT 
+            ct.transaction_id,
+            ct.card_id,
+            ct.merchant_name,
+            ct.amount,
+            ct.installment,
+            ct.transacted_at,
+            ct.category_id,
+            ct.memo,
+            ct.created_at,
+            c.category_name
+        FROM card_transaction ct
+        LEFT JOIN category c ON ct.category_id = c.category_id
+        WHERE ct.card_id = #{cardId}
+        ORDER BY ct.transacted_at DESC, ct.transaction_id DESC
+        LIMIT #{cri.pageSize} OFFSET #{cri.offset}
+    </select>
+	
+	<!-- 특정 카드의 모든 거래내역 조회 -->
+	<select id="selectAllTransactionsNByCardId" resultMap="transactionMap">
+		SELECT
+			transaction_id,
+			card_id,
+			transacted_at,
+			merchant_name,
+			amount,
+			installment,
+			category_id,
+			memo,
+			created_at
+		FROM card_transaction
+		WHERE card_id = #{cardId}
+		ORDER BY transacted_at DESC, transaction_id DESC
+	</select>
+	
+	<!-- 날짜 필터 + 페이징 -->
+    <select id="selectTransactionsByDateWithPaging" resultMap="transactionMap">
+        SELECT 
+            ct.transaction_id,
+            ct.card_id,
+            ct.merchant_name,
+            ct.amount,
+            ct.installment,
+            ct.transacted_at,
+            ct.category_id,
+            ct.memo,
+            ct.created_at,
+            c.category_name
+        FROM card_transaction ct
+        LEFT JOIN category c ON ct.category_id = c.category_id
+        WHERE ct.card_id = #{cardId}
+          AND DATE(ct.transacted_at) BETWEEN #{startDate} AND #{endDate}
+        ORDER BY ct.transacted_at DESC, ct.transaction_id DESC
+        LIMIT #{cri.pageSize} OFFSET #{cri.offset}
+    </select>
+	
+	<!-- 전체 거래 내역 개수 -->
+	<select id="countTransactions" resultType="int">
+		SELECT count(*)
+		FROM card_transaction
+		WHERE card_id = #{cardId}
+	</select>
+	
+	<!-- 날짜 필터 적용한 거래내역 개수 -->
+	<select id="countTransactionsByDate" resultType="int">
+		SELECT count(*)
+		FROM card_transaction
+		WHERE card_id = #{cardId}
+		AND DATE(transacted_at) BETWEEN #{startDate} AND #{endDate}
+	</select>
+	
+	<!-- 회원의 최근 카드 거래내역 -->
+    <select id="selectRecentTransactionsByMemberId" resultMap="transactionMap">
+        SELECT 
+            ct.transaction_id,
+            ct.card_id,
+            ct.merchant_name,
+            ct.amount,
+            ct.installment,
+            ct.transacted_at,
+            ct.category_id,
+            ct.memo,
+            ct.created_at,
+            c.category_name
+        FROM card_transaction ct
+        LEFT JOIN category c ON ct.category_id = c.category_id
+        JOIN card cd ON ct.card_id = cd.card_id
+        WHERE cd.member_id = #{memberId}
+        ORDER BY ct.transacted_at DESC
+        LIMIT #{limit}
+    </select>
+	
+	<!-- 거래내역 삭제 -->
+	<delete id="deleteTransaction">
+		DELETE FROM card_transaction
+		WHERE transaction_id = #{transactionId}
+	</delete>
+	
+	<!-- 카드의 모든 거래내역 삭제 -->
+	<delete id="deleteTransactionsByCardId">
+		DELETE FROM card_transaction
+		WHERE card_id = #{cardId}
+	</delete>
+	
+	<!-- 메모 업데이트 -->
+	<update id="updateMemo">
+		UPDATE card_transaction
+		SET memo = #{memo}
+		WHERE transaction_id = #{transactionId}
+	</update>
+	
+	<!-- 카테고리 업데이트 -->
+    <update id="updateCategory">
+        UPDATE card_transaction
+        SET category_id = #{categoryId}
+        WHERE transaction_id = #{transactionId}
+    </update>
+
+</mapper>
