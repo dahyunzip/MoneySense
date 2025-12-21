@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
-<html>
+<html styl>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +17,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script> 
     <script src="${ctx}/resources/js/landing.js" type="text/javascript"></script>
 </head>
-<body>
+<body style="overflow:hidden;">
     <header data-aos="zoom-out">
     	<div class="fix-layout">
 	    	<div class="logo"><a href="/" title="홈으로 이동"><img src="${ctx}/resources/images/logo.svg"></a></div>

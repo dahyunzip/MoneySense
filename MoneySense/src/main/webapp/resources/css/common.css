@@ -153,12 +153,15 @@ body {font-family:'Pretendard', 'Paperlogy', sans-serif !important;}
 
 
 /* (E) fixedMenu */
-html{overflow:hidden;}
+/* html{overflow:hidden;} */
 /* #contents{min-height:640px; display:flex; flex-direction: column; justify-content: center; } */
 #RESPONSE_POINT{max-width:480px; width:100%; margin:0 auto;min-height:100vh;/* j display:flex; flex-direction:column; ustify-content:space-between;*/ position:relative; overflow-y:auto; /* max-height:100vh;*/ border-left:1px solid #e5e5e5; border-right:1px solid #e5e5e5;}
 /* #RESPONSE_POINT::before{display:block; content:''; width:100vw; height:100vh; position:fixed; background:#f9f9f9; left:0; top:0;} */
-#contents{height:calc(100vh - 141px); overflow-y:auto; overflow-x:hidden}
+#contents{/* height:calc(100vh - 141px); */ padding-bottom:70px; overflow-y:auto; overflow-x:hidden}
 #subContents{height:100%;}
+@media all and (max-width:1200px){
+	#RESPONSE_POINT, #fixedMenu{max-width:100%;}
+}
 /******************************RESET.CSS **************************************/
 /* (S) RESET */
 * {margin: 0; padding: 0; box-sizing: border-box; letter-spacing:-0.05em;}
