@@ -20,7 +20,7 @@
 	            금융결제원 테스트 환경 주소 예시
 	        -->
 	        <div class="btn-block center">
-		        <a href="https://testapi.openbanking.or.kr/oauth/2.0/authorize?response_type=code&client_id=669dcc6e-ac4a-42a8-8910-85d7c1485911&redirect_uri=http://localhost:8088/accounts/callback&scope=login inquiry transfer&state=12345678901234567890123456789012&auth_type=0" 
+		        <a href="https://testapi.openbanking.or.kr/oauth/2.0/authorize?response_type=code&client_id=669dcc6e-ac4a-42a8-8910-85d7c1485911&redirect_uri=http://c6d2507t1p2.itwillbs.com/accounts/callback&scope=login inquiry transfer&state=12345678901234567890123456789012&auth_type=0" 
 		           class="btn-success">
 		            계좌 연동하기
 		        </a>

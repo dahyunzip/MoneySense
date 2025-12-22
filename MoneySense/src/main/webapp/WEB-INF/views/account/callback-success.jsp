@@ -28,10 +28,12 @@
 	            </div>
 	        </div>
 	        
-	        <a href="${ctx}/" class="btn-dashboard">
-	            홈으로 이동
-	        </a>
+	        <div class="btn-block center">
+		        <a href="${ctx}/" class="btn btn-success">
+		            홈으로 이동
+		        </a>
+	        </div>
 	    </div>
     </div>
 </div>
-<%@ include file="../include/Footer.jsp"%>
+<%@ include file="../include/Fixed.jsp"%>
