@@ -18,12 +18,12 @@
             
             <div class="form-group">
                 <label for="email">이메일</label>
-                <input type="email" id="email" name="email" required placeholder="example@email.com" autofocus>
+                <input type="email" id="email" name="email" required placeholder="test@moneysense.com" autofocus>
             </div>
             
             <div class="form-group">
                 <label for="password">비밀번호</label>
-                <input type="password" id="password" name="password" required placeholder="비밀번호를 입력하세요">
+                <input type="password" id="password" name="password" required placeholder="test123!A">
             </div>
             
             <button type="submit" class="btn-login">로그인</button>

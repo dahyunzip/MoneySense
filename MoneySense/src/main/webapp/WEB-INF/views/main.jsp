@@ -5,7 +5,7 @@
 <%@ include file="include/Header.jsp"%>
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 
 <c:if test="${not empty msg}">
     <script>
@@ -24,6 +24,7 @@
 .ie-card-change { font-size: 12px; margin-top: 5px; }
 .ie-card-change.up { color: #dc3545; }
 .ie-card-change.down { color: #0066ff; }
+.ie-card-comment span{font-size:10px; font-weight:600; color:#393939;margin-top:8px;}
 .quick-menu {padding: 20px; margin-top: 20px; }
 .quick-menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center; }
 .quick-menu-item { display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; color: #333; }
@@ -65,8 +66,16 @@
 	                </div>
 	                <c:if test="${expenseChange != null}">
 	                    <div class="ie-card-change ${expenseChange > 0 ? 'up' : 'down'}">
-	                        ${expenseChange > 0 ? '▲' : '▼'} 
+	                        ${expenseChange > 0 ? '▲' : '▼'}
 	                        <fmt:formatNumber value="${expenseChange}" pattern="#,###"/>원
+	                    </div>
+	                    <div class="ie-card-comment">
+	                    	<c:if test="${expenseChange > 0}">
+	                        	<span>😒?노력이 필요해요.</span>
+	                        </c:if>
+	                        <c:if test="${expenseChange < 0}">
+	                        	<span>👍 잘 줄이고 있어요.</span>
+	                        </c:if>
 	                    </div>
 	                </c:if>
 	            </div>
@@ -82,6 +91,14 @@
 	                    <div class="ie-card-change ${incomeChange > 0 ? 'up' : 'down'}">
 	                        ${incomeChange > 0 ? '▲' : '▼'} 
 	                        <fmt:formatNumber value="${incomeChange}" pattern="#,###"/>원
+	                    </div>
+	                    <div class="ie-card-comment">
+	                    	<c:if test="${incomeChange > 0}">
+	                        	<span>👍 수입이 늘었어요.</span>
+	                        </c:if>
+	                        <c:if test="${incomeChange < 0}">
+	                        	<span>😒 수입이 줄었어요.</span>
+	                        </c:if>
 	                    </div>
 	                </c:if>
 	            </div>
@@ -149,16 +166,19 @@ $(document).ready(function() {
     
     function createCategoryChart(data) {
         const ctx = document.getElementById('categoryChart').getContext('2d');
-        
+
         const labels = data.map(item => item.name);
         const amounts = data.map(item => item.amount);
-        
+
         // 색상 배열
         const colors = [
             '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
             '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF', '#4BC0C0'
         ];
-        
+
+        // 플러그인 등록
+        Chart.register(ChartDataLabels);
+
         new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -187,10 +207,27 @@ $(document).ready(function() {
                             label: function(context) {
                                 const total = amounts.reduce((a, b) => a + b, 0);
                                 const percentage = ((context.parsed / total) * 100).toFixed(1);
-                                return context.label + ': ' + 
-                                       context.parsed.toLocaleString() + '원 (' + 
+                                return context.label + ': ' +
+                                       context.parsed.toLocaleString() + '원 (' +
                                        percentage + '%)';
                             }
+                        }
+                    },
+                    datalabels: {
+                        color: '#fff',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+                        formatter: function(value, context) {
+                            const total = amounts.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+
+                            // 5% 이상인 것만 표시
+                            if (percentage >= 5) {
+                                return percentage + '%';
+                            }
+                            return '';
                         }
                     }
                 }
