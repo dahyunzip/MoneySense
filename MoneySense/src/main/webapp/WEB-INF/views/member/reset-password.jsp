@@ -2,38 +2,40 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/Header.jsp"%>
 <div id="subContents">
-    <div class="container">
-        <h3>새 비밀번호 설정</h3>
-        
-        <form id="resetForm" action="${ctx}/members/reset-password" method="post">
-            <sec:csrfInput/>
-            
-            <input type="hidden" name="email" value="${email}">
-            <input type="hidden" name="token" value="${token}">
-            
-            <div class="form-group">
-                <label>새 비밀번호</label>
-                <input type="password" class="form-control" id="newPassword" name="newPassword" 
-                       placeholder="새 비밀번호 입력 (8자 이상)" required>
-            </div>
-            
-            <div class="form-group">
-                <label>비밀번호 확인</label>
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" 
-                       placeholder="비밀번호 다시 입력" required>
-            </div>
-            
-            <div id="pwdError"></div>
-            
-            <button type="submit" class="btn">비밀번호 변경</button>
-            
-            <div class="text-center">
-                <a href="${ctx}/members/login">로그인으로 돌아가기</a>
-            </div>
-        </form>
+	<div class="fix-layout">
+	    <div class="container">
+	        <h3>새 비밀번호 설정</h3>
+	        
+	        <form id="resetForm" action="${ctx}/members/reset-password" method="post">
+	            <sec:csrfInput/>
+	            
+	            <input type="hidden" name="email" value="${email}">
+	            <input type="hidden" name="token" value="${token}">
+	            
+	            <div class="form-group">
+	                <label>새 비밀번호</label>
+	                <input type="password" class="form-control" id="newPassword" name="newPassword" 
+	                       placeholder="새 비밀번호 입력 (8자 이상)" required>
+	            </div>
+	            
+	            <div class="form-group">
+	                <label>비밀번호 확인</label>
+	                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" 
+	                       placeholder="비밀번호 다시 입력" required>
+	            </div>
+	            
+	            <div id="pwdError"></div>
+	            
+	            <button type="submit" class="btn">비밀번호 변경</button>
+	            
+	            <div class="text-center">
+	                <a href="${ctx}/members/login">로그인으로 돌아가기</a>
+	            </div>
+	        </form>
+	    </div>
     </div>
 </div>
-<%@ include file="../include/Footer.jsp"%>
+<%@ include file="../include/Fixed.jsp"%>
 <script>
     $(document).ready(function() {
         const $form = $('#resetForm');

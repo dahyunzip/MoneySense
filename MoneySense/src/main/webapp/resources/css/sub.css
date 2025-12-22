@@ -167,9 +167,9 @@ input:focus {outline: none;border-color: #667eea;}
 /* 계좌연동 성공(완료) */
 #callback .success-icon {font-size: 60px;color: #28a745;margin-bottom: 20px;}
 #callback .token-info {background: #f8f9fa;padding: 20px;border-radius: 5px;margin: 20px 0;text-align: left;}
-#callback .token-item {margin: 10px 0;padding: 10px;border-bottom: 1px solid #dee2e6;}
+#callback .token-item {margin: 10px 0;padding: 10px;border-bottom: 1px solid #dee2e6; font-size:14px}
 #callback .token-item:last-child {border-bottom: none;}
-#callback .token-label {font-weight: bold;color: #495057;display: inline-block;width: 150px;}
+#callback .token-label {font-weight: bold;color: #495057;display: inline-block;width: 150px; font-size:14px;}
 
 /* 오픈뱅킹 계좌연동 페이지 */
 #connect .info-box {padding: 20px;margin: 20px 0;text-align: center;}
