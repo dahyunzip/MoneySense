@@ -12,18 +12,22 @@
             </div>
         </c:if>
         
+        <div class="alert message">
+        	💡 테스트 팁 : input 태그 placeholder에 작성된 계정으로 테스트 해보세요!
+        </div>
+        
         <form action="${ctx}/members/login-process" method="post" id="loginForm">
             <!-- CSRF 토큰 -->
             <sec:csrfInput/>
             
             <div class="form-group">
                 <label for="email">이메일</label>
-                <input type="email" id="email" name="email" required placeholder="test@moneysense.com" autofocus>
+                <input type="email" id="email" name="email" required placeholder="test@test.com" autofocus>
             </div>
             
             <div class="form-group">
                 <label for="password">비밀번호</label>
-                <input type="password" id="password" name="password" required placeholder="test123!A">
+                <input type="password" id="password" name="password" required placeholder="test123A!">
             </div>
             
             <button type="submit" class="btn-login">로그인</button>

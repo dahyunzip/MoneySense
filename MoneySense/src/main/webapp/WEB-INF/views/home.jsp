@@ -197,8 +197,8 @@
     <footer>
     	<div class="fix-layout">
     		<ul class="li-wr">
-    			<li><a href="#">이메일 / 문의 안내</a></li>
-    			<li><a href="#">Github</a></li>
+    			<li><a href="mailto:bydhyun@naver.com">이메일 / 문의 안내</a></li>
+    			<li><a href="https://github.com/dahyunzip/MoneySense" target="_blank">Github</a></li>
     		</ul>
     	</div>
     </footer>
