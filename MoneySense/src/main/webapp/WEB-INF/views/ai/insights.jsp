@@ -28,13 +28,13 @@
 				    <option value="1">식비</option>
 				    <option value="2">교육</option>
 				    <option value="3">쇼핑</option>
-				    <option value="4">문화</option>
+				    <option value="4">문화/여가</option>
 				    <option value="5">의료/건강</option>
-				    <option value="6">교통</option>
+				    <option value="6">교육</option>
 				    <option value="7">주거/통신</option>
-				    <option value="8">주거</option>
-				    <option value="9">통신</option>
-				    <option value="10">기타</option>
+				    <option value="8">금융</option>
+				    <option value="9">기타</option>
+				    <!-- <option value="10">수입 </option>-->
 				</select>
 	            <button id="generateCategoryBtn" type="button">카테고리 인사이트 생성</button>
         	</div>
