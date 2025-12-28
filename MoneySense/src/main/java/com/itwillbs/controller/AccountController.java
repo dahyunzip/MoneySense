@@ -63,7 +63,7 @@ public class AccountController {
 			logger.info(" 토큰 발급 실패 : " + e.getMessage());
 			e.printStackTrace();
 			
-			rttr.addFlashAttribute("msg", "계좌 연동에 실패했습니다. 다시 시도해 주세요.");
+			rttr.addFlashAttribute("msgFail", "계좌 연동에 실패했습니다. 다시 시도해 주세요.");
 			return "redirect:/main";
 		}
 	}
@@ -96,7 +96,7 @@ public class AccountController {
 			logger.info(" 계좌 목록 조회 실패 : {}", e.getMessage());
 			e.printStackTrace();
 
-			rttr.addFlashAttribute("msg", "계좌 목록 조회에 실패했습니다.");
+			rttr.addFlashAttribute("msgFail", "계좌 목록 조회에 실패했습니다.");
 			return "redirect:/main";
 		}
 	}
@@ -120,7 +120,7 @@ public class AccountController {
 		}catch(Exception e) {
 			logger.info(" 계좌 동기화 실패 : {}", e.getMessage());
 			e.printStackTrace();
-			rttr.addFlashAttribute("msg", "계좌 동기화에 실패했습니다.");
+			rttr.addFlashAttribute("msgFail", "계좌 동기화에 실패했습니다.");
 			return "redirect:/accounts/list";
 			
 		}

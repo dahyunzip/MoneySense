@@ -1,12 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/Header.jsp"%>
+<script>
+$(document).ready(function() {
+    <c:if test="${not empty msg}">
+        showSuccess('${msg}');
+    </c:if>
+    
+    <c:if test="${not empty msgFail}">
+        showError('${msgFail}');
+    </c:if>
+});
+</script>
 <div id="subContents">
 	<div class="fix-layout">    
 	    <div class="container" id="callback">
 	        <div class="success-icon text-center">✓</div>
 	        <h1 class="page-title">계좌 연동 완료!</h1>
-	        <p class="message">${msg}</p>
+	        <%-- <p class="message">${msg}</p> --%>
 	        
 	        <div class="token-info">
 	            <h3>연동 정보</h3>

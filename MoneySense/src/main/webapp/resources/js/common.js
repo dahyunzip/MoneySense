@@ -76,5 +76,81 @@ $(document).ready(function(){
 	if(topCont.children().hasClass('bgGray')){
 		topCont.css({"background" : "#fafafa"});
 	}
-	
 });
+
+/**
+ * SweetAlert2 래퍼 함수
+ */
+
+// 기본 alert 대체
+function showAlert(message, icon = 'info') {
+    Swal.fire({
+        text: message,
+        icon: icon,
+        confirmButtonText: '확인',
+        confirmButtonColor: '#00AEEE'
+    });
+}
+
+// 성공 메시지
+function showSuccess(message) {
+    Swal.fire({
+        text: message,
+        icon: 'success',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#00AEEE'
+    });
+}
+
+// 에러 메시지
+function showError(message) {
+    Swal.fire({
+        text: message,
+        icon: 'error',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#00AEEE'
+    });
+}
+
+// 경고 메시지
+function showWarning(message) {
+    Swal.fire({
+        text: message,
+        icon: 'warning',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#00AEEE'
+    });
+}
+
+// confirm 대체
+function showConfirm(message, callback) {
+    Swal.fire({
+        text: message,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '확인',
+        cancelButtonText: '취소',
+        confirmButtonColor: '#00AEEE',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if (result.isConfirmed && callback) {
+            callback();
+        }
+    });
+}
+
+// Toast 알림 (우측 상단 작은 알림)
+function showToast(message, icon = 'success') {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true
+    });
+    
+    Toast.fire({
+        icon: icon,
+        title: message
+    });
+}

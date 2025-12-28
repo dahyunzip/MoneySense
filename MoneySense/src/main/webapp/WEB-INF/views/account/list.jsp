@@ -2,6 +2,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="../include/Header.jsp"%>
+<script>
+$(document).ready(function() {
+    <c:if test="${not empty msg}">
+        showSuccess('${msg}');
+    </c:if>
+    
+    <c:if test="${not empty msgFail}">
+        showError('${msgFail}');
+    </c:if>
+});
+</script>
 <div id="subContents" class="bgGray accounts">
 	<div class="fix-layout">
 	    <div class="container">
@@ -23,9 +34,9 @@
 	    		</div>
 	    	</div>
 	        
-	        <c:if test="${not empty msg}">
+	        <%-- <c:if test="${not empty msg}">
 	            <div class="message">${msg}</div>
-	        </c:if>
+	        </c:if> --%>
 	        
             <div class="total-account">
                 <span>총 ${accounts.size()}개의 계좌</span>

@@ -2,11 +2,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="../include/Header.jsp"%>
-<c:if test="${not empty msg}">
-    <script>
-        alert("${msg}");
-    </script>
-</c:if>
+<script>
+$(document).ready(function() {
+    <c:if test="${not empty msg}">
+        showSuccess('${msg}');
+    </c:if>
+    
+    <c:if test="${not empty msgFail}">
+        showError('${msgFail}');
+    </c:if>
+});
+</script>
 <div id="subContents" class="mypage alignCenter">
 	<div class="fix-layout">
 		<div class="container">

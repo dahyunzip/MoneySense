@@ -15,7 +15,26 @@
             return false;
         }
         
-        return confirm('정말로 회원 탈퇴하시겠습니까?\n\n이 작업은 되돌릴 수 없으며,\n모든 데이터가 삭제됩니다.');
+        event.preventDefault();
+        
+        Swal.fire({
+            title: '정말로 회원 탈퇴하시겠습니까?',
+            html: '이 작업은 되돌릴 수 없으며,<br>모든 데이터가 삭제됩니다.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '탈퇴하기',
+            cancelButtonText: '취소',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // 확인 시 form submit
+                document.querySelector('form').submit();
+            }
+        });
+        
+        return false; // form 기본 submit 막기
     }
 </script>
 <div id="subContents" class="mypage alignCenter">
