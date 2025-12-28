@@ -3,6 +3,7 @@
 <%@ include file="../include/Header.jsp"%>
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 
 <div id="subContents" class="statistics">
     <div class="fix-layout">
@@ -28,6 +29,8 @@ $(document).ready(function() {
     const csrfHeader = '${_csrf.headerName}';
     
     let charts = {};
+    
+    Chart.register(ChartDataLabels);
     
     // 데이터 로드
     function loadDashboardData() {
@@ -94,6 +97,7 @@ $(document).ready(function() {
         
         const labels = data.map(item => item.categoryName);
         const amounts = data.map(item => item.totalAmount);
+        const total = amounts.reduce((a, b) => a + b, 0);
         
         charts.category = new Chart(ctx, {
             type: 'doughnut',
@@ -117,8 +121,27 @@ $(document).ready(function() {
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return context.label + ': ' + context.parsed.toLocaleString() + '원';
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return context.label + ': ' + 
+                                       context.parsed.toLocaleString() + '원 (' + 
+                                       percentage + '%)';
                             }
+                        }
+                    },
+                    datalabels: {
+                        color: '#fff',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+                        formatter: function(value, context) {
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            
+                            // 5% 이상인 것만 표시
+                            if (percentage >= 5) {
+                                return percentage + '%';
+                            }
+                            return '';
                         }
                     }
                 }
@@ -155,6 +178,19 @@ $(document).ready(function() {
                             label: function(context) {
                                 return context.parsed.y.toFixed(1) + '%';
                             }
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'end',
+                        color: '#333',
+                        font: {
+                            weight: 'bold',
+                            size: 11
+                        },
+                        formatter: function(value) {
+                            if (value === 0) return '';
+                            return value.toFixed(1) + '%';
                         }
                     }
                 },
@@ -202,6 +238,9 @@ $(document).ready(function() {
                                 return '지출: ' + context.parsed.y.toLocaleString() + '원';
                             }
                         }
+                    },
+                    datalabels: {
+                        display: false
                     }
                 },
                 scales: {
@@ -234,7 +273,20 @@ $(document).ready(function() {
                     data: amounts,
                     backgroundColor: '#FFCE56',
                     borderColor: '#FFCE56',
-                    borderWidth: 1
+                    borderWidth: 1,
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'end',
+                        color: '#333',
+                        font: {
+                            weight: 'bold',
+                            size: 11
+                        },
+                        formatter: function(value) {
+                            if (value === 0) return '';
+                            return (value / 10000).toFixed(0) + '만원';
+                        }
+                    }
                 }, {
                     label: '추세선',
                     data: amounts,
