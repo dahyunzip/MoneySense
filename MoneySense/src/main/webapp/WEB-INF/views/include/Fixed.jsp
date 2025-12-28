@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
+
 
 <div id="fixedMenu">
 	<div class="fix-layout">
@@ -40,3 +42,21 @@
 		</ul>
 	</div>
 </div>
+<script src="${ctx}/resources/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+<script src="${ctx}/resources/js/common.js" type="text/javascript"></script>
+<script>
+$(document).ready(function() {
+    <c:if test="${not empty msg}">
+        showSuccess('${msg}');
+    </c:if>
+    
+    <c:if test="${not empty msgFail}">
+        showError('${msgFail}');
+    </c:if>
+    
+    <c:if test="${not empty msgWarning}">
+        showWarning('${msgWarning}');
+    </c:if>
+});
+</script>

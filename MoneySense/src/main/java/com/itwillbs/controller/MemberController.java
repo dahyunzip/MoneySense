@@ -52,7 +52,7 @@ public class MemberController {
 			rttr.addFlashAttribute("msg", "회원가입이 완료되었습니다. 로그인해주세요.");
 			return "redirect:/members/login";
 		}else {
-			rttr.addFlashAttribute("msg", "회원가입에 실패했습니다. 다시 시도해주세요.");
+			rttr.addFlashAttribute("msgFail", "회원가입에 실패했습니다. 다시 시도해주세요.");
 			return "redirect:/signup";
 		}
 	}
@@ -80,13 +80,13 @@ public class MemberController {
 		logger.info(" 로그인 페이지 요청");
 		if(error != null) {
 			if(message != null) {
-				model.addAttribute("msg", message);
+				model.addAttribute("msgFail", message);
 			}else {
-				model.addAttribute("msg", "이메일 또는 비밀번호가 올바르지 않습니다.");
+				model.addAttribute("msgFail", "이메일 또는 비밀번호가 올바르지 않습니다.");
 			}
 		}
 		if(expired != null) {
-			model.addAttribute("msg", "세션이 만료되었습니다. 다시 로그인해주세요.");
+			model.addAttribute("msgFail", "세션이 만료되었습니다. 다시 로그인해주세요.");
 		}
 		
 		return "member/login";
@@ -173,7 +173,7 @@ public class MemberController {
 	        
 	        rttr.addFlashAttribute("msg", "이름이 수정되었습니다.");
 		}else {
-			rttr.addFlashAttribute("msg", "이름 수정에 실패했습니다.");
+			rttr.addFlashAttribute("msgFail", "이름 수정에 실패했습니다.");
 		}
 		return "redirect:/members/mypage";
 	}
@@ -267,7 +267,7 @@ public class MemberController {
 		String email = mService.getEmailByToken(token);
 		
 		if(email == null) {
-			model.addAttribute("msg", "유효하지 않거나 만료된 링크입니다.");
+			model.addAttribute("msgFail", "유효하지 않거나 만료된 링크입니다.");
 			return "member/reset-fail";
 		}
 		

@@ -17,7 +17,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script> 
     <script src="${ctx}/resources/js/landing.js" type="text/javascript"></script>
 </head>
-<body>
+<body style="overflow:hidden;">
     <header data-aos="zoom-out">
     	<div class="fix-layout">
 	    	<div class="logo"><a href="/" title="홈으로 이동"><img src="${ctx}/resources/images/logo.svg"></a></div>
@@ -197,8 +197,8 @@
     <footer>
     	<div class="fix-layout">
     		<ul class="li-wr">
-    			<li><a href="#">이메일 / 문의 안내</a></li>
-    			<li><a href="#">Github</a></li>
+    			<li><a href="mailto:bydhyun@naver.com">이메일 / 문의 안내</a></li>
+    			<li><a href="https://github.com/dahyunzip/MoneySense" target="_blank">Github</a></li>
     		</ul>
     	</div>
     </footer>

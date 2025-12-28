@@ -5,7 +5,7 @@
 <%@ include file="include/Header.jsp"%>
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 
 <c:if test="${not empty msg}">
     <script>
@@ -24,6 +24,7 @@
 .ie-card-change { font-size: 12px; margin-top: 5px; }
 .ie-card-change.up { color: #dc3545; }
 .ie-card-change.down { color: #0066ff; }
+.ie-card-comment span{font-size:10px; font-weight:600; color:#393939;margin-top:8px;}
 .quick-menu {padding: 20px; margin-top: 20px; }
 .quick-menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center; }
 .quick-menu-item { display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; color: #333; }
@@ -37,11 +38,11 @@
 .quick-menu-text { font-size: 12px; font-weight: 600; }
 .chatbot-banner { padding: 20px; border-radius: 16px; margin: 20px 0; display: flex; align-items: center; gap: 15px; color: #000; }
 .chatbot-icon { width: 50px; height: 50px; background: url(/resources/images/bot-icon.png) no-repeat center; background-size: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; }
-.chatbot-text { font-size: 14px; font-weight: 400; background:#fff; width:100%; border-radius: 12px; padding:16px 0; text-align:center;  }
+.chatbot-text { font-size: 14px; font-weight: 400; background:#fff; width:100%; border-radius: 12px; padding:16px 12px;text-align:left; line-height:1.3; }
 .category-section { background: #fff; padding: 20px; margin: 20px 0; border-radius: 12px; }
 .section-title { font-size: 16px; font-weight: 700; color: #333; margin-bottom: 20px; }
 .chart-container { position: relative; height: 250px; }
-@media (max-width: 768px) { .asset-amount { font-size: 28px; } .quick-menu-grid { gap: 10px; } .quick-menu-icon { width: 45px; height: 45px; font-size: 20px; } }
+@media (max-width: 768px) { .asset-amount { font-size: 28px; } .quick-menu-grid { gap: 10px; } .quick-menu-icon { font-size: 20px; } }
 </style>
 <div id="mainContents" class="bgGray">
 	<div class="fix-layout">
@@ -65,8 +66,16 @@
 	                </div>
 	                <c:if test="${expenseChange != null}">
 	                    <div class="ie-card-change ${expenseChange > 0 ? 'up' : 'down'}">
-	                        ${expenseChange > 0 ? '▲' : '▼'} 
+	                        ${expenseChange > 0 ? '▲' : '▼'}
 	                        <fmt:formatNumber value="${expenseChange}" pattern="#,###"/>원
+	                    </div>
+	                    <div class="ie-card-comment">
+	                    	<c:if test="${expenseChange > 0}">
+	                        	<span>😒?노력이 필요해요.</span>
+	                        </c:if>
+	                        <c:if test="${expenseChange < 0}">
+	                        	<span>👍 잘 줄이고 있어요.</span>
+	                        </c:if>
 	                    </div>
 	                </c:if>
 	            </div>
@@ -82,6 +91,14 @@
 	                    <div class="ie-card-change ${incomeChange > 0 ? 'up' : 'down'}">
 	                        ${incomeChange > 0 ? '▲' : '▼'} 
 	                        <fmt:formatNumber value="${incomeChange}" pattern="#,###"/>원
+	                    </div>
+	                    <div class="ie-card-comment">
+	                    	<c:if test="${incomeChange > 0}">
+	                        	<span>👍 수입이 늘었어요.</span>
+	                        </c:if>
+	                        <c:if test="${incomeChange < 0}">
+	                        	<span>😒 수입이 줄었어요.</span>
+	                        </c:if>
 	                    </div>
 	                </c:if>
 	            </div>
@@ -114,7 +131,7 @@
 	    <div class="chatbot-banner">
 	        <div class="chatbot-icon"></div>
 	        <div class="chatbot-text">
-	            <strong><sec:authentication property="principal.member.name"/></strong>님, 오늘 지출을 어쩌면 0% 줄일 수 있어요!
+	            ${chatbotMessage}
 	        </div>
 	    </div>
 	    
@@ -149,16 +166,19 @@ $(document).ready(function() {
     
     function createCategoryChart(data) {
         const ctx = document.getElementById('categoryChart').getContext('2d');
-        
+
         const labels = data.map(item => item.name);
         const amounts = data.map(item => item.amount);
-        
+
         // 색상 배열
         const colors = [
             '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
             '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF', '#4BC0C0'
         ];
-        
+
+        // 플러그인 등록
+        Chart.register(ChartDataLabels);
+
         new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -187,10 +207,27 @@ $(document).ready(function() {
                             label: function(context) {
                                 const total = amounts.reduce((a, b) => a + b, 0);
                                 const percentage = ((context.parsed / total) * 100).toFixed(1);
-                                return context.label + ': ' + 
-                                       context.parsed.toLocaleString() + '원 (' + 
+                                return context.label + ': ' +
+                                       context.parsed.toLocaleString() + '원 (' +
                                        percentage + '%)';
                             }
+                        }
+                    },
+                    datalabels: {
+                        color: '#fff',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+                        formatter: function(value, context) {
+                            const total = amounts.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+
+                            // 5% 이상인 것만 표시
+                            if (percentage >= 5) {
+                                return percentage + '%';
+                            }
+                            return '';
                         }
                     }
                 }
@@ -199,4 +236,4 @@ $(document).ready(function() {
     }
 });
 </script>
-<%@ include file="include/Footer.jsp"%>
+<%@ include file="include/Fixed.jsp"%>

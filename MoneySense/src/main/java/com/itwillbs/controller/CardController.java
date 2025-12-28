@@ -89,7 +89,7 @@ public class CardController {
 		}catch(Exception e) {
 			logger.info(" 카드 등록 실패 : {}", e.getMessage());
 			e.printStackTrace();
-			rttr.addFlashAttribute("msg", "카드 등록에 실패하였습니다.");
+			rttr.addFlashAttribute("msgFail", "카드 등록에 실패하였습니다.");
 		}
 		logger.info(" ================================== ");
 		return "redirect:/cards/list";
@@ -109,7 +109,7 @@ public class CardController {
 			rttr.addFlashAttribute("msg", String.format("테스트 카드 %d장이 생성되었습니다.", generatedCount));
 		}catch(Exception e) {
 			logger.info(" 더미 카드 생성 실패 : {}", e.getMessage());
-			rttr.addFlashAttribute("msg", "카드 생성에 실패했습니다.");
+			rttr.addFlashAttribute("msgFail", "카드 생성에 실패했습니다.");
 		}
 		
 		logger.info(" ==================================== ");
@@ -214,7 +214,7 @@ public class CardController {
 			rttr.addFlashAttribute("msg", "카드가 삭제되었습니다.");
 		}catch(Exception e) {
 			logger.info(" 카드 삭제 실패 : {}", e.getMessage());
-			rttr.addFlashAttribute("msg", "카드 삭제에 실패했습니다.");
+			rttr.addFlashAttribute("msgFail", "카드 삭제에 실패했습니다.");
 		}
 		
 		logger.info(" ================================= ");

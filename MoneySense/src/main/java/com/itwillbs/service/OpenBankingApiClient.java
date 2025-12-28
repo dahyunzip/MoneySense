@@ -73,6 +73,38 @@ public class OpenBankingApiClient {
 		return response;
 	} // requestToken
 	
+	// 토큰 갱신 요청
+	public ResponseTokenVO refreshToken(String refreshToken) throws Exception {
+		logger.info(" 토큰 갱신 요청 시작 - refreshToken: {}", refreshToken);
+		
+		restTemplate = new RestTemplate();
+		httpHeaders = new HttpHeaders();
+		
+		httpHeaders.add("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+		
+		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+		parameters.add("client_id", clientId);
+		parameters.add("client_secret", clientSecret);
+		parameters.add("refresh_token", refreshToken);
+		parameters.add("scope", "inquiry transfer");
+		parameters.add("grant_type", "refresh_token");
+		
+		HttpEntity<MultiValueMap<String, String>> param = new HttpEntity<>(parameters, httpHeaders);
+		
+		String requestURL = "https://testapi.openbanking.or.kr/oauth/2.0/token";
+		
+		ResponseTokenVO response = restTemplate.exchange(
+			requestURL, 
+			HttpMethod.POST, 
+			param, 
+			ResponseTokenVO.class
+		).getBody();
+		
+		logger.info(" 토큰 갱신 완료 : {}", response);
+		
+		return response;
+	}
+	
 	// 계좌 목록 조회
 	public AccountSearchResponseVO findAccount(AccountSearchRequestVO accountSearchRequestVO) throws Exception{
 		logger.info(" 계좌 목록 조회 시작 ");
