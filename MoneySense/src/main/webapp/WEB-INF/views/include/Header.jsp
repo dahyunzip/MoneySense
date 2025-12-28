@@ -18,6 +18,7 @@
 	
 	<!-- (S) CSS -->
 	<link  rel="stylesheet" href="${ctx}/resources/css/common.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
 	<c:choose>
 	 <c:when test="${uri == '/main'}">
 		<link rel="stylesheet" href="${ctx}/resources/css/main.css" />
@@ -30,6 +31,7 @@
 	
 	<!-- (S) JS -->
 	<script src="${ctx}/resources/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
 	<script src="${ctx}/resources/js/common.js" type="text/javascript"></script>
 	<!-- (E) JS -->
 </head>

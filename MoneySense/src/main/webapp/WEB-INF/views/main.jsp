@@ -38,7 +38,7 @@
 .quick-menu-text { font-size: 12px; font-weight: 600; }
 .chatbot-banner { padding: 20px; border-radius: 16px; margin: 20px 0; display: flex; align-items: center; gap: 15px; color: #000; }
 .chatbot-icon { width: 50px; height: 50px; background: url(/resources/images/bot-icon.png) no-repeat center; background-size: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; }
-.chatbot-text { font-size: 14px; font-weight: 400; background:#fff; width:100%; border-radius: 12px; padding:16px 0; text-align:center;  }
+.chatbot-text { font-size: 14px; font-weight: 400; background:#fff; width:100%; border-radius: 12px; padding:16px 12px;text-align:left; line-height:1.3; }
 .category-section { background: #fff; padding: 20px; margin: 20px 0; border-radius: 12px; }
 .section-title { font-size: 16px; font-weight: 700; color: #333; margin-bottom: 20px; }
 .chart-container { position: relative; height: 250px; }
@@ -131,7 +131,7 @@
 	    <div class="chatbot-banner">
 	        <div class="chatbot-icon"></div>
 	        <div class="chatbot-text">
-	            <strong><sec:authentication property="principal.member.name"/></strong>님, 오늘 지출을 어쩌면 0% 줄일 수 있어요!
+	            ${chatbotMessage}
 	        </div>
 	    </div>
 	    

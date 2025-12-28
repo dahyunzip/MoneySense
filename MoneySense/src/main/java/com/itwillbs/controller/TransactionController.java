@@ -61,7 +61,7 @@ public class TransactionController {
 		BankAccountVO account = openbankingService.getAccountById(accountId);
 		
 		if(account == null) {
-			model.addAttribute("msg", "계좌 정보를 찾을 수 없습니다.");
+			model.addAttribute("msgFail", "계좌 정보를 찾을 수 없습니다.");
 			return "redirect:/accounts/list";
 		}
 		

@@ -6,11 +6,6 @@
     <div id="loginPage" class="container alignCenter">
         <h1 class="page-title">Login</h1>
         <p class="page-sub-title">로그인 후 머니센스를 이용해주세요!</p>
-        <c:if test="${not empty msg}">
-            <div class="alert ${msg.contains('완료') || msg.contains('성공') ? 'alert-success' : 'alert-danger'}">
-                ${msg}
-            </div>
-        </c:if>
         
         <div class="alert message">
         	💡 테스트 팁 : input 태그 placeholder에 작성된 계정으로 테스트 해보세요!
@@ -72,5 +67,18 @@
                 $('#loginForm').submit();
             }
         });
+        
+        <c:if test="${not empty msg}">
+        showSuccess('${msg}');
+        //alert('msg가 있습니다. : ${msg}');
+	    </c:if>
+	    
+	    <c:if test="${not empty msgFail}">
+        showError('${msgFail}');
+        //alert('msgFail이 있습니다. : ${msgFail}');
+	    </c:if>
+	    
+	    console.log('msg : ', '${msg}');
+	    console.log('msgFail : ', '${msgFail}');
     });
 </script>

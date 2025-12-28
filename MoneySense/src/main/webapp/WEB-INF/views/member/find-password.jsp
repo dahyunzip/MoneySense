@@ -1,6 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/Header.jsp"%>
+<script>
+$(document).ready(function() {
+    <c:if test="${not empty msg}">
+        showSuccess('${msg}');
+    </c:if>
+    
+    <c:if test="${not empty msgFail}">
+        showError('${msgFail}');
+    </c:if>
+});
+</script>
 <div id="subContents">
 	<div class="fix-layout">   
 	    <div class="container" id="loginPage">
@@ -16,10 +27,6 @@
 	           		<button type="submit" class="btn btn-login mb20">메일 전송</button>
 	            </div>
 	        </form>
-	        
-	        <c:if test="${not empty msg}">
-	            <p class="msg">${msg}</p>
-	        </c:if>
 	        
 	        <div class="text-center">
 	            <a href="${ctx}/members/login">로그인으로 돌아가기</a>
