@@ -3,7 +3,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
-
 <div id="fixedMenu">
 	<div class="fix-layout">
 		<ul>
@@ -42,9 +41,6 @@
 		</ul>
 	</div>
 </div>
-<script src="${ctx}/resources/js/jquery-3.7.1.min.js" type="text/javascript"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
-<script src="${ctx}/resources/js/common.js" type="text/javascript"></script>
 <script>
 $(document).ready(function() {
     <c:if test="${not empty msg}">

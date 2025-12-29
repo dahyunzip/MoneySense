@@ -3,8 +3,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ include file="../include/Header.jsp"%>
-<script src="${ctx}/resources/js/jquery-ui.min.js"></script>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
+
 <link rel="stylesheet" href="${ctx}/resources/css/jquery-ui.css">
+<script src="${ctx}/resources/js/jquery-ui.min.js"></script>
 <!-- 로딩 스피너 -->
 <div id="loadingOverlay" style="display:none;">
     <div class="loading-spinner-overlay">
